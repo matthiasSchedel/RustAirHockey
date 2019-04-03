@@ -1,3 +1,4 @@
+// ich möchte mit cargo run --example display --release gebaut werden, weil Graphik und Debug nicht cool ist.
 #![no_std]
 #![no_main]
 #![feature(alloc_error_handler)]
@@ -66,6 +67,7 @@ fn main() -> ! {
     layer1.clear();
     layer2.clear();
 
+    // ab hier fancy Dinge, die nicht schön implmentiert sind...
     let mut left_corner_x: i32 = 6;
     let mut left_corner_y: i32 = 6;
     let mut velocity_x: i32 = 1;
@@ -73,6 +75,8 @@ fn main() -> ! {
 
     let border_width = 5;
 
+
+    // hier entsteht das "Spielfeld" - hier nur ein Rahmen mit Öffnungen am Rand.
     for x in 0..480 {
         for y in 0..border_width {
             layer2.print_point_color_at(x, y, Color::from_hex(0x000_000));
@@ -101,23 +105,28 @@ fn main() -> ! {
         }
     }
 
+    // hier sind die Größen, die vom Display übrig bleiben, wenn wir den Rand abziehen
     let limit_x:i32 = 475;
     let limit_y:i32 = 267; 
 
+    // und das ist der Main Loop
     loop {
         //und jetzt können wir alles machen, was wir auf Layern machen können.
         
+        // in jeder Iteration wird das ganze Feld neu gezeichnet
         for x in 0..480 {
             for y in 0..272 {
                 if x >= left_corner_x && x < left_corner_x + 100 && y >= left_corner_y && y < left_corner_y + 100 {
+                    //entweder rot, wenn das Quadrat grade hier ist
                     layer1.print_point_color_at(x as usize, y as usize, Color::from_hex(0xff0_000));
                 } else {
+                    //oder blau, wenn hier grade nichts ist.
                     layer1.print_point_color_at(x as usize,y as usize, Color::from_argb8888(0));
                 }
             }
         }
 
-        
+        // hier errechnet sich die neue Position. Wenn keine Verschiebung möglich ist, bleibt es stehen und ändert die Richtung
         if left_corner_x + velocity_x + 100 <= limit_x && left_corner_x + velocity_x >= 5 {
             left_corner_x += velocity_x;
         } else {
