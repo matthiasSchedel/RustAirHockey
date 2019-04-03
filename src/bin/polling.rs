@@ -43,9 +43,11 @@ use stm32f7_discovery::{
     sd,
     system_clock::{self, Hz},
     touch,
+    airhockey
 };
 
-mod super::airhockey;
+
+
 
 #[global_allocator]
 static ALLOCATOR: CortexMHeap = CortexMHeap::empty();
@@ -132,7 +134,24 @@ fn main() -> ! {
 
     let mut previous_button_state = pins.button.get();
     let mut audio_writer = AudioWriter::new();
+
+    let mut airhockey_game:AirHockey = AirHockey::new();
+    airhockey_game.init();
+
+
+
+
     loop {
+
+        // handle input
+        //      if touchcontroller().rightPlayerTouched == true
+        // handle collision
+        //          game.move(rightPlayer)
+        // draw
+        //      graphicController.draw()
+        // 
+
+
         // poll button state
         let current_button_state = pins.button.get();
         if current_button_state != previous_button_state {
