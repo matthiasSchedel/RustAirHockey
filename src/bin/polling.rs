@@ -126,7 +126,7 @@ fn main() -> ! {
     touch::check_family_id(&mut i2c_3).unwrap();
 
     let mut rng = Rng::init(&mut rng, &mut rcc).expect("RNG init failed");
-    print!("Random numbers: ");
+    /* print!("Random numbers: ");
     for _ in 0..4 {
         print!(
             "{} ",
@@ -134,10 +134,10 @@ fn main() -> ! {
                 .expect("Failed to generate random number")
         );
     }
-    println!("");
+    println!(""); */
 
     // ethernet
-    let mut ethernet_interface = ethernet::EthernetDevice::new(
+  /*   let mut ethernet_interface = ethernet::EthernetDevice::new(
         Default::default(),
         Default::default(),
         &mut rcc,
@@ -163,7 +163,7 @@ fn main() -> ! {
         dhcp_rx_buffer,
         dhcp_tx_buffer,
         Instant::from_millis(system_clock::ms() as i64),
-    ).expect("could not bind udp socket");
+    ).expect("could not bind udp socket"); */
 
     let mut previous_button_state = pins.button.get();
     let mut audio_writer = AudioWriter::new();
@@ -181,25 +181,45 @@ fn main() -> ! {
             previous_button_state = current_button_state;
         }
 
+        let width_max = 523;
+        let heigth_max = 293;
+        
         // poll for new touch data
         for touch in &touch::touches(&mut i2c_3).unwrap() {
+            for i in (0..10) {
+                for j in (0..10) {
+                    if (touch.x + i - 5) < width_max && (touch.y - 5 + j) < heigth_max {
+                        let tx:usize = (touch.x as usize) + (i as usize) - 5;
+                        let ty:usize = (touch.y as usize) + (j as usize) - 5;
+                        layer_1.print_point_color_at(
+                         tx as usize,
+                         ty as usize,
+                        Color::from_hex(0xffff00),
+                    );
+                    }
+                }
+            }
             layer_1.print_point_color_at(
                 touch.x as usize,
                 touch.y as usize,
                 Color::from_hex(0xffff00),
             );
+            println!("{}", touch.x);
+            println!("{}", touch.y);
+
         }
 
         // poll for new audio data
-        while sai_2.bsr.read().freq().bit_is_clear() {} // fifo_request_flag
+       /*  while sai_2.bsr.read().freq().bit_is_clear() {} // fifo_request_flag
         let data0 = sai_2.bdr.read().data().bits();
         while sai_2.bsr.read().freq().bit_is_clear() {} // fifo_request_flag
-        let data1 = sai_2.bdr.read().data().bits();
-
+        let data1 = sai_2.bdr.read().data().bits(); 
         audio_writer.set_next_col(&mut layer_1, data0, data1);
+        */
+
 
         // handle new ethernet packets
-        if let Ok((ref mut iface, ref mut prev_ip_addr)) = ethernet_interface {
+        /* if let Ok((ref mut iface, ref mut prev_ip_addr)) = ethernet_interface {
             let timestamp = Instant::from_millis(system_clock::ms() as i64);
             match iface.poll(&mut sockets, timestamp) {
                 Err(::smoltcp::Error::Exhausted) => {
@@ -258,7 +278,7 @@ fn main() -> ! {
                 .poll_delay(&sockets, timestamp)
                 .map(|sockets_timeout| timeout = sockets_timeout);
             // TODO await next interrupt
-        }
+        } */
 
         // Initialize the SD Card on insert and deinitialize on extract.
         if sd.card_present() && !sd.card_initialized() {
