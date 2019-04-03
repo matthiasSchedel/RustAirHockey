@@ -6,17 +6,14 @@ extern crate alloc_cortex_m;
 extern crate cortex_m;
 extern crate cortex_m_rt as rt;
 extern crate cortex_m_semihosting;
-#[macro_use]
 extern crate stm32f7;
-#[macro_use]
 extern crate stm32f7_discovery;
 
 use alloc_cortex_m::CortexMHeap;
 use core::alloc::Layout as AllocLayout;
 use core::panic::PanicInfo;
-use core::fmt::Write;
 use rt::{entry, exception};
-use stm32f7::stm32f7x6::{CorePeripherals, Peripherals};
+use stm32f7::stm32f7x6::{Peripherals};
 use stm32f7_discovery::{
     gpio::{GpioPort, OutputPin},
     init,
@@ -29,8 +26,8 @@ use stm32f7_discovery::{
 fn main() -> ! {
     let peripherals = Peripherals::take().unwrap();
     let mut rcc = peripherals.RCC;
-    let mut pwr = peripherals.PWR;
     let mut flash = peripherals.FLASH;
+    let mut pwr = peripherals.PWR;
     let mut ltdc = peripherals.LTDC;
     let mut fmc = peripherals.FMC;
 
@@ -52,10 +49,6 @@ fn main() -> ! {
     let mut pins = init::pins(
         gpio_a, gpio_b, gpio_c, gpio_d, gpio_e, gpio_f, gpio_g, gpio_h, gpio_i, gpio_j, gpio_k,
     );
-    // turn led on
-    pins.led.set(true);
-
-
     init::init_sdram(&mut rcc, &mut fmc);
     let mut lcd = lcd::init(&mut ltdc, &mut rcc);
     
