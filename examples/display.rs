@@ -49,20 +49,27 @@ fn main() -> ! {
     let mut pins = init::pins(
         gpio_a, gpio_b, gpio_c, gpio_d, gpio_e, gpio_f, gpio_g, gpio_h, gpio_i, gpio_j, gpio_k,
     );
+    
+    //fuers Display brauchen wir den sdram und das lcd
     init::init_sdram(&mut rcc, &mut fmc);
     let mut lcd = lcd::init(&mut ltdc, &mut rcc);
     
+    // das display hat 2 Layer auf die wir zeichnen können
     let mut layer1 = lcd::Lcd::layer_1(&mut lcd).unwrap();
     let mut layer2 = lcd::Lcd::layer_2(&mut lcd).unwrap();
+    
+    // dass wir was sehen, machen wir das Display und das Licht an
     pins.display_enable.set(true);
     pins.backlight.set(true);
 
+    // alte Sachen wegraeumen
     layer1.clear();
     layer2.clear();
 
     loop {
-        for i in 0..100 {
-            for j in 0..100 {
+        //und jetzt können wir alles machen, was wir auf Layern machen können.
+        for i in 100..200 {
+            for j in 100..200 {
                 layer1.print_point_color_at(i, j, Color::from_hex(0xff0_000));
             }
         }
