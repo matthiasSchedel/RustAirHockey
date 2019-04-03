@@ -3,6 +3,7 @@ target = "thumbv7em-none-eabihf"
 
 [target.thumbv7em-none-eabihf]
 runner = "sh gdb.sh"
+#windows runner = "gdb.bat"
 rustflags = [
   "-C", "link-arg=-Tlink.x",
   "-C", "linker=rust-lld",
