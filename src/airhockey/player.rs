@@ -3,7 +3,7 @@
 use super::field;
 
 // General player properties
-pub const PLAYER_RADIUS: u16 = 10;
+pub const PLAYER_RADIUS: u16 = 15;
 const PLAYER_COLOR: u8 = 150;
 
 // Player
@@ -11,6 +11,7 @@ pub struct Player {
     player_id: u8,
     xpos_centre: u16,
     ypos_centre: u16,
+    radius:u16,
 }
 
 impl Player {
@@ -22,7 +23,8 @@ impl Player {
             Player {
                 player_id: player_id,
                 xpos_centre : field::WIDTH_MAX/4,
-                ypos_centre : field::HEIGHT_MAX/2,   
+                ypos_centre : field::HEIGHT_MAX/2,
+                radius: PLAYER_RADIUS,
             }
         }
         else{
@@ -30,6 +32,7 @@ impl Player {
                 player_id : player_id,
                 xpos_centre : 3* field::WIDTH_MAX/4,
                 ypos_centre : field::HEIGHT_MAX,
+                radius: PLAYER_RADIUS,
             }
         }
     }
