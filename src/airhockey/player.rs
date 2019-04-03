@@ -35,6 +35,6 @@ impl Player {
     }
     
     pub fn get_position(&self) -> (u16, u16) {
-        (self.xpos_centre, self.ypos_centre);
+        return (self.xpos_centre, self.ypos_centre);
     }
 }

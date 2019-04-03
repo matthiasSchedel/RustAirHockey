@@ -34,20 +34,16 @@ use smoltcp::{
 };
 use stm32f7::stm32f7x6::{CorePeripherals, Interrupt, Peripherals};
 use stm32f7_discovery::{
-    ethernet,
+    airhockey, ethernet,
     gpio::{GpioPort, InputPin, OutputPin},
-    init,
+    graphics_controller, init,
     lcd::AudioWriter,
     lcd::{self, Color},
     random::Rng,
     sd,
     system_clock::{self, Hz},
-    touch,
-    airhockey
+    touch, touch_controller,
 };
-
-
-
 
 #[global_allocator]
 static ALLOCATOR: CortexMHeap = CortexMHeap::empty();
@@ -131,26 +127,23 @@ fn main() -> ! {
 
     let mut rng = Rng::init(&mut rng, &mut rcc).expect("RNG init failed");
 
-
     let mut previous_button_state = pins.button.get();
     let mut audio_writer = AudioWriter::new();
 
-    let mut airhockey_game:AirHockey = AirHockey::new();
+    let player_count = 2;
+    let mut airhockey_game = airhockey::game::Game::new(player_count);
+    // let graphics_controller =
+
     airhockey_game.init();
 
-
-
-
     loop {
-
         // handle input
         //      if touchcontroller().rightPlayerTouched == true
         // handle collision
         //          game.move(rightPlayer)
         // draw
         //      graphicController.draw()
-        // 
-
+        //
 
         // poll button state
         let current_button_state = pins.button.get();
@@ -191,7 +184,6 @@ fn main() -> ! {
             // println!("{}", touch.x);
             // println!("{}", touch.y);
         }
-
 
         // Initialize the SD Card on insert and deinitialize on extract.
         if sd.card_present() && !sd.card_initialized() {
