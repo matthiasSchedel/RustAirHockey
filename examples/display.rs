@@ -66,12 +66,68 @@ fn main() -> ! {
     layer1.clear();
     layer2.clear();
 
+    let mut left_corner_x: i32 = 6;
+    let mut left_corner_y: i32 = 6;
+    let mut velocity_x: i32 = 1;
+    let mut velocity_y: i32 = 1;
+
+    let border_width = 5;
+
+    for x in 0..480 {
+        for y in 0..border_width {
+            layer2.print_point_color_at(x, y, Color::from_hex(0x000_000));
+        }
+
+        for y in 272-border_width..272 {
+            layer2.print_point_color_at(x,y, Color::from_hex(0x000_000));
+        }
+    }
+
+    for y in 0..101 {
+        for x in 0..border_width {
+                layer2.print_point_color_at(x, y, Color::from_hex(0x000_000));
+        }
+        for x in 480-border_width..480 {
+                layer2.print_point_color_at(x, y, Color::from_hex(0x000_000));
+        }
+    }
+
+    for y in 171..272 {
+        for x in 0..border_width {
+                layer2.print_point_color_at(x, y, Color::from_hex(0x000_000));
+        }
+        for x in 480-border_width..480 {
+                layer2.print_point_color_at(x, y, Color::from_hex(0x000_000));
+        }
+    }
+
+    let limit_x:i32 = 475;
+    let limit_y:i32 = 267; 
+
     loop {
         //und jetzt können wir alles machen, was wir auf Layern machen können.
-        for i in 100..200 {
-            for j in 100..200 {
-                layer1.print_point_color_at(i, j, Color::from_hex(0xff0_000));
+        
+        for x in 0..480 {
+            for y in 0..272 {
+                if x >= left_corner_x && x < left_corner_x + 100 && y >= left_corner_y && y < left_corner_y + 100 {
+                    layer1.print_point_color_at(x as usize, y as usize, Color::from_hex(0xff0_000));
+                } else {
+                    layer1.print_point_color_at(x as usize,y as usize, Color::from_argb8888(0));
+                }
             }
+        }
+
+        
+        if left_corner_x + velocity_x + 100 <= limit_x && left_corner_x + velocity_x >= 5 {
+            left_corner_x += velocity_x;
+        } else {
+            velocity_x *= -1;
+        }
+
+        if left_corner_y + velocity_y + 100 <= limit_y && left_corner_y + velocity_y >= 5 {
+            left_corner_y += velocity_y;
+        } else {
+            velocity_y *= -1;
         }
     }
 }
