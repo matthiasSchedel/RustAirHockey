@@ -54,3 +54,6 @@ pub mod sd;
 pub mod system_clock;
 pub mod task_runtime;
 pub mod touch;
+pub mod airhockey;
+pub mod touch_controller;
+pub mod graphics_controller;
