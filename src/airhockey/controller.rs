@@ -6,14 +6,14 @@ use crate::{
     touch_controller::touch_controller::TouchController,
 };
 
-pub struct Controller<'a> {
-    graphics_controller:&'a GraphicsController,
-    touch_controller:&'a TouchController
+pub struct Controller {
+    graphics_controller: GraphicsController,
+    touch_controller: TouchController
 
 }
-impl <'a> Controller<'a> {
+impl Controller {
     // game constructor
-    pub fn new(graphics_controller: &'a GraphicsController, touch_controller: &'a TouchController) -> Controller<'a> {
+    pub fn new(graphics_controller: GraphicsController, touch_controller: TouchController) -> Controller{
         Controller { 
             touch_controller:touch_controller,
             graphics_controller: graphics_controller
