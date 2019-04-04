@@ -1,9 +1,9 @@
 //! Graphics controller.
-const STROKE_COLOR:u16 = 0xffff00;
-const USE_STROKE:bool = true;
-const PLAYER_SIZE:u16 = 10;
-const PUCK_SIZE:u16 = 6;
-const BACKGROUND_COLOR:u16 = 0xfff000;
+const STROKE_COLOR: u32 = 0xffff00;
+const USE_STROKE: bool = true;
+const PLAYER_SIZE: u16 = 10;
+const PUCK_SIZE: u16 = 6;
+const BACKGROUND_COLOR: u32 = 0xfff000;
 // GraphicsController struct
 pub struct GraphicsController {
     display: i32,
@@ -11,8 +11,6 @@ pub struct GraphicsController {
     width: u16,
     //display height
     height: u16,
-    //background color used in controller
-    background_color: u16,
 }
 impl GraphicsController {
     // game constructor
@@ -20,7 +18,7 @@ impl GraphicsController {
         GraphicsController {
             display: 2,
             width: width,
-            height: height
+            height: height,
         }
     }
     // is touched method
@@ -33,10 +31,10 @@ impl GraphicsController {
         &self,
         color: u16,
         pos_x: u16,
-        pos_y: u16,
-        radius: f32,
-        draw_stroke: bool,
-        stroke_color: u16,
+        // pos_y: u16,
+        // radius: f32,
+        // draw_stroke: bool,
+        // stroke_color: u16,
     ) {
 
     }
