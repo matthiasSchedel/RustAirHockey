@@ -25,6 +25,9 @@ impl Game {
     }
 
     pub fn init(&self) {
-        
+        // what happens here?
+        // 1. run constructor
+        // 2. get random number -> place puk
+        // 3. set scores to 0 - 0
     }
 }

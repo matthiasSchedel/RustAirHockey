@@ -68,8 +68,8 @@ fn main() -> ! {
     layer2.clear();
 
     // ab hier fancy Dinge, die nicht schön implmentiert sind...
-    let mut velocity_x: i32 = 10;
-    let mut velocity_y: i32 = 10;
+    let mut velocity_x: i32 = 3;
+    let mut velocity_y: i32 = 1;
 
     let border_width = 5;
 
@@ -111,7 +111,7 @@ fn main() -> ! {
         (x-center_x)*(x-center_x) + (y-center_y)*(y-center_y) <= radius*radius
     }
 
-    let radius = 50;
+    let radius = 10;
     let mut center_x = 170;
     let mut center_y = 100;
 
