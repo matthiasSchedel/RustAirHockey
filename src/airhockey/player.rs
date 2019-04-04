@@ -31,13 +31,21 @@ impl Player {
             Player {
                 player_id : player_id,
                 xpos_centre : 3* field::WIDTH_MAX/4,
-                ypos_centre : field::HEIGHT_MAX,
+                ypos_centre : field::HEIGHT_MAX/2,
                 radius: PLAYER_RADIUS,
             }
         }
     }
-    
+    //*Draw the player at a given position
+    pub fn draw_player_at_position(&self) {
+    }
+
     pub fn get_position(&self) -> (u16, u16) {
-        (self.xpos_centre, self.ypos_centre);
+        return (self.xpos_centre, self.ypos_centre);
+    }
+
+    pub fn set_position(& mut self, x : u16, y:u16){
+        self.xpos_centre = x;
+        self.ypos_centre = y;
     }
 }
