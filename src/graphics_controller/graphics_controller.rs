@@ -1,5 +1,9 @@
 //! Graphics controller.
-
+const STROKE_COLOR:u16 = 0xffff00;
+const USE_STROKE:bool = true;
+const PLAYER_SIZE:u16 = 10;
+const PUCK_SIZE:u16 = 6;
+const BACKGROUND_COLOR:u16 = 0xfff000;
 // GraphicsController struct
 pub struct GraphicsController {
     display: i32,
@@ -12,12 +16,11 @@ pub struct GraphicsController {
 }
 impl GraphicsController {
     // game constructor
-    pub fn new(width: u16, height: u16, background_color: u16) -> GraphicsController {
+    pub fn new(width: u16, height: u16) -> GraphicsController {
         GraphicsController {
             display: 2,
             width: width,
-            height: height,
-            background_color: background_color,
+            height: height
         }
     }
     // is touched method
