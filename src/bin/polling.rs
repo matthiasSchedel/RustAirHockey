@@ -132,8 +132,10 @@ fn main() -> ! {
     let mut previous_button_state = pins.button.get();
     let mut audio_writer = AudioWriter::new();
 
-    let player_count = 2;
-    let mut airhockey_game = airhockey::init::init(player_count);
+    //init airhockey game with 2 players
+    let airhockey_game = airhockey::init::init(2); 
+    airhockey_game.start(10, 5, true);
+
     // let graphics_controller =
 
     // airhockey_game.init();
