@@ -4,13 +4,13 @@ use super::field;
 
 // General player properties
 pub const PLAYER_RADIUS: u16 = 10;
-const PLAYER_COLOR: u8 = 150;
+pub const PLAYER_COLOR: u8 = 150;
 
 // Player
 pub struct Player {
-    player_id: u8,
-    xpos_centre: u16,
-    ypos_centre: u16,
+    pub player_id: u8,
+    pub xpos_centre: u16,
+    pub ypos_centre: u16,
 }
 
 impl Player {

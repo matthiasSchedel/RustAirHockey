@@ -31,7 +31,7 @@ pub fn init(playerCount: u8) -> Game {
 }
 
 fn createController() -> Controller {
-    let graphics_controller = GraphicsController::new(field::WIDTH_MAX,field::HEIGHT_MAX, field::BACKGROUND_COLOR);
+    let graphics_controller = GraphicsController::new(field::WIDTH_MAX,field::HEIGHT_MAX);
     let touch_controller = TouchController::new(field::WIDTH_MAX,field::HEIGHT_MAX);
     let controller = Controller::new(graphics_controller, touch_controller);
     return controller;

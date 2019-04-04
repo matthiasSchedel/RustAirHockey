@@ -7,8 +7,8 @@ use crate::{
 };
 
 pub struct Controller {
-    graphics_controller: GraphicsController,
-    touch_controller: TouchController
+    pub graphics_controller: GraphicsController,
+    pub touch_controller: TouchController
 
 }
 impl Controller {
