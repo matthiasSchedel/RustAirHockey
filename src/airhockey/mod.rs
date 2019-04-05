@@ -1,5 +1,4 @@
 pub mod ball;
-pub mod controller;
 pub mod field;
 pub mod game;
 pub mod graphics_handler;
