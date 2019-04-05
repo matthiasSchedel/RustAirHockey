@@ -12,9 +12,7 @@ pub struct Player {
     xpos_centre: u16,
     ypos_centre: u16,
     radius:u16,
-    //* The last valid touch position
-    touch_pos_x: u16,
-    touch_pos_y: u16,
+    //!Defining the half of the field where the player can move
     x_min: u16,
     x_max: u16,
     
@@ -57,21 +55,16 @@ impl Player {
         self.xpos_centre = x;
         self.ypos_centre = y;
     }
-    //*Update the last valid touch_position
-    pub fn update_player_on_touch(& mut self, x: u16, y: u16){
-        self.touch_pos_x = x;
-        self.touch_pos_y = y;
-        self.move_player();
-    }
-    //*Move the player according to the touch position
-    //TODO implement delayed movement
-    fn move_player(& mut self){
-        self.xpos_centre = self.touch_pos_x;
-        self.ypos_centre = self.touch_pos_y;
+    
+    ///Move the player according to the touch position
+    pub fn move_player(& mut self, touch_pos_x:u16, touch_pos_y:u16){
+        //TODO implement delayed movement?
+        self.xpos_centre = touch_pos_x;
+        self.ypos_centre = touch_pos_y;
     }
 
     //*Whether a x-position is in the right half of the field of a player
-    pub fn correct_half(&self, x: u16, y: u16)->bool{
+    pub fn correct_half(&self, x: u16)->bool{
         x < self.x_max && x > self.x_min
     }
     pub fn get_id(&self) -> u8{
