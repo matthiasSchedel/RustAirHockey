@@ -1,9 +1,10 @@
+pub mod ball;
+pub mod controller;
 pub mod field;
 pub mod game;
+pub mod graphics_handler;
 pub mod init;
+pub mod input_handler;
+pub mod physics_handler;
 pub mod player;
-pub mod controller;
 pub mod score;
-pub mod input;
-pub mod physics;
-pub mod graphics;
