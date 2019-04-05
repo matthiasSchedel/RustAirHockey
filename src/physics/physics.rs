@@ -1,7 +1,4 @@
 //! Graphics controller.
-#![no_std]
-extern crate m;
-
 use crate::alloc;
 use m::Float;
 use alloc::vec::Vec;
@@ -9,8 +6,8 @@ use alloc::vec::Vec;
 const FRICTION: u32 = 0xff_ff_00;
 const USE_FRICTION: bool = true;
 
-// PhysicsController struct
-pub struct PhysicsController {
+// Physics struct
+pub struct Physics {
     display: i32,
     // display width
     width: u16,
@@ -36,10 +33,10 @@ impl CollisionObject {
     }
 }
 
-impl PhysicsController {
+impl Physics {
     // game constructor
-    pub fn new(width: u16, height: u16, radius: u16) -> PhysicsController {
-        PhysicsController {
+    pub fn new(width: u16, height: u16, radius: u16) -> Physics {
+        Physics {
             display: 2,
             width: width,
             height: height,
@@ -56,11 +53,11 @@ impl PhysicsController {
     pub fn update_ball_position(&mut self, old_x: u16, old_y: u16, radius: u16, coll: CollisionObject) {
         let border_collisions: CollisionObject =
             self.calculate_border_collision_point(old_x, old_y, radius);
-        
-        // this one needs a fix, as it might need other parameters. 
-        let player_collision : CollisionObject = 
+
+        // this one needs a fix, as it might need other parameters.
+        let player_collision : CollisionObject =
             self.calculate_ball_collision_point(old_x, old_y, radius);
-        
+
         if border_collisions.has_collided {
             self.update_pos_from_coll_point(border_collisions);
         } else if player_collision.has_collided {
@@ -80,12 +77,12 @@ impl PhysicsController {
         }
         // TODO: ball-collision
         // migrate from examples/display.rs - we might need speed information somewhere
-        
+
 
         // collision is handled - update position
         self.ball_pos[0] += self.ball_speed[0] as u16;
         self.ball_pos[1] += self.ball_speed[1] as u16;
-        
+
     }
 
     fn update_ball_pos_without_coll(&mut self) {
@@ -114,7 +111,7 @@ impl PhysicsController {
         }  else {
             coll_x = old_x;
         }
-        
+
         //y-Richtung: Fallen wir oben oder unten raus?
         if i32::from(old_y) + self.ball_speed[1] as i32+ i32::from(radius) <= 0 {
             collision = true;

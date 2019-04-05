@@ -3,17 +3,17 @@ extern crate alloc;
 
 use alloc::vec::Vec;
 
-pub struct TouchController {
+pub struct Input {
     touch: i32,
     // display width
     width: u16,
     //display height
     height: u16,
 }
-impl TouchController {
+impl Input {
     // game constructor
-    pub fn new(width: u16, height: u16) -> TouchController {
-        TouchController {
+    pub fn new(width: u16, height: u16) -> Input {
+        Input {
             touch: 2,
             width: width,
             height: height,

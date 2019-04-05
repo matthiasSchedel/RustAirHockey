@@ -16,23 +16,66 @@
 // extern crate smoltcp;
 use crate::{
     graphics_controller::graphics_controller::GraphicsController,
-    touch_controller::touch_controller::TouchController,
+    input::input::Input,
+    physics::physics::Physics,
+
 };
-use super::{controller::Controller, game, game::Game, field};
+
+use super::{ game, game::Game, field, graphics_handler,graphics_handler::GraphicsHandler,physics_handler::PhysicsHandler,physics_handler,input_handler, input_handler::InputHandler};
+
+
+struct GeneralHardware {
+
+}
+
+impl GeneralHardware {
+    fn new() -> GeneralHardware{
+        GeneralHardware {}
+    }
+}
+
+struct Handler {
+    physics_handler:PhysicsHandler,
+
+}
+
+impl Handler {
+    fn new(physics_handler:PhysicsHandler,
+        graphics_handler:GraphicsHandler,
+        input_handler:InputHandler) -> Handler {
+        physics_handler:physics_handler,
+        graphics_handler:graphics_handler,
+        input_handler:input_handler
+    }
+}
+
+
+
+
+
 // use crate::{
 //     controller::controller::Controller
 //     };
 
 // Function init
 pub fn init(playerCount: u8) -> Game {
-    let controller = createController();
-    let game = Game::new(playerCount, controller);
+
+    let handler = createHandler();
+    let game = Game::new(playerCount, handler);
     return game;
 }
 
-fn createController() -> Controller {
-    let graphics_controller = GraphicsController::new(field::WIDTH_MAX,field::HEIGHT_MAX);
-    let touch_controller = TouchController::new(field::WIDTH_MAX,field::HEIGHT_MAX);
-    let controller = Controller::new(graphics_controller, touch_controller);
-    return controller;
+fn createHandler() -> Handler {
+    //init graphics
+    //init physics 
+    //init input
+    // let graphics_handler = GraphicsHandler::new(field::WIDTH_MAX,field::HEIGHT_MAX);
+    // let input_handler = Input::new(field::WIDTH_MAX,field::HEIGHT_MAX);
+    // let physics_handler = Physics::new(physics_controller, input);
+    // return (controller);
+}
+
+//init the general hardware
+pub fn init_general_hardware() {
+
 }
