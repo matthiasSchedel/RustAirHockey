@@ -1,22 +1,26 @@
 //! Touch controller.
 extern crate alloc;
 
+// use crate::i2c::I2C;
+use crate::{i2c::I2C, stm32f7::stm32f7x6::I2C3};
 use alloc::vec::Vec;
 
-pub struct Input {
+pub struct Input<'a> {
     touch: i32,
     // display width
     width: u16,
     //display height
     height: u16,
+    i2c_3: &'a mut I2C<I2C3>,
 }
-impl Input {
+impl<'a> Input<'a> {
     // game constructor
-    pub fn new(width: u16, height: u16) -> Input {
+    pub fn new(width: u16, height: u16, i2c_3: &'a mut I2C<I2C3>) -> Input<'a> {
         Input {
             touch: 2,
             width: width,
             height: height,
+            i2c_3: i2c_3,
         }
     }
     // is touched method

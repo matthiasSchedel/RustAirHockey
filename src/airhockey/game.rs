@@ -1,6 +1,6 @@
 //! Airhockey game.
 
-use super::{controller::Controller, player::Player, score::Score};
+use super::{player::Player, score::Score};
 use alloc::vec::Vec;
 
 const POINTS_PER_GOAL: u8 = 1;
@@ -8,12 +8,11 @@ const COLOR_ARRAY: [u32; 4] = [0xfff000, 0xfff000, 0xfff000, 0xfff000];
 
 pub struct Game {
     players: Vec<Player>,
-    controller: Controller,
     score: Score,
 }
 impl Game {
     // game constructor
-    pub fn new(number_players: u8, controller: Controller) -> Game {
+    pub fn new(number_players: u8) -> Game {
         let mut players: Vec<Player> = Vec::new();
         for p in 0..number_players {
             players.push(Player::new(p))
@@ -21,7 +20,6 @@ impl Game {
         let score = Score::new(players.len() as u8, 10);
         Game {
             players: players,
-            controller: controller,
             score: score,
         }
     }

@@ -15,43 +15,42 @@
 // use stm32f7_discovery;
 // extern crate smoltcp;
 use crate::{
-    graphics_controller::graphics_controller::GraphicsController,
-    input::input::Input,
+    graphics_controller::graphics_controller::GraphicsController, input::input::Input,
     physics::physics::Physics,
-
 };
 
-use super::{ game, game::Game, field, graphics_handler,graphics_handler::GraphicsHandler,physics_handler::PhysicsHandler,physics_handler,input_handler, input_handler::InputHandler};
+use super::{
+    field, game, game::Game, graphics_handler, graphics_handler::GraphicsHandler, input_handler,
+    input_handler::InputHandler, physics_handler, physics_handler::PhysicsHandler,
+};
 
-
-struct GeneralHardware {
-
-}
+struct GeneralHardware {}
 
 impl GeneralHardware {
-    fn new() -> GeneralHardware{
+    fn new() -> GeneralHardware {
         GeneralHardware {}
     }
 }
 
 struct Handler {
-    physics_handler:PhysicsHandler,
-
+    physics_handler: PhysicsHandler,
+    graphics_handler: GraphicsHandler<'static>,
+    input_handler: InputHandler<'static>,
 }
 
 impl Handler {
-    fn new(physics_handler:PhysicsHandler,
-        graphics_handler:GraphicsHandler,
-        input_handler:InputHandler) -> Handler {
-        physics_handler:physics_handler,
-        graphics_handler:graphics_handler,
-        input_handler:input_handler
+    fn new(
+        physics_handler: PhysicsHandler,
+        graphics_handler: GraphicsHandler<'static>,
+        input_handler: InputHandler<'static>,
+    ) -> Handler {
+        Handler {
+            physics_handler: physics_handler,
+            graphics_handler: graphics_handler,
+            input_handler: input_handler,
+        }
     }
 }
-
-
-
-
 
 // use crate::{
 //     controller::controller::Controller
@@ -59,15 +58,16 @@ impl Handler {
 
 // Function init
 pub fn init(playerCount: u8) -> Game {
-
-    let handler = createHandler();
-    let game = Game::new(playerCount, handler);
+    // let handler = createHandler();
+    let game = Game::new(playerCount);
     return game;
 }
 
-fn createHandler() -> Handler {
+fn createHandler() {
+    // let handler = Handler::new(physics_handler,graphics_handler,input_handler);
+    // return handler;
     //init graphics
-    //init physics 
+    //init physics
     //init input
     // let graphics_handler = GraphicsHandler::new(field::WIDTH_MAX,field::HEIGHT_MAX);
     // let input_handler = Input::new(field::WIDTH_MAX,field::HEIGHT_MAX);
@@ -76,6 +76,4 @@ fn createHandler() -> Handler {
 }
 
 //init the general hardware
-pub fn init_general_hardware() {
-
-}
+pub fn init_general_hardware() {}
