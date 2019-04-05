@@ -56,8 +56,11 @@ impl PhysicsController {
     pub fn update_ball_position(&mut self, old_x: u16, old_y: u16, radius: u16, coll: CollisionObject) {
         let border_collisions: CollisionObject =
             self.calculate_border_collision_point(old_x, old_y, radius);
+        
+        // this one needs a fix, as it might need other parameters. 
         let player_collision : CollisionObject = 
             self.calculate_ball_collision_point(old_x, old_y, radius);
+        
         if border_collisions.has_collided {
             self.update_pos_from_coll_point(border_collisions);
         } else if player_collision.has_collided {
@@ -76,6 +79,8 @@ impl PhysicsController {
             self.ball_speed[1] *= -1.0;
         }
         // TODO: ball-collision
+        // migrate from examples/display.rs - we might need speed information somewhere
+        
 
         // collision is handled - update position
         self.ball_pos[0] += self.ball_speed[0] as u16;
@@ -136,7 +141,7 @@ impl PhysicsController {
         radius: u16,
     ) -> CollisionObject {
         let player_pos = vec![old_x, old_y];
-        let collision = self.calculate_point_distance(player_pos, self.ball_pos) <= radius + self.ball_radius;
+        let collision = self.calculate_point_distance(player_pos, self.ball_pos) <= (radius + self.ball_radius).into();
 
         CollisionObject::new(collision, old_x, old_y)
     }
