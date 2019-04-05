@@ -34,18 +34,16 @@ use smoltcp::{
 };
 use stm32f7::stm32f7x6::{CorePeripherals, Interrupt, Peripherals};
 use stm32f7_discovery::{
-    ethernet,
+    airhockey, ethernet,
     gpio::{GpioPort, InputPin, OutputPin},
-    init,
+    graphics_controller, init,
     lcd::AudioWriter,
     lcd::{self, Color},
     random::Rng,
     sd,
     system_clock::{self, Hz},
-    touch,
+    touch, touch_controller,
 };
-
-mod super::airhockey;
 
 #[global_allocator]
 static ALLOCATOR: CortexMHeap = CortexMHeap::empty();
@@ -129,10 +127,24 @@ fn main() -> ! {
 
     let mut rng = Rng::init(&mut rng, &mut rcc).expect("RNG init failed");
 
-
     let mut previous_button_state = pins.button.get();
     let mut audio_writer = AudioWriter::new();
+
+    let player_count = 2;
+    let mut airhockey_game = airhockey::game::Game::new(player_count);
+    // let graphics_controller =
+
+    airhockey_game.init();
+
     loop {
+        // handle input
+        //      if touchcontroller().rightPlayerTouched == true
+        // handle collision
+        //          game.move(rightPlayer)
+        // draw
+        //      graphicController.draw()
+        //
+
         // poll button state
         let current_button_state = pins.button.get();
         if current_button_state != previous_button_state {
@@ -146,34 +158,10 @@ fn main() -> ! {
             previous_button_state = current_button_state;
         }
 
-        let width_max = 523;
-        let heigth_max = 293;
-
-        // poll for new touch data
-        for touch in &touch::touches(&mut i2c_3).unwrap() {
-            for i in (0..10) {
-                for j in (0..10) {
-                    if (touch.x + i - 5) < width_max && (touch.y - 5 + j) < heigth_max {
-                        let tx: usize = (touch.x as usize) + (i as usize) - 5;
-                        let ty: usize = (touch.y as usize) + (j as usize) - 5;
-                        layer_1.print_point_color_at(
-                            tx as usize,
-                            ty as usize,
-                            Color::from_hex(0xffff00),
-                        );
-                    }
-                }
-            }
-            layer_1.print_point_color_at(
-                touch.x as usize,
-                touch.y as usize,
-                Color::from_hex(0xffff00),
-            );
-            // println!("{}", touch.x);
-            // println!("{}", touch.y);
+        if airhockey_game.aggregate_touch_position(1, &touch::touches(&mut i2c_3).unwrap()) != (0,0) {
+            
         }
-
-
+     
         // Initialize the SD Card on insert and deinitialize on extract.
         if sd.card_present() && !sd.card_initialized() {
             if let Some(i_err) = sd::init(&mut sd).err() {

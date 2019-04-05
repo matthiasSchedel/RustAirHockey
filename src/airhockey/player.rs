@@ -15,6 +15,12 @@ pub struct Player {
     //!Defining the half of the field where the player can move
     x_min: u16,
     x_max: u16,
+    //!The player is following the user's input (given by target_position)
+    target_position_x: u16,
+    target_position_y: u16,
+    //!The speed the player is moving towards the target position
+    speed_x: u16,
+    speed_y: u16,
     
 }
 impl Player {
@@ -70,4 +76,5 @@ impl Player {
     pub fn get_id(&self) -> u8{
         self.player_id
     }
+    
 }

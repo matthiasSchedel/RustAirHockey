@@ -24,7 +24,7 @@ impl TouchController {
     pub fn init(&self) {
         
     }
-
+    //TODO this should be done in the player class
     ///Update the last valid touch_position
     pub fn update_players_touch(& mut self){
         let touch_pos = (0,0);
