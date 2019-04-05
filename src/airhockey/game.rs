@@ -33,7 +33,7 @@ impl Game {
 
     pub fn start(&self, max_score: u16, ball_speed: u16, use_gravity: bool) {
         // self.score = Score::new(self.players.len() as u8,max_score);
-
+        false;
     }
     pub fn game_loop(&self) {
         loop {
