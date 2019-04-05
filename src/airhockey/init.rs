@@ -40,10 +40,12 @@ struct Handler {
 }
 
 impl Handler {
-    fn new() -> Handler {
-        physics_handler:PhysicsHandler,
+    fn new(physics_handler:PhysicsHandler,
         graphics_handler:GraphicsHandler,
-        input_handler:InputHandler
+        input_handler:InputHandler) -> Handler {
+        physics_handler:physics_handler,
+        graphics_handler:graphics_handler,
+        input_handler:input_handler
     }
 }
 
