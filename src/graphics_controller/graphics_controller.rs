@@ -4,6 +4,8 @@ const USE_STROKE: bool = true;
 const PLAYER_SIZE: u16 = 10;
 const PUCK_SIZE: u16 = 6;
 const BACKGROUND_COLOR: u32 = 0xfff000;
+
+use crate::lcd::FramebufferAl88;
 // GraphicsController struct
 pub struct GraphicsController {
     display: i32,
@@ -29,17 +31,25 @@ impl GraphicsController {
     //draw a circle around pos x,y with radius - and
     pub fn draw_circle(
         &self,
-        color: u16,
-        pos_x: u16,
-        // pos_y: u16,
-        // radius: f32,
-        // draw_stroke: bool,
-        // stroke_color: u16,
+        color: u32,
+        pos: [u16;2],
+        radius: u16,
+        draw_stroke: bool,
+        stroke_color: u32,
     ) {
+        for y in pos[1] - radius..=pos[1] + radius {
+            for x in pos[0] - radius..=pos[0] + radius {
+                if x * x + pos[0] * pos[0] - 2 * x * pos[0] + y * y
+                    + pos[1] * pos[1] - 2 * y * pos[1]
+                    <= radius * radius
+                {
+                //layer.print_point_color_at(x as usize , y as usize , color);
+            }
+        }
 
     }
 
-    pub fn clear_circle(&self, color: u16, pos_x: u16, pos_y: u16, radius: f32) {}
+    pub fn clear_circle(&self, color: u16, pos[0]: u16, pos[1]: u16, radius: f32) {}
 
     pub fn clear_field(&self, color: u16) {}
 
