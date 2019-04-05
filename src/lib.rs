@@ -29,6 +29,7 @@ extern crate cortex_m;
 extern crate font8x8;
 extern crate spin;
 extern crate stm32f7;
+
 #[macro_use]
 extern crate bitflags;
 extern crate bare_metal;
@@ -57,3 +58,4 @@ pub mod touch;
 pub mod airhockey;
 pub mod touch_controller;
 pub mod graphics_controller;
+pub mod physics_controller;

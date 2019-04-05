@@ -21,7 +21,9 @@ use stm32f7_discovery::{
     gpio::{GpioPort, OutputPin},
     init,
     system_clock::{self},
-    lcd::{self, Color},
+    lcd::{self, Color,FramebufferArgb8888},
+    touch,
+
     
 };
 
@@ -72,12 +74,12 @@ fn main() -> ! {
     // ab hier fancy Dinge, die nicht schön implmentiert sind...
     let mut velocity_x: i32 = 3;
     let mut velocity_y: i32 = 1;
-    
+
     let radius = 10;
     let mut center_x = 170;
     let mut center_y = 100;
     let color = Color::from_hex(0xff0_000);
-    
+
     let border_width = 5;
 
     let mut velocity_x2: i32 = 1;
@@ -119,7 +121,7 @@ fn main() -> ! {
 
     // hier sind die Größen, die vom Display übrig bleiben, wenn wir den Rand abziehen
     let limit_x:i32 = 475;
-    let limit_y:i32 = 267; 
+    let limit_y:i32 = 267;
 
     fn in_circle(x: usize, y: usize, center_x: usize, center_y: usize, radius: usize) -> bool {
         (x-center_x)*(x-center_x) + (y-center_y)*(y-center_y) <= radius*radius
@@ -130,13 +132,13 @@ fn main() -> ! {
         // Wurzeln vermeiden, dementsprechend ist alles hier quadriert.
         let distance = (center1_x-center2_x)*(center1_x-center2_x) + (center1_y-center2_y)*(center1_y-center2_y);
         let min_distance = (radius1 + radius2) * (radius1 + radius2);
-        distance < min_distance      
+        distance < min_distance
     }
 
     // und das ist der Main Loop
     loop {
         //und jetzt können wir alles machen, was wir auf Layern machen können.
-        
+
         // in jeder Iteration wird das ganze Feld neu gezeichnet
         for x in 0..480 {
             for y in 0..272 {
@@ -184,7 +186,7 @@ fn main() -> ! {
         if circle_collision(center_x, center_y, radius, center_x2, center_y2, radius2) {
             // Bingo. Hier magische Physik einfügen. Massenerhaltung, Energieerhaltung, Impulserhaltung
             // das jetzt eher ein Monster, aber ich mag es.
-            
+
             // wir brauchen: die Normalenvektoren
             let mut norm_x: i16 = center_x as i16- center_x2 as i16;
             let mut norm_y: i16 = center_y as i16- center_y2 as i16;

@@ -33,16 +33,18 @@ use smoltcp::{
     wire::{EthernetAddress, IpCidr, IpEndpoint, Ipv4Address},
 };
 use stm32f7::stm32f7x6::{CorePeripherals, Interrupt, Peripherals};
+use stm32f7_discovery::airhockey::controller::Controller;
 use stm32f7_discovery::{
-    airhockey, ethernet,
+    airhockey::{self, game::Game},
+    ethernet,
     gpio::{GpioPort, InputPin, OutputPin},
-    graphics_controller, init,
+    init,
     lcd::AudioWriter,
     lcd::{self, Color},
     random::Rng,
     sd,
     system_clock::{self, Hz},
-    touch, touch_controller,
+    touch,
 };
 
 #[global_allocator]
@@ -130,11 +132,13 @@ fn main() -> ! {
     let mut previous_button_state = pins.button.get();
     let mut audio_writer = AudioWriter::new();
 
-    let player_count = 2;
-    let mut airhockey_game = airhockey::game::Game::new(player_count);
+    //init airhockey game with 2 players
+    let airhockey_game = airhockey::init::init(2); 
+    airhockey_game.start(10, 5, true);
+
     // let graphics_controller =
 
-    airhockey_game.init();
+    // airhockey_game.init();
 
     loop {
         // handle input
