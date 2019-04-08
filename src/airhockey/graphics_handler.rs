@@ -1,5 +1,6 @@
 use super::{ball, ball::Ball};
 use super::field;
+use super::{player, player::Player};
 use crate::graphics::graphics::Graphics;
 
 const DRAW_LAYER_NO: u8 = 1;
@@ -27,6 +28,17 @@ impl<'a> GraphicsHandler<'a> {
       ball::STROKE_COLOR,
     );
   }
+
+pub fn draw_player(self,player_:Player){
+  self.graphics.draw_circle(
+    player::COLOR.
+    player_.position,
+    player::RADIUS,
+    player::HAS_STROKE,
+    player::STROKE_COLOR,
+  );
+}
+
 
   pub fn draw_playing_field(&self) {
     self.graphics.draw_field(
