@@ -1,8 +1,8 @@
 //! Graphics controller.
-extern crate m;
+extern crate libm;
 use crate::alloc;
 use alloc::vec::Vec;
-use m::Float;
+use libm::F32Ext;
 
 const FRICTION: f32 = 0.95;
 const USE_FRICTION: bool = true;
@@ -121,7 +121,6 @@ impl Physics {
             self.ball_speed[0] *= FRICTION;
             self.ball_speed[1] *= FRICTION;
         }
-        
     }
 
     /// checks if and where a ball collides with the border and returns a corresponding collision object
