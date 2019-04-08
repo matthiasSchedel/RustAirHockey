@@ -72,20 +72,22 @@ impl<'a> Player<'a> {
             }
         }
     }
-    ///Checks for user input and updates the player accordingly
+    /* ///Checks for user input and updates the player accordingly
     ///To be called in the game's main loop
     pub fn update_player(& mut self){
         self.update_on_user_input();
         self.move_player();
         self.draw();
-    }
+    } */
 
-    fn draw(&self){
+    ///To be called in the game's main loop
+    pub fn draw(&self){
         self.graphics_handler.draw_player(self.color, [self.current_pos_x, self.current_pos_y], self.radius, false, self.color);
     }
     
     ///Move the player according to the target position
-    fn move_player(& mut self){
+    /// To be called in the game's main loop
+    pub fn move_player(& mut self){
         //TODO implement delayed movement?
         if helper::unsigned_subtraction(self.current_pos_x, self.target_pos_y) < self.speed_x 
         && helper::unsigned_subtraction(self.current_pos_y, self.target_pos_y) < self.speed_y{
@@ -99,8 +101,13 @@ impl<'a> Player<'a> {
             self.current_pos_y += self.speed_y;
         }
     }
+    ///To be called in the game's main loop
+    pub fn update_on_user_input(&self){
+        //Only fetch touches once
 
-    fn update_on_user_input(&self){
+        if self.player_id == 0{
+            self.input_handler.fetch_input();
+        }
         (self.target_pos_x, self.target_pos_y) = self.input_handler.get_target_position(
             self.current_pos_x, self.current_pos_y, self.radius, self.x_min, self.x_max);
         self.speed_x = helper::unsigned_subtraction(self.target_pos_x, self.current_pos_x)/20;
