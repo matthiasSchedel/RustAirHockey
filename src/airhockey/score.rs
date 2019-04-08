@@ -7,12 +7,12 @@ pub const POINTS_PER_GOAL: u8 = 1;
 pub struct Score<'a> {
     player_scores: Vec<u16>,
     max_score: u16,
-    handler:&'a Handler
+    handler:&'a Handler<'a>
 }
 
 impl<'a> Score<'a> {
     // game constructor
-    pub fn new(number_players: u8, max_score: u16, &'a handler: Handler) -> Score<'a> {
+    pub fn new(number_players: u8, max_score: u16, handler:&'a Handler<'a>) -> Score<'a> {
         let mut player_scores: Vec<u16> = Vec::new();
         for p in 0..number_players {
             player_scores.push(0);
@@ -20,7 +20,7 @@ impl<'a> Score<'a> {
         Score {
             player_scores: player_scores,
             max_score: max_score,
-            handler: Handler
+            handler: &'a Handler<'a>
         }
 
     }

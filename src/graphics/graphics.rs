@@ -17,23 +17,29 @@ const PLAYER_SIZE: u16 = 10;
 const PUCK_SIZE: u16 = 6;
 const BACKGROUND_COLOR: u32 = 0xfff000;
 
-// GraphicsController struct
-pub struct GraphicsController<'a> {
+// Graphics struct
+pub struct Graphics {
     // display layer
-    display_layer: &'a mut [lcd::Layer<FramebufferArgb8888>; 2],
+    display_layer: (
+            lcd::Layer<lcd::FramebufferArgb8888>,
+            lcd::Layer<lcd::FramebufferAl88>,
+        ),
     // display width
     width: u16,
     //display height
     height: u16,
 }
-impl<'a> GraphicsController<'a> {
+impl Graphics {
     // game constructor
     pub fn new(
         width: u16,
         height: u16,
-        display_layer: &'a mut [lcd::Layer<FramebufferArgb8888>; 2],
-    ) -> GraphicsController {
-        GraphicsController {
+        display_layer:   (
+            lcd::Layer<lcd::FramebufferArgb8888>,
+            lcd::Layer<lcd::FramebufferAl88>
+        ),
+    ) -> Graphics {
+        Graphics {
             display_layer: display_layer,
             width: width,
             height: height,
