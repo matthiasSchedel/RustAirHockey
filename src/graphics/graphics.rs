@@ -1,15 +1,7 @@
 //! Graphics controller.
 use crate::{
-    gpio::{GpioPort, OutputPin},
-    init,
-    lcd::{self, Color, FramebufferArgb8888},
-    system_clock, touch,
+    lcd::{self, Color, FramebufferArgb8888}
 };
-use alloc_cortex_m::CortexMHeap;
-use core::alloc::Layout as AllocLayout;
-use core::panic::PanicInfo;
-use rt::{entry, exception};
-use stm32f7::stm32f7x6::Peripherals;
 
 const STROKE_COLOR: u32 = 0xffff00;
 const USE_STROKE: bool = true;
@@ -19,17 +11,17 @@ const BACKGROUND_COLOR: u32 = 0xfff000;
 
 // Graphics struct
 /// method
-pub struct Graphics<'a> {
+pub struct Graphics {
     /// display layer
-    display_layer: &'a mut [lcd::Layer<FramebufferArgb8888>; 2],
+    display_layer:   (lcd::Layer<lcd::FramebufferArgb8888>, lcd::Layer<lcd::FramebufferAl88>),
     /// display width 0 == width, 1 == height
     screen_size: [u16; 2],
 }
-impl<'a> Graphics<'a> {
+impl Graphics {
     /// game constructor
     pub fn new(
         screen_size: [u16; 2],
-        display_layer: &'a mut [lcd::Layer<FramebufferArgb8888>; 2],
+        display_layer:  (lcd::Layer<lcd::FramebufferArgb8888>, lcd::Layer<lcd::FramebufferAl88>)
     ) -> Graphics {
         Graphics {
             display_layer: display_layer,
@@ -97,10 +89,10 @@ impl<'a> Graphics<'a> {
 }
 
 /// init graphics
-pub fn init<'a>(
-    display_layer: &'a mut [lcd::Layer<FramebufferArgb8888>; 2],
+pub fn init(
+    display_layer: (lcd::Layer<lcd::FramebufferArgb8888>, lcd::Layer<lcd::FramebufferAl88>),
     screen_size: [u16; 2],
-) -> Graphics<'a> {
+) -> Graphics {
     return { Graphics::new(screen_size, display_layer) };
 }
 

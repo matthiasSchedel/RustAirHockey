@@ -3,13 +3,13 @@ use crate::graphics::graphics::Graphics;
 
 const DRAW_LAYER_NO: u8 = 1;
 
-pub struct GraphicsHandler<'a> {
-  graphics: &'a Graphics<'static>,
+pub struct GraphicsHandler {
+  graphics: Graphics,
   screen_size: [u16; 2],
 }
 
-impl<'a> GraphicsHandler<'a> {
-  pub fn new(graphics: &'a Graphics<'static>) -> GraphicsHandler<'a> {
+impl GraphicsHandler {
+  pub fn new(graphics: Graphics) -> GraphicsHandler {
     GraphicsHandler {
       graphics: graphics,
       screen_size: [480, 272],
