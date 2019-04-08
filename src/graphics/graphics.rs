@@ -17,21 +17,21 @@ const PLAYER_SIZE: u16 = 10;
 const PUCK_SIZE: u16 = 6;
 const BACKGROUND_COLOR: u32 = 0xfff000;
 
-// GraphicsController struct
+// Graphics struct
 /// method
-pub struct GraphicsController<'a> {
+pub struct Graphics<'a> {
     /// display layer
     display_layer: &'a mut [lcd::Layer<FramebufferArgb8888>; 2],
     /// display width 0 == width, 1 == height
     screen_size: [u16; 2],
 }
-impl<'a> GraphicsController<'a> {
+impl<'a> Graphics<'a> {
     /// game constructor
     pub fn new(
         screen_size: [u16; 2],
         display_layer: &'a mut [lcd::Layer<FramebufferArgb8888>; 2],
-    ) -> GraphicsController {
-        GraphicsController {
+    ) -> Graphics {
+        Graphics {
             display_layer: display_layer,
             screen_size: screen_size,
         }
@@ -100,8 +100,8 @@ impl<'a> GraphicsController<'a> {
 pub fn init<'a>(
     display_layer: &'a mut [lcd::Layer<FramebufferArgb8888>; 2],
     screen_size: [u16; 2],
-) -> GraphicsController<'a> {
-    return { GraphicsController::new(screen_size, display_layer) };
+) -> Graphics<'a> {
+    return { Graphics::new(screen_size, display_layer) };
 }
 
 // /// function for drawing the basic field
