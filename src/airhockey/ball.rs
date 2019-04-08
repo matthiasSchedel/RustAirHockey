@@ -2,7 +2,7 @@ pub const RADIUS:u16 = 10;
 pub const COLOR: u32 = 0xfff000; 
 pub const START_POSITION: [u16;2] = [RADIUS,RADIUS];
 pub const START_SPEED: [f32;2] = [0.0,0.0];
-pub const STROKE_COLOR: u32 = 0xfff000; 
+pub const STROKE_COLOR: u32 = 0xfff010; 
 pub const HAS_STROKE: bool = false; 
 
 

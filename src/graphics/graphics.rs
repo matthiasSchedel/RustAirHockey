@@ -42,9 +42,9 @@ impl<'a> Graphics<'a> {
     }
 
     /// check if point is outside
-    fn isPointOutside(&self, point: [u16; 2]) -> bool {
-        return (self.screen_size[0] > point[0] && point[0] > 0)
-            && (self.screen_size[1] > point[1] && point[1] > 0);
+    fn isPointOutside(&self, point: [u16; 2] ,pointsize:u16) -> bool {
+        return (self.screen_size[0] > point[0]+pointsize || point[0]-pointsize < 0)
+            && (self.screen_size[1] > point[1]+pointsize || point[1] > 0);
     }
 
     ///draw a circle around pos x,y with radius - and
@@ -153,16 +153,3 @@ pub fn init<'a>(
 //      let rdm_x=rand.gen_range(x_bound_low,x_bound_high);
 //      rdm_x as u16
 // }
-    // // lower rectangle
-    // draw_rectangle( 0 , 0 , field_size[0], border_width  , color);
-
-    // // upper rectangle
-    // draw_rectangle( 0  , field_size[1]-border_width  , field_size[0]  , field_size[1]  , color);
-
-    // // left side
-    // draw_rectangle( 0  , 0  , border_width  , (field_size[1]-goal_size)/2  , color);
-    // draw_rectangle( 0  , (field_size[1]+goal_size)/2  , border_width  ,  field_size[1]  , color);
-
-    // // draw right side
-    // draw_rectangle( field_size[0]-border_width  , 0  , field_size[0]  , (field_size[1]-goal_size)/2  , color);
-    // draw_rectangle( field_size[0]-border_width  , (field_size[1]+goal_size)/2   , field_size[0]  ,  field_size[1]  , color);
