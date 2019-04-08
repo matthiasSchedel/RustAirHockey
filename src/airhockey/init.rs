@@ -23,7 +23,7 @@ use super::{
     field, game, game::Game, graphics_handler, graphics_handler::GraphicsHandler, input_handler,
     input_handler::InputHandler, physics_handler, physics_handler::PhysicsHandler,
 };
-
+/// handler
 struct GeneralHardware {}
 
 impl GeneralHardware {
@@ -31,7 +31,7 @@ impl GeneralHardware {
         GeneralHardware {}
     }
 }
-
+/// handler
 struct Handler {
     physics_handler: PhysicsHandler,
     graphics_handler: GraphicsHandler<'static>,
@@ -39,6 +39,7 @@ struct Handler {
 }
 
 impl Handler {
+    /// handler
     fn new(
         physics_handler: PhysicsHandler,
         graphics_handler: GraphicsHandler<'static>,
@@ -56,13 +57,18 @@ impl Handler {
 //     controller::controller::Controller
 //     };
 
-// Function init
+/// Function init
 pub fn init(playerCount: u8) -> Game {
+    init_general_hardware();
     // let handler = createHandler();
     let game = Game::new(playerCount);
     return game;
 }
 
+/// create the handlers
+/// params = hardware dependencies
+///
+/// return Handler object
 fn createHandler() {
     // let handler = Handler::new(physics_handler,graphics_handler,input_handler);
     // return handler;
@@ -75,5 +81,5 @@ fn createHandler() {
     // return (controller);
 }
 
-//init the general hardware
+/// init the general hardware
 pub fn init_general_hardware() {}
