@@ -1,4 +1,5 @@
 use super::{ball, ball::Ball};
+use super::field;
 use crate::graphics::graphics::Graphics;
 
 const DRAW_LAYER_NO: u8 = 1;
@@ -27,5 +28,11 @@ impl<'a> GraphicsHandler<'a> {
     );
   }
 
-  pub fn draw_playing_field(&self) {}
+  pub fn draw_playing_field(&self) {
+    self.graphics.draw_field(
+      field::BACKGROUND_COLOR,
+      self.screen_size,
+      field::BORDER_WIDTH,
+    );
+  }
 }
