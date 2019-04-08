@@ -62,7 +62,7 @@ impl Physics {
     /// (3) update position
     pub fn update_ball_position(&mut self, old_x: u16, old_y: u16, radius: u16, speed_x: f32, speed_y: f32, coll: CollisionObject) {
         let border_collisions: CollisionObject =
-            self.calculate_border_collision_point(old_x, old_y, radius);
+            self.calculate_border_collision_point(old_x, old_y, radius, speed_x, speed_y);
 
         // this one needs a fix, as it might need other parameters.
         let player_collision : CollisionObject =
