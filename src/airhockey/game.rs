@@ -33,16 +33,17 @@ impl Game {
         // self.score = Score::new(self.players.len() as u8,max_score);
         false;
     }
-    pub fn game_loop(&self) {
+    pub fn game_loop(&self) -> bool {
             // self.handle_inputs();
             // self.handle_physics();
             let scored: u8 = self.evaluate_score();
             if scored != 0 {
                 self.score.add_score(self.evaluate_score());
                 if self.score.is_game_over().0 {
-                    break;
+                    return false;
                 }
             }
+            return true;
             // self.handle_graphcis();
     }
 
