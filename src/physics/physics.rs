@@ -56,7 +56,8 @@ impl Physics {
 
     /// beams the ball to a given position. Instant speed.
     pub fn set_ball_pos(&mut self, pos_x: u16, pos_y: u16) {
-        self.ball_pos = vec![pos_x, pos_y];
+        self.ball_pos[0] = pos_x;
+        self.ball_pos[1] = pos_y;
     }
 
     /// updates the position (and speed) of the ball.
