@@ -34,7 +34,6 @@ impl Game {
         false;
     }
     pub fn game_loop(&self) {
-        loop {
             // self.handle_inputs();
             // self.handle_physics();
             let scored: u8 = self.evaluate_score();
@@ -45,7 +44,6 @@ impl Game {
                 }
             }
             // self.handle_graphcis();
-        }
     }
 
     fn check_win_condition(&self) -> bool {
