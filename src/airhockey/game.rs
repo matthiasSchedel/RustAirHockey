@@ -1,6 +1,6 @@
 //! Airhockey game.
 
-use super::{player::Player, score::Score};
+use super::{player::Player, score::Score, ball::Ball};
 use alloc::vec::Vec;
 
 const POINTS_PER_GOAL: u8 = 1;
@@ -9,20 +9,32 @@ const COLOR_ARRAY: [u32; 4] = [0xfff000, 0xfff000, 0xfff000, 0xfff000];
 pub struct Game {
     players: Vec<Player>,
     score: Score,
+    ball: Ball
 }
-impl Game {
-    // game constructor
-    pub fn new(number_players: u8) -> Game {
-        let mut players: Vec<Player> = Vec::new();
+fn createGameElements(number_players: u8) -> (Ball, Vec<Player>, Score) {
+    let ball = Ball::new();
+    let mut players: Vec<Player> = Vec::new();
         for p in 0..number_players {
             players.push(Player::new(p))
         }
-        let score = Score::new(players.len() as u8, 10);
+    let score = Score::new(players.len() as u8, 10);
+    
+    return {(ball, players, score)};
+    }
+
+impl Game {
+    // game constructor
+    pub fn new(number_players: u8) -> Game {
+        let game_elements =  createGameElements(number_players);
+
         Game {
-            players: players,
-            score: score,
+            players: game_elements.1,
+            score: game_elements.2,
+            ball: game_elements.0
         }
     }
+    
+
     // is touched method
     pub fn is_touched(&self, p_id: usize) -> bool {
         self.players[p_id].get_position();
@@ -33,19 +45,18 @@ impl Game {
         // self.score = Score::new(self.players.len() as u8,max_score);
         false;
     }
-    pub fn game_loop(&self) {
-        loop {
+    pub fn game_loop(&self) -> bool {
             // self.handle_inputs();
             // self.handle_physics();
             let scored: u8 = self.evaluate_score();
             if scored != 0 {
                 self.score.add_score(self.evaluate_score());
                 if self.score.is_game_over().0 {
-                    break;
+                    return false;
                 }
             }
+            return true;
             // self.handle_graphcis();
-        }
     }
 
     fn check_win_condition(&self) -> bool {

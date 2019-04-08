@@ -48,12 +48,11 @@ fn main() -> ! {
     let airhockey_game = airhockey::init::init(2);
     airhockey_game.start(10, 5, true);
     loop {
-        airhockey_game.game_loop();
-
-
+        while airhockey_game.game_loop() {
+            
+        }
     }
 }
-
 
 fn poll_socket(socket: &mut Socket) -> Result<(), smoltcp::Error> {
     match socket {
