@@ -44,13 +44,13 @@ impl CollisionObject {
 
 impl Physics {
     /// game constructor
-    pub fn new(width: u16, height: u16, radius: u16) -> Physics {
+    pub fn new(width: u16, height: u16, ball_radius: u16) -> Physics {
         Physics {
             width,
             height,
             ball_pos: vec![0, 0],
             ball_speed: vec![0., 0.],
-            ball_radius: radius,
+            ball_radius,
         }
     }
 
@@ -218,8 +218,9 @@ impl Physics {
         let share_norm_x_player = norm_x * velocity_norm_player;
         let share_norm_y_player = norm_y * velocity_norm_player;
 
-        let share_tan_x_player = tan_x as i16 * velocity_tan_player;
-        let share_tan_y_player = tan_y * velocity_norm_player;
+        // _, weil wir sie aktuell nicht verwenden
+        let _share_tan_x_player = tan_x as i16 * velocity_tan_player;
+        let _share_tan_y_player = tan_y * velocity_norm_player;
 
         // jetzt wird geschummelt. Nur der Ball bekommt den Bounce, that's not how to physics
         let pulse_x = share_norm_x + share_norm_x_player;
