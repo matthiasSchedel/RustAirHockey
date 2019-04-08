@@ -5,16 +5,21 @@ pub const START_SPEED: [f32; 2] = [0.0, 0.0];
 pub const STROKE_COLOR: u32 = 0xfff000;
 pub const HAS_STROKE: bool = false;
 
-pub struct Ball {
-    pub position: [u16; 2],
-    pub speed: [f32; 2],
+use super::init::Handler;
+
+pub struct Ball<'a> {
+    position: [u16; 2],
+    speed: [f32; 2],
+    handler: &'a Handler
+
 }
-impl Ball {
+impl<'a> Ball<'a> {
     // Ball constructor
-    pub fn new() -> Ball {
+    pub fn new(handler:&'a Handler) -> Ball<'a> {
         Ball {
             position: START_POSITION,
             speed: START_SPEED,
+            handler:Handler
         }
     }
 }

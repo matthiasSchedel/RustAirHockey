@@ -18,7 +18,7 @@ use stm32f7::stm32f7x6::{CorePeripherals, Peripherals};
 use crate::{graphics::graphics::Graphics, input::input::Input, physics::physics::Physics};
 
 use super::{
-    ball, field, game, game::Game, graphics_handler, graphics_handler::GraphicsHandler,
+    ball, ball::Ball, player, player::Player, score, score::Score, field, game, game::Game, graphics_handler, graphics_handler::GraphicsHandler,
     input_handler, input_handler::InputHandler, physics_handler, physics_handler::PhysicsHandler,
 };
 
@@ -55,11 +55,11 @@ impl Handler {
 
 /// Function init
 pub fn init(playerCount: u8) -> Game {
-    // let handler = createHandler();
-    //
+    let handler = createHandler();
     let game = Game::new(playerCount);
     return game;
 }
+
 
 pub fn createHandler() -> Handler {
     let hardware: (
