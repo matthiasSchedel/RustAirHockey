@@ -6,11 +6,12 @@ use alloc::vec::Vec;
 const POINTS_PER_GOAL: u8 = 1;
 const COLOR_ARRAY: [u32; 4] = [0xfff000, 0xfff000, 0xfff000, 0xfff000];
 
-pub struct Game {
-    players: Vec<Player>,
+pub struct Game<'a> {
+    players: Vec<Player<'a>>,
     score: Score,
     ball: Ball
 }
+
 fn createGameElements(number_players: u8) -> (Ball, Vec<Player>, Score) {
     let ball = Ball::new();
     let mut players: Vec<Player> = Vec::new();
@@ -22,7 +23,7 @@ fn createGameElements(number_players: u8) -> (Ball, Vec<Player>, Score) {
     return {(ball, players, score)};
     }
 
-impl Game {
+impl<'a> Game<'a> {
     // game constructor
     pub fn new(number_players: u8) -> Game {
         let game_elements =  createGameElements(number_players);

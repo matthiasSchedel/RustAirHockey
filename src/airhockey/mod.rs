@@ -7,3 +7,4 @@ pub mod input_handler;
 pub mod physics_handler;
 pub mod player;
 pub mod score;
+pub mod helper;
