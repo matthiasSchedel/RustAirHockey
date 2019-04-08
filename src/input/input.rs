@@ -15,7 +15,7 @@ pub struct Input {
 }
 impl Input {
     /// Input
-    pub fn new(width: u16, height: u16, i2c_3:  I2C<I2C3>) -> Input {
+    pub fn new(width: u16, height: u16, i2c_3: I2C<I2C3>) -> Input {
         Input {
             width: width,
             height: height,
@@ -28,10 +28,9 @@ impl Input {
     }
 
     /// Input
-    pub fn get_touch_positions(&self) -> (alloc::vec::Vec<u16>, alloc::vec::Vec<u16>) {
-        let positions_x: Vec<u16> = Vec::new();
-        let positions_y: Vec<u16> = Vec::new();
-        (positions_x, positions_y)
+    pub fn get_touch_positions(&self) -> alloc::vec::Vec<(u16,u16)> {
+        let positions: Vec<(u16,u16)> = Vec::new();
+        return {positions};
     }
 }
 
