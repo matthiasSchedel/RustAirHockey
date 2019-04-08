@@ -19,6 +19,7 @@ pub struct Physics {
     ball_radius: u16,
 }
 
+/// contains all relevat information an a collision
 pub struct CollisionObject {
     has_collided: bool,
     collision_pos: Vec<u16>,
@@ -29,7 +30,7 @@ impl CollisionObject {
     /// game constructor
     pub fn new(has_collided: bool, pos_x: u16, pos_y: u16, speed_x: f32, speed_y: f32) -> CollisionObject {
         CollisionObject {
-            has_collided: has_collided,
+            has_collided,
             collision_pos: vec![pos_x, pos_y],
             collision_speed: vec![speed_x, speed_y],
 
