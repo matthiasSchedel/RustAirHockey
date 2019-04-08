@@ -31,8 +31,9 @@ impl<'a> GraphicsHandler<'a> {
   pub fn draw_playing_field(&self) {
     self.graphics.draw_field(
       field::BACKGROUND_COLOR,
-      self.screen_size,
+      [field::WIDTH_MAX,field::HEIGHT_MAX],
       field::BORDER_WIDTH,
+      field::GOAL_SIZE,
     );
   }
 }

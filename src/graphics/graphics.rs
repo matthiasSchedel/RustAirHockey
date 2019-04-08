@@ -78,6 +78,7 @@ impl<'a> Graphics<'a> {
 
     /// method
     pub fn draw_rectangle(
+        &self,
         x_start: u16,
         y_start: u16,
         x_end: u16,
@@ -92,31 +93,28 @@ impl<'a> Graphics<'a> {
     }
     ///method for drawing the field
     pub fn draw_field(
-    layer: &mut lcd::Layer<FramebufferArgb8888>,
+    &self,
     color: u32,
     field_size:[u16;2],
     border_width:u16,
+    goal_size:u16,
+
 
     
     ){
-    // import global size of field
-    let border_width=10;
-    // define goalsize
-    let goal_size=50;
-
     // lower rectangle
-    Graphics::draw_rectangle( 0 , 0 , field_size[0], border_width  , color);
+    self.draw_rectangle( 0 , 0 , field_size[0], border_width  , color);
 
     // upper rectangle
-    Graphics::draw_rectangle( 0  , field_size[1]-border_width  , field_size[0]  , field_size[1]  , color);
+    self.draw_rectangle( 0  , field_size[1]-border_width  , field_size[0]  , field_size[1]  , color);
 
     // left side
-    Graphics::draw_rectangle( 0  , 0  , border_width  , (field_size[1]-goal_size)/2  , color);
-    Graphics::draw_rectangle( 0  , (field_size[1]+goal_size)/2  , border_width  ,  field_size[1]  , color);
+    self.draw_rectangle( 0  , 0  , border_width  , (field_size[1]-goal_size)/2  , color);
+    self.draw_rectangle( 0  , (field_size[1]+goal_size)/2  , border_width  ,  field_size[1]  , color);
 
     // draw right side
-    Graphics::draw_rectangle( field_size[0]-border_width  , 0  , field_size[0]  , (field_size[1]-goal_size)/2  , color);
-    Graphics::draw_rectangle( field_size[0]-border_width  , (field_size[1]+goal_size)/2   , field_size[0]  ,  field_size[1]  , color);
+    self.draw_rectangle( field_size[0]-border_width  , 0  , field_size[0]  , (field_size[1]-goal_size)/2  , color);
+    self.draw_rectangle( field_size[0]-border_width  , (field_size[1]+goal_size)/2   , field_size[0]  ,  field_size[1]  , color);
 
     }
 }
@@ -155,3 +153,16 @@ pub fn init<'a>(
 //      let rdm_x=rand.gen_range(x_bound_low,x_bound_high);
 //      rdm_x as u16
 // }
+    // // lower rectangle
+    // draw_rectangle( 0 , 0 , field_size[0], border_width  , color);
+
+    // // upper rectangle
+    // draw_rectangle( 0  , field_size[1]-border_width  , field_size[0]  , field_size[1]  , color);
+
+    // // left side
+    // draw_rectangle( 0  , 0  , border_width  , (field_size[1]-goal_size)/2  , color);
+    // draw_rectangle( 0  , (field_size[1]+goal_size)/2  , border_width  ,  field_size[1]  , color);
+
+    // // draw right side
+    // draw_rectangle( field_size[0]-border_width  , 0  , field_size[0]  , (field_size[1]-goal_size)/2  , color);
+    // draw_rectangle( field_size[0]-border_width  , (field_size[1]+goal_size)/2   , field_size[0]  ,  field_size[1]  , color);
