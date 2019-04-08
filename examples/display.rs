@@ -82,8 +82,8 @@ fn main() -> ! {
 
     let border_width = 5;
 
-    let mut velocity_x2: i32 = 1;
-    let mut velocity_y2: i32 = 1;
+    let mut velocity_x2: i32 = 10;
+    let mut velocity_y2: i32 = 10;
     let mut center_x2 = 100;
     let mut center_y2 = 170;
     let radius2 = 10;
