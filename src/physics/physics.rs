@@ -4,12 +4,11 @@ use crate::alloc;
 use alloc::vec::Vec;
 use m::Float;
 
-const FRICTION: u32 = 0xff_ff_00;
+const FRICTION: f32 = 0.95;
 const USE_FRICTION: bool = true;
 
 /// Physics struct
 pub struct Physics {
-    display: i32,
     // display width
     width: u16,
     //display height
@@ -47,7 +46,6 @@ impl Physics {
     /// game constructor
     pub fn new(width: u16, height: u16, radius: u16) -> Physics {
         Physics {
-            display: 2,
             width,
             height,
             ball_pos: vec![0, 0],
@@ -72,10 +70,9 @@ impl Physics {
         radius: u16,
         speed_x: f32,
         speed_y: f32,
-        coll: CollisionObject,
     ) {
         let border_collisions: CollisionObject =
-            self.calculate_border_collision_point(old_x, old_y, radius, speed_x, speed_y);
+            self.calculate_border_collision_point(old_x, old_y, radius);
 
         // this one needs a fix, as it might need other parameters.
         let player_collision: CollisionObject =
@@ -114,8 +111,16 @@ impl Physics {
     }
 
     fn update_ball_pos_without_coll(&mut self) {
+        //set new position
         self.ball_pos[0] += self.ball_speed[0] as u16;
         self.ball_pos[1] += self.ball_speed[1] as u16;
+
+        //apply friction
+        if USE_FRICTION {
+            self.ball_speed[0] *= FRICTION;
+            self.ball_speed[1] *= FRICTION;
+        }
+        
     }
 
     /// checks if and where a ball collides with the border and returns a corresponding collision object
