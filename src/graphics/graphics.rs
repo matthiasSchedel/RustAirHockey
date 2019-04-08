@@ -17,34 +17,37 @@ const PLAYER_SIZE: u16 = 10;
 const PUCK_SIZE: u16 = 6;
 const BACKGROUND_COLOR: u32 = 0xfff000;
 
-// GraphicsController struct
-pub struct GraphicsController<'a> {
-    // display layer
+// Graphics struct
+/// method
+pub struct Graphics<'a> {
+    /// display layer
     display_layer: &'a mut [lcd::Layer<FramebufferArgb8888>; 2],
-    // display width
-    width: u16,
-    //display height
-    height: u16,
+    /// display width 0 == width, 1 == height
+    screen_size: [u16; 2],
 }
-impl<'a> GraphicsController<'a> {
-    // game constructor
+impl<'a> Graphics<'a> {
+    /// game constructor
     pub fn new(
-        width: u16,
-        height: u16,
+        screen_size: [u16; 2],
         display_layer: &'a mut [lcd::Layer<FramebufferArgb8888>; 2],
-    ) -> GraphicsController {
-        GraphicsController {
+    ) -> Graphics {
+        Graphics {
             display_layer: display_layer,
-            width: width,
-            height: height,
+            screen_size: screen_size,
         }
     }
-    // is touched method
+    /// is touched method
     pub fn is_touched(&self, p_id: usize) -> bool {
         return false;
     }
 
-    //draw a circle around pos x,y with radius - and
+    /// check if point is outside
+    fn isPointOutside(&self, point: [u16; 2]) -> bool {
+        return (self.screen_size[0] > point[0] && point[0] > 0)
+            && (self.screen_size[1] > point[1] && point[1] > 0);
+    }
+
+    ///draw a circle around pos x,y with radius - and
     pub fn draw_circle(
         &self,
         color: u32,
@@ -64,16 +67,19 @@ impl<'a> GraphicsController<'a> {
             }
         }
     }
+    /// method
     pub fn clear_circle(&self, color: u16, pos: [u16; 2], radius: f32) {}
 
+    /// method
     pub fn clear_field(&self, color: u16) {}
 
+    /// method
     pub fn draw_field(&self, field_color: u16, border_color: u16, goal_size: u16) {}
 
+    /// method
     pub fn draw_score(&self, player1_score: u8, player2_score: u8) {}
 
-    pub fn init(&self) {}
-
+    /// method
     pub fn draw_rectangle(
         layer: &mut lcd::Layer<FramebufferArgb8888>,
         x_start: u16,
@@ -88,6 +94,14 @@ impl<'a> GraphicsController<'a> {
             }
         }
     }
+}
+
+/// init graphics
+pub fn init<'a>(
+    display_layer: &'a mut [lcd::Layer<FramebufferArgb8888>; 2],
+    screen_size: [u16; 2],
+) -> Graphics<'a> {
+    return { Graphics::new(screen_size, display_layer) };
 }
 
 // /// function for drawing the basic field
