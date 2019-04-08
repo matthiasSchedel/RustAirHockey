@@ -9,10 +9,6 @@ use super::field;
 use super::input_handler::{self, InputHandler};
 use super::graphics_handler::GraphicsHandler;
 
-// General player properties
-//pub const PLAYER_RADIUS: u16 = 15;
-//pub const PLAYER_COLOR: u8 = 150;
-
 // Player
 pub struct Player<'a> {
     player_id: u8,
@@ -57,6 +53,7 @@ impl<'a> Player<'a> {
 
             }
         } else {
+            //TODO zusammenfassen!
             Player {
                 player_id : player_id,
                 current_pos_x : 3* field::WIDTH_MAX/4,
@@ -104,7 +101,7 @@ impl<'a> Player<'a> {
     }
 
     fn update_on_user_input(&self){
-        (self.target_pos_x, self.target_pos_y) = input_handler::get_target_position(
+        (self.target_pos_x, self.target_pos_y) = self.input_handler.get_target_position(
             self.current_pos_x, self.current_pos_y, self.radius, self.x_min, self.x_max);
         self.speed_x = helper::unsigned_subtraction(self.target_pos_x, self.current_pos_x)/20;
         self.speed_y = helper::unsigned_subtraction(self.target_pos_y, self.current_pos_y)/20;
