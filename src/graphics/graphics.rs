@@ -62,7 +62,7 @@ impl<'a> Graphics<'a> {
                     - 2 * y * pos[1]
                     <= radius * radius
                 {
-                    //layer.print_point_color_at(x as usize , y as usize , color);
+                    self.display_layer[0].print_point_color_at(x as usize , y as usize ,Color::from_hex(color));
                 }
             }
         }
@@ -74,25 +74,50 @@ impl<'a> Graphics<'a> {
     pub fn clear_field(&self, color: u16) {}
 
     /// method
-    pub fn draw_field(&self, field_color: u16, border_color: u16, goal_size: u16) {}
-
-    /// method
     pub fn draw_score(&self, player1_score: u8, player2_score: u8) {}
 
     /// method
     pub fn draw_rectangle(
-        layer: &mut lcd::Layer<FramebufferArgb8888>,
         x_start: u16,
         y_start: u16,
         x_end: u16,
         y_end: u16,
-        color: lcd::Color,
+        color: u32,
     ) {
         for x in x_start..x_end {
             for y in y_start..y_end {
-                layer.print_point_color_at(x as usize, y as usize, color);
+                self.display_layer[0].print_point_color_at(x as usize, y as usize, Color::from_hex(color));
             }
         }
+    }
+    ///method for drawing the field
+    pub fn draw_field(
+    layer: &mut lcd::Layer<FramebufferArgb8888>,
+    color: u32,
+    field_size:[u16;2],
+    border_width:u16,
+
+    
+    ){
+    // import global size of field
+    let border_width=10;
+    // define goalsize
+    let goal_size=50;
+
+    // lower rectangle
+    Graphics::draw_rectangle( 0 , 0 , field_size[0], border_width  , color);
+
+    // upper rectangle
+    Graphics::draw_rectangle( 0  , field_size[1]-border_width  , field_size[0]  , field_size[1]  , color);
+
+    // left side
+    Graphics::draw_rectangle( 0  , 0  , border_width  , (field_size[1]-goal_size)/2  , color);
+    Graphics::draw_rectangle( 0  , (field_size[1]+goal_size)/2  , border_width  ,  field_size[1]  , color);
+
+    // draw right side
+    Graphics::draw_rectangle( field_size[0]-border_width  , 0  , field_size[0]  , (field_size[1]-goal_size)/2  , color);
+    Graphics::draw_rectangle( field_size[0]-border_width  , (field_size[1]+goal_size)/2   , field_size[0]  ,  field_size[1]  , color);
+
     }
 }
 
@@ -104,34 +129,8 @@ pub fn init<'a>(
     return { Graphics::new(screen_size, display_layer) };
 }
 
-// /// function for drawing the basic field
-// pub fn draw_field(
-//     layer: &mut lcd::Layer<FramebufferArgb8888>,
-//     color: lcd::Color,
-// ){
-//     // import global size of filed
-//     let HEIGHT=airhockey::field::HEIGHT_MAX;
-//     let WIDTH=airhockey::field::WIDTH_MAX;;
-//     // define width of field
-//     let width=10;
-//     // define goalsize
-//     let goal_size=50;
 
-//     // lower rectangle
-//     draw_rectangle(layer, 0 , 0 , WIDTH  , width  , color);
 
-//     // upper rectangle
-//     draw_rectangle(layer, 0  , HEIGHT-width  , WIDTH  , HEIGHT  , color);
-
-//     // left side
-//     draw_rectangle(layer, 0  , 0  , width  , (HEIGHT-goal_size)/2  , color);
-//     draw_rectangle(layer, 0  , (HEIGHT+goal_size)/2  , width  ,  HEIGHT  , color);
-
-//     // draw right side
-//     draw_rectangle(layer, WIDTH-width  , 0  , WIDTH  , (HEIGHT-goal_size)/2  , color);
-//     draw_rectangle(layer, WIDTH-width  , (HEIGHT+goal_size)/2   , WIDTH  ,  HEIGHT  , color);
-
-// }
 
 // /// function for random initializing the ball
 // pub fn initialize_ball_poisition(
