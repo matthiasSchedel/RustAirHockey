@@ -5,17 +5,17 @@ extern crate alloc;
 use crate::{i2c::I2C, stm32f7::stm32f7x6::I2C3};
 use alloc::vec::Vec;
 
-pub struct Input<'a> {
+pub struct Input {
     touch: i32,
     // display width
     width: u16,
     //display height
     height: u16,
-    i2c_3: &'a mut I2C<I2C3>,
+    i2c_3: I2C<I2C3>,
 }
-impl<'a> Input<'a> {
+impl Input {
     // game constructor
-    pub fn new(width: u16, height: u16, i2c_3: &'a mut I2C<I2C3>) -> Input<'a> {
+    pub fn new(width: u16, height: u16, i2c_3: I2C<I2C3>) -> Input {
         Input {
             touch: 2,
             width: width,
