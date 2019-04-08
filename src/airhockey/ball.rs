@@ -11,7 +11,7 @@ use super::init::Handler;
 pub struct Ball<'a> {
     position: [u16; 2],
     speed: [f32; 2],
-    handler: &'a Handler<'a>
+    handler: &'a Handler
 
 }
 impl<'a> Ball<'a> {

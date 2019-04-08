@@ -55,23 +55,36 @@ impl Handler {
 //     };
 
 // Function init
-pub fn init<'a> (playerCount: u8) -> Game {
-    let handler = createHandler();
+pub fn init<'a> (playerCount: u8) -> Game<'a> {
     let game = Game::new(playerCount);
     return game;
 }
+
+// struct Hardware {
+//     lcd_layer: (
+//             lcd::Layer<lcd::FramebufferArgb8888>,
+//             lcd::Layer<lcd::FramebufferAl88>)
+//     i2c:a,
+// }
+
+// impl Hardware {
+//     fn new() {
+
+//     }
+// }
 
 pub fn createHandler() -> Handler {
     let hardware: (
         (
             lcd::Layer<lcd::FramebufferArgb8888>,
-            lcd::Layer<lcd::FramebufferAl88>,
+            lcd::Layer<lcd::FramebufferAl88>
         ),
         I2C<I2C3>
     );
+    let layers = ((hardware.0).0, (hardware.0).1);
     let graphics = Graphics::new(
-        [field::WIDTH_MAX, field::HEIGHT_MAX],
-        ((hardware.0).0, (hardware.0).1),
+        field::WIDTH_MAX, field::HEIGHT_MAX,
+        layers
     );
     let input = Input::new(field::WIDTH_MAX, field::HEIGHT_MAX, hardware.1);
     let physics = Physics::new(field::WIDTH_MAX, field::HEIGHT_MAX);

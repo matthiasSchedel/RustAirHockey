@@ -24,7 +24,7 @@ pub struct Player<'a> {
     target_pos: (u16,u16),
     ///The speed the player is moving towards the target position
     speed: (u16,u16),
-    handler: &'a Handler<'a>
+    handler: &'a Handler
 }
 
 impl<'a> Player<'a> {
