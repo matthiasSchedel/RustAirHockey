@@ -15,7 +15,7 @@ pub struct Input {
 }
 impl Input {
     /// Input
-    pub fn new(width: u16, height: u16, i2c_3:  I2C<I2C3>) -> Input {
+    pub fn new(width: u16, height: u16, i2c_3: I2C<I2C3>) -> Input {
         Input {
             width: width,
             height: height,

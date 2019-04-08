@@ -1,7 +1,5 @@
 //! Graphics controller.
-use crate::{
-    lcd::{self, Color, FramebufferArgb8888}
-};
+use crate::lcd::{self, Color, FramebufferArgb8888};
 
 const STROKE_COLOR: u32 = 0xffff00;
 const USE_STROKE: bool = true;
@@ -13,7 +11,10 @@ const BACKGROUND_COLOR: u32 = 0xfff000;
 /// method
 pub struct Graphics {
     /// display layer
-    display_layer:   (lcd::Layer<lcd::FramebufferArgb8888>, lcd::Layer<lcd::FramebufferAl88>),
+    display_layer: (
+        lcd::Layer<lcd::FramebufferArgb8888>,
+        lcd::Layer<lcd::FramebufferAl88>,
+    ),
     /// display width 0 == width, 1 == height
     screen_size: [u16; 2],
 }
@@ -21,7 +22,10 @@ impl Graphics {
     /// game constructor
     pub fn new(
         screen_size: [u16; 2],
-        display_layer:  (lcd::Layer<lcd::FramebufferArgb8888>, lcd::Layer<lcd::FramebufferAl88>)
+        display_layer: (
+            lcd::Layer<lcd::FramebufferArgb8888>,
+            lcd::Layer<lcd::FramebufferAl88>,
+        ),
     ) -> Graphics {
         Graphics {
             display_layer: display_layer,
@@ -90,7 +94,10 @@ impl Graphics {
 
 /// init graphics
 pub fn init(
-    display_layer: (lcd::Layer<lcd::FramebufferArgb8888>, lcd::Layer<lcd::FramebufferAl88>),
+    display_layer: (
+        lcd::Layer<lcd::FramebufferArgb8888>,
+        lcd::Layer<lcd::FramebufferAl88>,
+    ),
     screen_size: [u16; 2],
 ) -> Graphics {
     return { Graphics::new(screen_size, display_layer) };

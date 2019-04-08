@@ -1,7 +1,7 @@
 //! Airhockey Player.
-pub const RADIUS:u16 = 10;
-pub const COLOR: u32 = 0xfff000; 
-pub const STROKE_COLOR: u32 = 0xfff000; 
+pub const RADIUS: u16 = 10;
+pub const COLOR: u32 = 0xfff000;
+pub const STROKE_COLOR: u32 = 0xfff000;
 pub const HAS_STROKE: bool = false;
 
 use super::field;
@@ -20,24 +20,23 @@ pub struct Player {
 impl Player {
     //Create new player
 
-    pub fn new(player_id: u8) -> Player{
+    pub fn new(player_id: u8) -> Player {
         //This has to be changed if more than two players exist
         if player_id == 0 {
             Player {
                 player_id: player_id,
-                xpos_centre : field::WIDTH_MAX/4,
-                ypos_centre : field::HEIGHT_MAX/2,   
+                xpos_centre: field::WIDTH_MAX / 4,
+                ypos_centre: field::HEIGHT_MAX / 2,
             }
-        }
-        else{
+        } else {
             Player {
-                player_id : player_id,
-                xpos_centre : 3* field::WIDTH_MAX/4,
-                ypos_centre : field::HEIGHT_MAX,
+                player_id: player_id,
+                xpos_centre: 3 * field::WIDTH_MAX / 4,
+                ypos_centre: field::HEIGHT_MAX,
             }
         }
     }
-    
+
     pub fn get_position(&self) -> (u16, u16) {
         return (self.xpos_centre, self.ypos_centre);
     }

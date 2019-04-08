@@ -1,8 +1,8 @@
 //! Graphics controller.
 extern crate m;
 use crate::alloc;
-use m::Float;
 use alloc::vec::Vec;
+use m::Float;
 
 const FRICTION: u32 = 0xff_ff_00;
 const USE_FRICTION: bool = true;
@@ -27,12 +27,17 @@ pub struct CollisionObject {
 
 impl CollisionObject {
     /// game constructor
-    pub fn new(has_collided: bool, pos_x: u16, pos_y: u16, speed_x: f32, speed_y: f32) -> CollisionObject {
+    pub fn new(
+        has_collided: bool,
+        pos_x: u16,
+        pos_y: u16,
+        speed_x: f32,
+        speed_y: f32,
+    ) -> CollisionObject {
         CollisionObject {
             has_collided: has_collided,
             collision_pos: vec![pos_x, pos_y],
             collision_speed: vec![speed_x, speed_y],
-
         }
     }
 }
@@ -59,12 +64,20 @@ impl Physics {
     /// (1) check for collision wit border or with another object
     /// (2) adjust speed depending on (1)
     /// (3) update position
-    pub fn update_ball_position(&mut self, old_x: u16, old_y: u16, radius: u16, speed_x: f32, speed_y: f32, coll: CollisionObject) {
+    pub fn update_ball_position(
+        &mut self,
+        old_x: u16,
+        old_y: u16,
+        radius: u16,
+        speed_x: f32,
+        speed_y: f32,
+        coll: CollisionObject,
+    ) {
         let border_collisions: CollisionObject =
             self.calculate_border_collision_point(old_x, old_y, radius);
 
         // this one needs a fix, as it might need other parameters.
-        let player_collision : CollisionObject =
+        let player_collision: CollisionObject =
             self.calculate_ball_collision_point(old_x, old_y, radius, speed_x, speed_y);
 
         if border_collisions.has_collided {
@@ -97,7 +110,6 @@ impl Physics {
         // collision is handled - update position
         self.ball_pos[0] += self.ball_speed[0] as u16;
         self.ball_pos[1] += self.ball_speed[1] as u16;
-
     }
 
     fn update_ball_pos_without_coll(&mut self) {
@@ -123,12 +135,12 @@ impl Physics {
         } else if old_x + self.ball_speed[0] as u16 + radius >= self.width {
             collision = true;
             coll_x = self.width;
-        }  else {
+        } else {
             coll_x = old_x;
         }
 
         //y-Richtung: Fallen wir oben oder unten raus?
-        if i32::from(old_y) + self.ball_speed[1] as i32+ i32::from(radius) <= 0 {
+        if i32::from(old_y) + self.ball_speed[1] as i32 + i32::from(radius) <= 0 {
             collision = true;
             coll_y = 0;
         } else if old_y + self.ball_speed[1] as u16 + radius >= self.height {
@@ -142,7 +154,11 @@ impl Physics {
     }
 
     fn calculate_point_distance(&self, position1: Vec<u16>) -> f32 {
-        f32::from((position1[0] - self.ball_pos[0])*(position1[0]-self.ball_pos[0]) + (position1[1]-self.ball_pos[1])*(position1[1]-self.ball_pos[1])).sqrt()
+        f32::from(
+            (position1[0] - self.ball_pos[0]) * (position1[0] - self.ball_pos[0])
+                + (position1[1] - self.ball_pos[1]) * (position1[1] - self.ball_pos[1]),
+        )
+        .sqrt()
     }
 
     /// checks if and where a ball collides with a player and returns a corresponding collision object
@@ -155,14 +171,15 @@ impl Physics {
         speed_y: f32,
     ) -> CollisionObject {
         let player_pos = vec![old_x, old_y];
-        let collision = self.calculate_point_distance(player_pos) <= (radius + self.ball_radius).into();
+        let collision =
+            self.calculate_point_distance(player_pos) <= (radius + self.ball_radius).into();
 
         //here be physics
         let mut norm_x: f32 = f32::from(self.ball_pos[0]) - f32::from(old_x);
         let mut norm_y: f32 = f32::from(self.ball_pos[1]) - f32::from(old_y);
 
-        let dist: f32 = norm_x*norm_x + norm_y*norm_y.sqrt();
-        
+        let dist: f32 = norm_x * norm_x + norm_y * norm_y.sqrt();
+
         norm_x /= dist;
         norm_y /= dist;
 
@@ -208,5 +225,4 @@ impl Physics {
     }
     ///input some circle object
     pub fn calculate_circle_coll_with_ball(&self) {}
-
 }

@@ -1,11 +1,11 @@
 use crate::alloc;
 use alloc::vec::Vec;
- 
-pub const POINTS_PER_GOAL:u8 = 1;
+
+pub const POINTS_PER_GOAL: u8 = 1;
 
 pub struct Score {
-    player_scores:Vec<u16>,
-    max_score:u16
+    player_scores: Vec<u16>,
+    max_score: u16,
 }
 
 impl Score {
@@ -19,23 +19,19 @@ impl Score {
             player_scores: player_scores,
             max_score: max_score,
         }
-
     }
-    pub fn add_score(&self, player:u8) {
+    pub fn add_score(&self, player: u8) {}
 
-    }
-    
     // return 0 if no player has won else player number
     pub fn is_game_over(&self) -> (bool, u8) {
-        let mut i:u16 = 1;
+        let mut i: u16 = 1;
         // for p in self.player_scores {
-        //     if (p >= self.max_score) 
+        //     if (p >= self.max_score)
         //     {
         //         return (true, p as u8);
-        //     } 
+        //     }
         //     i += 1;
         // }
-        return (false,0);
+        return (false, 0);
     }
-
 }

@@ -4,12 +4,12 @@ use crate::input::input::Input;
 const DRAW_LAYER_NO: u8 = 1;
 
 pub struct InputHandler {
-  input:  Input,
+  input: Input,
   screen_size: [u16; 2],
 }
 
 impl InputHandler {
-  pub fn new(input:  Input) -> InputHandler {
+  pub fn new(input: Input) -> InputHandler {
     InputHandler {
       input: input,
       screen_size: [480, 272],
