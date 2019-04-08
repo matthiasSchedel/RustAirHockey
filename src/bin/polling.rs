@@ -33,7 +33,6 @@ use smoltcp::{
     wire::{EthernetAddress, IpCidr, IpEndpoint, Ipv4Address},
 };
 use stm32f7::stm32f7x6::{CorePeripherals, Interrupt, Peripherals};
-use stm32f7_discovery::airhockey::controller::Controller;
 use stm32f7_discovery::{
     airhockey::{self, game::Game},
     ethernet,

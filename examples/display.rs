@@ -16,13 +16,12 @@ use m::Float;
 use core::alloc::Layout as AllocLayout;
 use core::panic::PanicInfo;
 use rt::{entry, exception};
-use stm32f7::stm32f7x6::{Peripherals};
+use stm32f7::stm32f7x6::Peripherals;
 use stm32f7_discovery::{
     gpio::{GpioPort, OutputPin},
     init,
-    system_clock::{self},
-    lcd::{self, Color,FramebufferArgb8888},
-    touch,
+    lcd::{self, Color, FramebufferArgb8888},
+    system_clock,touch,
 
     
 };
@@ -35,7 +34,6 @@ fn main() -> ! {
     let mut pwr = peripherals.PWR;
     let mut ltdc = peripherals.LTDC;
     let mut fmc = peripherals.FMC;
-
 
     init::init_system_clock_216mhz(&mut rcc, &mut pwr, &mut flash);
     init::enable_gpio_ports(&mut rcc);
@@ -54,15 +52,15 @@ fn main() -> ! {
     let mut pins = init::pins(
         gpio_a, gpio_b, gpio_c, gpio_d, gpio_e, gpio_f, gpio_g, gpio_h, gpio_i, gpio_j, gpio_k,
     );
-    
+
     //fuers Display brauchen wir den sdram und das lcd
     init::init_sdram(&mut rcc, &mut fmc);
     let mut lcd = lcd::init(&mut ltdc, &mut rcc);
-    
+
     // das display hat 2 Layer auf die wir zeichnen können
     let mut layer1 = lcd::Lcd::layer_1(&mut lcd).unwrap();
     let mut layer2 = lcd::Lcd::layer_2(&mut lcd).unwrap();
-    
+
     // dass wir was sehen, machen wir das Display und das Licht an
     pins.display_enable.set(true);
     pins.backlight.set(true);
@@ -282,4 +280,40 @@ fn panic(info: &PanicInfo) -> ! {
     asm::bkpt();
 
     loop {}
+}
+
+// Noting to see here
+
+pub fn draw_circle(
+    layer: &mut lcd::Layer<FramebufferArgb8888>,
+    x_centre: usize,
+    y_centre: usize,
+    radius: usize,
+    color: lcd::Color,
+) {
+    for y in y_centre - radius..=y_centre + radius {
+        for x in x_centre - radius..=x_centre + radius {
+            if x * x + x_centre * x_centre - 2 * x * x_centre + y * y + y_centre * y_centre
+                - 2 * y * y_centre
+                <= radius * radius
+            {
+                layer.print_point_color_at(x as usize, y as usize, color);
+            }
+        }
+    }
+}
+
+pub fn draw_rectangle(
+    layer: &mut lcd::Layer<FramebufferArgb8888>,
+    x_start: usize,
+    y_start: usize,
+    length: usize,
+    hight: usize,
+    color: lcd::Color,
+) {
+    for x in x_start..=length {
+        for y in y_start..=hight {
+            layer.print_point_color_at(x as usize, y as usize, color);
+        }
+    }
 }
