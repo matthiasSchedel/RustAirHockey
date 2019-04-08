@@ -12,6 +12,8 @@ use core::fmt::Write;
 use core::panic::PanicInfo;
 use cortex_m::{asm, interrupt, peripheral::NVIC};
 use rt::{entry, exception, ExceptionFrame};
+use crate::i2c::{I2C};
+use stm32f7::stm32f7x6::I2C3;
 use cortex_m_semihosting::hio::{self, HStdout};
 use stm32f7::stm32f7x6::{CorePeripherals, Interrupt, Peripherals};
 use smoltcp::{
@@ -36,13 +38,13 @@ use crate::{
 };
 
 use crate::{
-    graphics::graphics::GraphicsController, input::input::Input,
+    graphics::graphics::Graphics, input::input::Input,
     physics::physics::Physics,
 };
 
 use super::{
     field, game, game::Game, graphics_handler, graphics_handler::GraphicsHandler, input_handler,
-    input_handler::InputHandler, physics_handler, physics_handler::PhysicsHandler,
+    input_handler::InputHandler, physics_handler, physics_handler::PhysicsHandler
 };
 
 const HEAP_SIZE: usize = 50 * 1024; // in bytes
@@ -87,14 +89,17 @@ pub fn init(playerCount: u8) -> Game {
 }
 
 pub fn createHandler() {
+    let hardware:((lcd::Layer<lcd::FramebufferArgb8888>, lcd::Layer<lcd::FramebufferAl88>), I2C<I2C3>) = init_general_hardware();
+    let graphics = graphcs::
+   // let graphics_handler = GraphicsHandler::new(field::WIDTH_MAX,field::HEIGHT_MAX);
+    // let input_handler = Input::new(field::WIDTH_MAX,field::HEIGHT_MAX);
+    // let physics_handler = Physics::new(physics_controller, input);
     // let handler = Handler::new(physics_handler,graphics_handler,input_handler);
     // return handler;
     //init graphics
     //init physics
     //init input
-    // let graphics_handler = GraphicsHandler::new(field::WIDTH_MAX,field::HEIGHT_MAX);
-    // let input_handler = Input::new(field::WIDTH_MAX,field::HEIGHT_MAX);
-    // let physics_handler = Physics::new(physics_controller, input);
+
     // return (controller);
 }
 
@@ -104,7 +109,7 @@ pub fn createHandler() {
 
 
 /// init the general hardware
-pub fn init_general_hardware<b>() ->((lcd::Layer<lcd::FramebufferArgb8888>, lcd::Layer<lcd::FramebufferAl88>), I2C<I2C3>)  {
+pub fn init_general_hardware() ->((lcd::Layer<lcd::FramebufferArgb8888>, lcd::Layer<lcd::FramebufferAl88>), I2C<I2C3>)  {
 
 
     /// initialising LCD screen
