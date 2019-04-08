@@ -16,7 +16,7 @@ pub struct InputHandler {
 }
 
 impl InputHandler {
-  pub fn new(input:Input) -> InputHandler {
+  pub fn new(input: Input) -> InputHandler {
     InputHandler {
       input: input,
       screen_size: [480, 272],

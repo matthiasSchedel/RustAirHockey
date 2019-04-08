@@ -1,5 +1,10 @@
 //! Airhockey Player.
 use super::helper;
+pub const RADIUS: u16 = 10;
+pub const COLOR: u32 = 0xfff000;
+pub const STROKE_COLOR: u32 = 0xfff000;
+pub const HAS_STROKE: bool = false;
+
 use super::field;
 use super::input_handler::{self, InputHandler};
 use super::graphics_handler::GraphicsHandler;
@@ -51,8 +56,7 @@ impl<'a> Player<'a> {
                 graphics_handler: graphics_handler,
 
             }
-        }
-        else{
+        } else {
             Player {
                 player_id : player_id,
                 current_pos_x : 3* field::WIDTH_MAX/4,
