@@ -57,5 +57,5 @@ pub mod task_runtime;
 pub mod touch;
 pub mod airhockey;
 pub mod input;
-pub mod graphics_controller;
+pub mod graphics;
 pub mod physics;

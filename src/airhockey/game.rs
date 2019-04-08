@@ -73,7 +73,7 @@ impl Game {
     fn render(&self) {
 
         // for p in self.players {
-        // self.controller.graphics_controller.draw_circle(COLOR_ARRAY[(p.player_id as usize)], p.get_position().0)
+        // self.controller.graphics.draw_circle(COLOR_ARRAY[(p.player_id as usize)], p.get_position().0)
         // }
     }
 
