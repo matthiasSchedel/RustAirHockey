@@ -5,73 +5,45 @@
 
 // use crate::{alloc,alloc_cortex_m, cortex_m, cortex_m_rt as rt, cortex_m_semihosting as sh, stm32f7, smoltcp};
 
-use alloc::vec::Vec;
-use alloc_cortex_m::CortexMHeap;
-use core::alloc::Layout as AllocLayout;
-use core::fmt::Write;
-use core::panic::PanicInfo;
-use cortex_m::{asm, interrupt, peripheral::NVIC};
-use rt::{entry, exception, ExceptionFrame};
-use crate::i2c::{I2C};
-use stm32f7::stm32f7x6::I2C3;
-use cortex_m_semihosting::hio::{self, HStdout};
-use stm32f7::stm32f7x6::{CorePeripherals, Interrupt, Peripherals};
-use smoltcp::{
-    dhcp::Dhcpv4Client,
-    socket::{
-        Socket, SocketSet, TcpSocket, TcpSocketBuffer, UdpPacketMetadata, UdpSocket,
-        UdpSocketBuffer,
-    },
-    time::Instant,
-    wire::{EthernetAddress, IpCidr, IpEndpoint, Ipv4Address},
-};
+use crate::i2c::I2C;
 use crate::{
-    ethernet,
-    gpio::{GpioPort, InputPin, OutputPin},
-    init,
-    lcd::AudioWriter,
-    lcd::{self, Color},
-    random::Rng,
-    sd,
+    gpio::{GpioPort, OutputPin},
+    init, lcd,
     system_clock::{self, Hz},
-    touch,
 };
+use smoltcp::wire::EthernetAddress;
+use stm32f7::stm32f7x6::I2C3;
+use stm32f7::stm32f7x6::{CorePeripherals, Peripherals};
 
-use crate::{
-    graphics::graphics::Graphics, input::input::Input,
-    physics::physics::Physics,
-};
+use crate::{graphics::graphics::Graphics, input::input::Input, physics::physics::Physics};
 
 use super::{
-    field, game, game::Game, graphics_handler, graphics_handler::GraphicsHandler, input_handler,
-    input_handler::InputHandler, physics_handler, physics_handler::PhysicsHandler
+    ball, field, game, game::Game, graphics_handler, graphics_handler::GraphicsHandler,
+    input_handler, input_handler::InputHandler, physics_handler, physics_handler::PhysicsHandler,
 };
 
 const HEAP_SIZE: usize = 50 * 1024; // in bytes
 const ETH_ADDR: EthernetAddress = EthernetAddress([0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef]);
 
-struct GeneralHardware {
-
-}
+struct GeneralHardware {}
 
 impl GeneralHardware {
     fn new() -> GeneralHardware {
-        GeneralHardware {
-        }
+        GeneralHardware {}
     }
 }
 
-struct Handler {
+pub struct Handler {
     physics_handler: PhysicsHandler,
-    graphics_handler: GraphicsHandler<'static>,
-    input_handler: InputHandler<'static>,
+    graphics_handler: GraphicsHandler,
+    input_handler: InputHandler,
 }
 
 impl Handler {
-    fn new(
+    pub fn new(
         physics_handler: PhysicsHandler,
-        graphics_handler: GraphicsHandler<'static>,
-        input_handler: InputHandler<'static>,
+        graphics_handler: GraphicsHandler,
+        input_handler: InputHandler,
     ) -> Handler {
         Handler {
             physics_handler: physics_handler,
@@ -84,18 +56,32 @@ impl Handler {
 /// Function init
 pub fn init(playerCount: u8) -> Game {
     // let handler = createHandler();
-    // 
+    //
     let game = Game::new(playerCount);
     return game;
 }
 
-pub fn createHandler()  -> Handler {
-    let hardware:((lcd::Layer<lcd::FramebufferArgb8888>, lcd::Layer<lcd::FramebufferAl88>), I2C<I2C3>) = init_general_hardware();
-    let graphics = Graphics::new((hardware.0).0, (hardware.0).1);
-    let input = Input::new(field::WIDTH_MAX, field::HEIGHT_MAX,  hardware.1);
-    let physics = Physics::new(field::WIDTH_MAX, field::HEIGHT_MAX);
-    return Handler::new();
-   // let graphics_handler = GraphicsHandler::new(field::WIDTH_MAX,field::HEIGHT_MAX);
+pub fn createHandler() -> Handler {
+    let hardware: (
+        (
+            lcd::Layer<lcd::FramebufferArgb8888>,
+            lcd::Layer<lcd::FramebufferAl88>,
+        ),
+        I2C<I2C3>,
+    ) = init_general_hardware();
+    let graphics = Graphics::new(
+        [field::WIDTH_MAX, field::HEIGHT_MAX],
+        ((hardware.0).0, (hardware.0).1),
+    );
+    let input = Input::new(field::WIDTH_MAX, field::HEIGHT_MAX, hardware.1);
+    let physics = Physics::new(field::WIDTH_MAX, field::HEIGHT_MAX, ball::RADIUS);
+
+    return Handler::new(
+        PhysicsHandler::new(physics),
+        GraphicsHandler::new(graphics),
+        InputHandler::new(input),
+    );
+    // let graphics_handler = GraphicsHandler::new(field::WIDTH_MAX,field::HEIGHT_MAX);
     // let input_handler = Input::new(field::WIDTH_MAX,field::HEIGHT_MAX);
     // let physics_handler = Physics::new(physics_controller, input);
     // let handler = Handler::new(physics_handler,graphics_handler,input_handler);
@@ -107,20 +93,18 @@ pub fn createHandler()  -> Handler {
     // return (controller);
 }
 
-
-
-
-
-
 /// init the general hardware
-pub fn init_general_hardware() ->((lcd::Layer<lcd::FramebufferArgb8888>, lcd::Layer<lcd::FramebufferAl88>), I2C<I2C3>)  {
-
-
+pub fn init_general_hardware() -> (
+    (
+        lcd::Layer<lcd::FramebufferArgb8888>,
+        lcd::Layer<lcd::FramebufferAl88>,
+    ),
+    I2C<I2C3>,
+) {
     /// initialising LCD screen
     let core_peripherals = CorePeripherals::take().unwrap();
     let mut systick = core_peripherals.SYST;
     let mut nvic = core_peripherals.NVIC;
-
 
     let peripherals = Peripherals::take().unwrap();
     let mut rcc = peripherals.RCC;
@@ -135,13 +119,11 @@ pub fn init_general_hardware() ->((lcd::Layer<lcd::FramebufferArgb8888>, lcd::La
     let mut ethernet_mac = peripherals.ETHERNET_MAC;
     let mut ethernet_dma = peripherals.ETHERNET_DMA;
 
-
     init::init_systick(Hz(100), &mut systick, &rcc);
     systick.enable_interrupt();
 
-
     /// Initialise display port
-        let gpio_a = GpioPort::new(peripherals.GPIOA);
+    let gpio_a = GpioPort::new(peripherals.GPIOA);
     let gpio_b = GpioPort::new(peripherals.GPIOB);
     let gpio_c = GpioPort::new(peripherals.GPIOC);
     let gpio_d = GpioPort::new(peripherals.GPIOD);
@@ -156,7 +138,6 @@ pub fn init_general_hardware() ->((lcd::Layer<lcd::FramebufferArgb8888>, lcd::La
         gpio_a, gpio_b, gpio_c, gpio_d, gpio_e, gpio_f, gpio_g, gpio_h, gpio_i, gpio_j, gpio_k,
     );
 
-
     init::init_sdram(&mut rcc, &mut fmc);
     let mut lcd = init::init_lcd(&mut ltdc, &mut rcc);
     pins.display_enable.set(true);
@@ -167,9 +148,12 @@ pub fn init_general_hardware() ->((lcd::Layer<lcd::FramebufferArgb8888>, lcd::La
 
     layer_1.clear();
     layer_2.clear();
-    let mut lcd_display:(lcd::Layer<lcd::FramebufferArgb8888>, lcd::Layer<lcd::FramebufferAl88>) = (layer_1,layer_2);
+    let mut lcd_display: (
+        lcd::Layer<lcd::FramebufferArgb8888>,
+        lcd::Layer<lcd::FramebufferAl88>,
+    ) = (layer_1, layer_2);
 
-    // Initialisig touch 
+    // Initialisig touch
     let mut i2c_3 = init::init_i2c_3(peripherals.I2C3, &mut rcc);
     return (lcd_display, i2c_3);
 }

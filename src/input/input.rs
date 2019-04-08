@@ -6,16 +6,16 @@ use crate::{i2c::I2C, stm32f7::stm32f7x6::I2C3};
 use alloc::vec::Vec;
 
 /// Input
-pub struct Input<'a> {
+pub struct Input {
     // display width
     width: u16,
     //display height
     height: u16,
-    i2c_3: &'a mut I2C<I2C3>,
+    i2c_3: I2C<I2C3>,
 }
-impl<'a> Input<'a> {
+impl Input {
     /// Input
-    pub fn new(width: u16, height: u16, i2c_3: &'a mut I2C<I2C3>) -> Input<'a> {
+    pub fn new(width: u16, height: u16, i2c_3:  I2C<I2C3>) -> Input {
         Input {
             width: width,
             height: height,
@@ -36,6 +36,6 @@ impl<'a> Input<'a> {
 }
 
 /// init input
-pub fn init<'a>(width: u16, height: u16, i2c_3: &'a mut I2C<I2C3>) -> Input<'a> {
+pub fn init(width: u16, height: u16, i2c_3: I2C<I2C3>) -> Input {
     return { Input::new(width, height, i2c_3) };
 }

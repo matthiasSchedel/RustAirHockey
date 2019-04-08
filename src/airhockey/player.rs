@@ -1,4 +1,8 @@
 //! Airhockey Player.
+pub const RADIUS:u16 = 10;
+pub const COLOR: u32 = 0xfff000; 
+pub const STROKE_COLOR: u32 = 0xfff000; 
+pub const HAS_STROKE: bool = false;
 
 use super::field;
 
