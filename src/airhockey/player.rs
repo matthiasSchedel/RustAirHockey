@@ -32,7 +32,7 @@ pub struct Player<'a> {
 impl<'a> Player<'a> {
     //Create new player
 
-    pub fn new(player_id: u8, radius: u16, color: u32, input_handler: InputHandler, graphics_handler:GraphicsHandler) -> Player<'a>{
+    pub fn new(player_id: u8, radius: u16, color: u32, input_handler: &InputHandler, graphics_handler: &GraphicsHandler) -> Player<'a>{
         //This has to be changed if more than two players exist
         if player_id == 0 {
             Player {
@@ -82,7 +82,7 @@ impl<'a> Player<'a> {
 
     ///To be called in the game's main loop
     pub fn draw(&self){
-        self.graphics_handler.draw_player(self.color, [self.current_pos_x, self.current_pos_y], self.radius, false, self.color);
+        self.graphics_handler.draw_player(self.color, [self.current_pos_x, self.current_pos_y], self.radius);
     }
     
     ///Move the player according to the target position

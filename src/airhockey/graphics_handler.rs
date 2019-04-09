@@ -18,13 +18,13 @@ impl GraphicsHandler {
   // Ball constructor
 
  pub fn draw_ball(&self, color: u32, pos: [u16;2], radius: u16) {
-    self.graphics_controller.draw_circle(
+    self.graphics.draw_circle(
      color, pos, radius, false, color);
   }
 
   pub fn draw_playing_field(&self) {}
 
-  pub fn draw_player(&self, color: Color, pos: [u16;2], radius: u16){
-    self.graphics_controller.draw_circle(color, pos, radius, false, color);
+  pub fn draw_player(&self, color: u32, pos: [u16;2], radius: u16){
+    self.graphics.draw_circle(color, pos, radius, false, color);
   }
 }
