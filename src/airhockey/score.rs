@@ -23,10 +23,11 @@ impl Score {
             player_scores: player_scores,
             max_score: max_score,
         }
+
     }
     /// add to the score of a player
     pub fn add_score(&mut self, player: u8) {
-        self.player_scores[player as usize] =  self.player_scores[player as usize] + 1;
+        self.player_scores[player as usize] = self.player_scores[player as usize] + 1;
     }
 
     /// return 0 if no player has won else player number
@@ -41,4 +42,5 @@ impl Score {
         }
         return (false, 0);
     }
+
 }

@@ -1,5 +1,21 @@
 //! Graphics controller.
-use crate::lcd::{self, FramebufferArgb8888};
+use crate::{
+    gpio::{GpioPort, OutputPin},
+    init,
+    lcd::{self, Color, FramebufferArgb8888},
+    system_clock, touch,
+};
+use alloc_cortex_m::CortexMHeap;
+use core::alloc::Layout as AllocLayout;
+use core::panic::PanicInfo;
+use rt::{entry, exception};
+use stm32f7::stm32f7x6::Peripherals;
+
+const STROKE_COLOR: u32 = 0xffff00;
+const USE_STROKE: bool = true;
+const PLAYER_SIZE: u16 = 10;
+const PUCK_SIZE: u16 = 6;
+const BACKGROUND_COLOR: u32 = 0xfff000;
 
 /// Graphics struct
 pub struct Graphics {
@@ -34,23 +50,28 @@ impl Graphics {
         return false;
     }
 
-    /// draw a circle around pos x,y with radius - and
+    ///Draw a circle around pos x,y with radius - and
     pub fn draw_circle(
-        &self,
+        &mut self,
         color: u32,
         pos: [u16; 2],
         radius: u16,
         draw_stroke: bool,
         stroke_color: u32,
     ) {
-        for y in pos[1] - radius..=pos[1] + radius {
-            for x in pos[0] - radius..=pos[0] + radius {
-                if x * x + pos[0] * pos[0] - 2 * x * pos[0] + y * y + pos[1] * pos[1]
-                    - 2 * y * pos[1]
-                    <= radius * radius
-                {
-                    //layer.print_point_color_at(x as usize , y as usize , color);
+        let mut x_test = 0;
+        let pos_x = usize::from(pos[0]);
+        let pos_y = usize::from(pos[1]);
+        assert!(pos_x < 523);
+        assert!(pos_y < 293);
+
+        for y in pos_y - usize::from(radius)..= pos_y + usize::from(radius) {
+            for x in usize::from(pos[0] - radius)..=usize::from(pos[0] + radius) {
+                x_test = x * x + y * y + pos_y * pos_y- 2 * y * pos_y+ pos_x * pos_x-2 * x * pos_x;
+                if x_test <= usize::from(radius) * usize::from(radius) {
+                    self.display_layer.1.print_point_color_at(x, y, Color::from_hex(color));
                 }
+
             }
         }
     }

@@ -58,6 +58,8 @@ impl Game {
             //input handling
             //update players with new user input -> new player pos
             self.handle_inputs();
+            self.update_players_with_user_input();
+            self.draw_players();
             //collision handling
             self.handle_collisions();
             //check ball for collision -> new ball pos
@@ -77,8 +79,11 @@ impl Game {
     }
 
     /// update player with user input
-    fn update_players_with_user_input(&self) {
-        //rufe methoden in klasse player auf
+    fn update_players_with_user_input(&mut self) {
+        for p in &mut self.players {
+            p.update_on_user_input(&mut self.handler);
+            p.move_player();
+        }
     }
 
     /// check ball for colls
@@ -101,17 +106,18 @@ impl Game {
         );
     }
 
-    /// draw field
-    fn draw_field(&self) {}
+    fn draw_ball(&self) { }
 
     /// draw score
-    fn draw_score(&self) {}
+    fn draw_field(&self) {}
 
-    /// draw ball
-    fn draw_ball(&self) {}
+    fn draw_score(&mut self) {}
 
-    /// draw player
-    fn draw_players(&self) {}
+    fn draw_players(&mut self) {
+        for p in & mut self.players {
+            p.draw(&mut self.handler);
+        }
+    }
 
     /// check if a player has won and return winning player if true
     fn check_win_condition(& mut self) -> bool {

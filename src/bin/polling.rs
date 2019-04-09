@@ -3,6 +3,7 @@
 #![no_main]
 #![no_std]
 
+#[macro_use]
 extern crate alloc;
 extern crate alloc_cortex_m;
 extern crate cortex_m;
@@ -14,11 +15,12 @@ extern crate stm32f7;
 extern crate stm32f7_discovery;
 extern crate smoltcp;
 
+use alloc::vec::Vec;
 use alloc_cortex_m::CortexMHeap;
 use core::alloc::Layout as AllocLayout;
 use core::fmt::Write;
 use core::panic::PanicInfo;
-use cortex_m::{asm, interrupt};
+use cortex_m::{asm, interrupt, peripheral::NVIC};
 use rt::{entry, exception, ExceptionFrame};
 use sh::hio::{self, HStdout};
 
@@ -27,8 +29,16 @@ use stm32f7_discovery::{airhockey, lcd, system_clock};
 #[global_allocator]
 static ALLOCATOR: CortexMHeap = CortexMHeap::empty();
 
+const HEAP_SIZE: usize = 50 * 1024; // in bytes
+const ETH_ADDR: EthernetAddress = EthernetAddress([0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef]);
+
 #[entry]
 fn main() -> ! {
+    //Initialize the allocator BEFORE you use it
+    unsafe { ALLOCATOR.init(rt::heap_start() as usize, HEAP_SIZE) }
+
+
+
     //init airhockey game with 2 players
     let handler = airhockey::init::create_handler();
 
