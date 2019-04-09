@@ -12,6 +12,7 @@ const DRAW_LAYER_NO: u8 = 1;
 pub struct InputHandler {
   input: Input,
   screen_size: [u16; 2],
+  last_input_positions: Vec<(u16,u16)>,
 }
 
 impl InputHandler {
@@ -20,6 +21,7 @@ impl InputHandler {
     InputHandler {
       input: input,
       screen_size: [480, 272],
+      last_input_positions: vec![(0,0)]
     }
   }
 
@@ -37,7 +39,7 @@ impl InputHandler {
     half_x_max: u16,
   ) -> (u16, u16) {
     let filtered_touches =
-      self.filter_touches_for_player(half_x_min, half_x_max, self.input.get_touch_positions());
+      self.filter_touches_for_player(half_x_min, half_x_max);
     let mut position = (0, 0);
 
     for touch in filtered_touches {
@@ -57,22 +59,22 @@ impl InputHandler {
     (position.0, position.1)
   }
 
-  ///Filter a list of touches for a players
-  fn filter_touches_for_player(
-    &mut self,
-    x_min: u16,
-    x_max: u16,
-    inputs: Vec<(u16, u16)>,
-  ) -> Vec<(u16, u16)> {
-    let mut positions: Vec<(u16, u16)> = Vec::new();
-    for input in inputs {
-      //If the touch position is in the player's half of the field
-      if input.0 < x_max && input.0 > x_min {
-        positions.push((input.0, input.1));
-      } else {
-        continue;
-      }
+
+    pub fn fetch_input(& mut self){
+        self.last_input_positions = self.input.get_touch_positions()
     }
-    positions
-  }
+
+    ///Filter a list of touches for a players
+    fn filter_touches_for_player(& mut self, x_min:u16, x_max:u16) ->Vec<(u16,u16)> {
+        let mut positions: Vec<(u16, u16)> = Vec::new();
+        for input in &mut self.last_input_positions {
+            //If the touch position is in the player's half of the field
+            if input.0 < x_max && input.0 > x_min{
+                positions.push((input.0, input.1));
+            } else{
+                continue;
+            } 
+        }
+        positions
+    }
 }
