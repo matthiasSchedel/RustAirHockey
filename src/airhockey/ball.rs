@@ -20,7 +20,7 @@ impl<'a> Ball<'a> {
         Ball {
             position: START_POSITION,
             speed: START_SPEED,
-            handler:Handler
+            handler: handler
         }
     }
 }

@@ -4,7 +4,7 @@ use crate::graphics::graphics::Graphics;
 const DRAW_LAYER_NO: u8 = 1;
 
 pub struct GraphicsHandler {
-  graphics: Graphics,
+  graphics: Graphics ,
   screen_size: [u16; 2],
 }
 

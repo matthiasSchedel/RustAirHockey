@@ -1,41 +1,37 @@
 //! Airhockey game.
+const MAX_SCORE:u16 = 10;
 
-use super::{player::Player, score::Score, ball::Ball};
+use super::{player::Player, score::Score, ball::Ball, init::Handler, init};
 use alloc::vec::Vec;
 
 const POINTS_PER_GOAL: u8 = 1;
 const COLOR_ARRAY: [u32; 4] = [0xfff000, 0xfff000, 0xfff000, 0xfff000];
 
-pub struct Game<'a> {
-    players: Vec<Player<'a>>,
-    score: Score,
-    ball: Ball
-}
 
-fn createGameElements(number_players: u8) -> (Ball, Vec<Player>, Score) {
-    let ball = Ball::new();
+fn createGameFromElements<'a>(number_players: u8) -> Game<'a>{
+    let handler = init::createHandler();
+    let ball = Ball::new(&handler);
     let mut players: Vec<Player> = Vec::new();
         for p in 0..number_players {
-            players.push(Player::new(p))
+            players.push(Player::new(p,&handler))
         }
-    let score = Score::new(players.len() as u8, 10);
+    let score = Score::new(players.len() as u8, MAX_SCORE, &handler);
     
-    return {(ball, players, score)};
-    }
+    return Game { ball: ball, players: players, score: score };
+ }
 
+
+pub struct Game<'a> {
+    players: Vec<Player<'a>>,
+    score: Score<'a>,
+    ball:Ball<'a>
+}
 impl<'a> Game<'a> {
     // game constructor
-    pub fn new(number_players: u8) -> Game {
-        let game_elements =  createGameElements(number_players);
-
-        Game {
-            players: game_elements.1,
-            score: game_elements.2,
-            ball: game_elements.0
-        }
+    pub fn new(number_players: u8) -> Game<'a> {
+        let game: Game = createGameFromElements(number_players) ;
+        return game;
     }
-    
-
     // is touched method
     pub fn is_touched(&self, p_id: usize) -> bool {
         self.players[p_id].get_position();

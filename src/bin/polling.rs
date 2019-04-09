@@ -137,7 +137,7 @@ fn main() -> ! {
     // start the game loop
     airhockey_game.game_loop();
 
-    // let graphics_controller =
+    // let graphics =
 
     // airhockey_game.init();
 
