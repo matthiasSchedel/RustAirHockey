@@ -5,9 +5,11 @@ use alloc::vec::Vec;
 use libm::F32Ext;
 
 const FRICTION: f32 = 0.95;
+/// friction used in simulation
+/// is friction used in simulation?
 const USE_FRICTION: bool = true;
 
-// Physics struct
+/// Physics struct
 pub struct Physics {
     // display width
     width: u16,
@@ -19,6 +21,7 @@ pub struct Physics {
 }
 
 /// contains all relevat information an a collision
+/// collisions object struct
 pub struct CollisionObject {
     has_collided: bool,
     collision_pos: Vec<u16>,
@@ -43,7 +46,7 @@ impl CollisionObject {
 }
 
 impl Physics {
-    /// game constructor
+    /// physics constructor
     pub fn new(width: u16, height: u16, ball_radius: u16) -> Physics {
         Physics {
             width,

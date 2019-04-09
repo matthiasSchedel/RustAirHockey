@@ -1,3 +1,4 @@
+//! helper module
 use alloc::vec::Vec;
 use arrayvec::ArrayVec;
 
