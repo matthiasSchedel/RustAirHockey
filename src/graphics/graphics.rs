@@ -21,9 +21,9 @@ const BACKGROUND_COLOR: u32 = 0xfff000;
 pub struct Graphics {
     // display layer
     display_layer: (
-            lcd::Layer<lcd::FramebufferArgb8888>,
-            lcd::Layer<lcd::FramebufferAl88>,
-        ),
+        lcd::Layer<lcd::FramebufferArgb8888>,
+        lcd::Layer<lcd::FramebufferAl88>,
+    ),
     // display width
     width: u16,
     //display height
@@ -34,9 +34,9 @@ impl Graphics {
     pub fn new(
         width: u16,
         height: u16,
-        display_layer:   (
+        display_layer: (
             lcd::Layer<lcd::FramebufferArgb8888>,
-            lcd::Layer<lcd::FramebufferAl88>
+            lcd::Layer<lcd::FramebufferAl88>,
         ),
     ) -> Graphics {
         Graphics {
@@ -50,7 +50,7 @@ impl Graphics {
         return false;
     }
 
-    //draw a circle around pos x,y with radius - and
+    ///Draw a circle around pos x,y with radius - and
     pub fn draw_circle(
         &self,
         color: u32,
@@ -61,6 +61,7 @@ impl Graphics {
     ) {
         for y in pos[1] - radius..=pos[1] + radius {
             for x in pos[0] - radius..=pos[0] + radius {
+                println!("x:{}", x);
                 if x * x + pos[0] * pos[0] - 2 * x * pos[0] + y * y + pos[1] * pos[1]
                     - 2 * y * pos[1]
                     <= radius * radius

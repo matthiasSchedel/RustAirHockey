@@ -107,8 +107,8 @@ fn main() -> ! {
 
     // println!("Hello World");
 
-    // // Initialize the allocator BEFORE you use it
-    // unsafe { ALLOCATOR.init(rt::heap_start() as usize, HEAP_SIZE) }
+    //Initialize the allocator BEFORE you use it
+    unsafe { ALLOCATOR.init(rt::heap_start() as usize, HEAP_SIZE) }
 
     // let _xs = vec![1, 2, 3];
 
@@ -135,7 +135,7 @@ fn main() -> ! {
     //init airhockey game with 2 players
     let handler = airhockey::init::createHandler();
     
-    let airhockey_game = airhockey::init::init(2, handler);
+    let mut airhockey_game = airhockey::init::init(2, handler);
     // airhockey_game.start(10, 5, true);
     // start the game loop
     airhockey_game.game_loop();  // das ist die start methode
