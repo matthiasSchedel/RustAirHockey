@@ -85,8 +85,8 @@ pub fn init_general_hardware(
 
     let peripherals = Peripherals::take().unwrap();
     let mut rcc = peripherals.RCC;
-    let pwr = peripherals.PWR;
-    let flash = peripherals.FLASH;
+    let mut pwr = peripherals.PWR;
+    let mut flash = peripherals.FLASH;
     let mut fmc = peripherals.FMC;
     let mut ltdc = peripherals.LTDC;
     let sai_2 = peripherals.SAI2;

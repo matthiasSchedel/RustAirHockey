@@ -32,7 +32,7 @@ fn main() -> ! {
     //init airhockey game with 2 players
     let handler = airhockey::init::create_handler();
 
-    let airhockey_game = airhockey::init::init(2, handler);
+    let mut airhockey_game = airhockey::init::init(2, handler);
     // airhockey_game.start(10, 5, true);
     // start the game loop
     airhockey_game.game_loop(); // das ist die start methode
