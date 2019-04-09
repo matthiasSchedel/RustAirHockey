@@ -59,7 +59,7 @@ pub fn create_handler() -> Handler {
     let layers = ((hardware.0).0, (hardware.0).1);
     let graphics = Graphics::new(field::WIDTH_MAX, field::HEIGHT_MAX, layers);
     let input = Input::new(field::WIDTH_MAX, field::HEIGHT_MAX, hardware.1);
-    let physics = Physics::new(field::WIDTH_MAX, field::HEIGHT_MAX);
+    let physics = Physics::new(field::WIDTH_MAX, field::HEIGHT_MAX, ball::RADIUS);
 
     return Handler::new(
         PhysicsHandler::new(physics),
