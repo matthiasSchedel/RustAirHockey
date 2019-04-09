@@ -1,5 +1,15 @@
 //! Graphics controller.
-use crate::lcd::{self, Color, FramebufferArgb8888};
+use crate::{
+    gpio::{GpioPort, OutputPin},
+    init,
+    lcd::{self, Color, FramebufferArgb8888},
+    system_clock, touch,
+};
+use alloc_cortex_m::CortexMHeap;
+use core::alloc::Layout as AllocLayout;
+use core::panic::PanicInfo;
+use rt::{entry, exception};
+use stm32f7::stm32f7x6::Peripherals;
 
 const STROKE_COLOR: u32 = 0xffff00;
 const USE_STROKE: bool = true;
@@ -8,42 +18,39 @@ const PUCK_SIZE: u16 = 6;
 const BACKGROUND_COLOR: u32 = 0xfff000;
 
 // Graphics struct
-/// method
 pub struct Graphics {
-    /// display layer
+    // display layer
     display_layer: (
-        lcd::Layer<lcd::FramebufferArgb8888>,
-        lcd::Layer<lcd::FramebufferAl88>,
-    ),
-    /// display width 0 == width, 1 == height
-    screen_size: [u16; 2],
-}
-impl Graphics {
-    /// game constructor
-    pub fn new(
-        screen_size: [u16; 2],
-        display_layer: (
             lcd::Layer<lcd::FramebufferArgb8888>,
             lcd::Layer<lcd::FramebufferAl88>,
+        ),
+    // display width
+    width: u16,
+    //display height
+    height: u16,
+}
+impl Graphics {
+    // game constructor
+    pub fn new(
+        width: u16,
+        height: u16,
+        display_layer:   (
+            lcd::Layer<lcd::FramebufferArgb8888>,
+            lcd::Layer<lcd::FramebufferAl88>
         ),
     ) -> Graphics {
         Graphics {
             display_layer: display_layer,
-            screen_size: screen_size,
+            width: width,
+            height: height,
         }
     }
-    /// is touched method
+    // is touched method
     pub fn is_touched(&self, p_id: usize) -> bool {
         return false;
     }
 
-    /// check if point is outside
-    fn isPointOutside(&self, point: [u16; 2]) -> bool {
-        return (self.screen_size[0] > point[0] && point[0] > 0)
-            && (self.screen_size[1] > point[1] && point[1] > 0);
-    }
-
-    ///draw a circle around pos x,y with radius - and
+    //draw a circle around pos x,y with radius - and
     pub fn draw_circle(
         &self,
         color: u32,
@@ -63,19 +70,16 @@ impl Graphics {
             }
         }
     }
-    /// method
     pub fn clear_circle(&self, color: u16, pos: [u16; 2], radius: f32) {}
 
-    /// method
     pub fn clear_field(&self, color: u16) {}
 
-    /// method
     pub fn draw_field(&self, field_color: u16, border_color: u16, goal_size: u16) {}
 
-    /// method
     pub fn draw_score(&self, player1_score: u8, player2_score: u8) {}
 
-    /// method
+    pub fn init(&self) {}
+
     pub fn draw_rectangle(
         layer: &mut lcd::Layer<FramebufferArgb8888>,
         x_start: u16,
@@ -90,17 +94,6 @@ impl Graphics {
             }
         }
     }
-}
-
-/// init graphics
-pub fn init(
-    display_layer: (
-        lcd::Layer<lcd::FramebufferArgb8888>,
-        lcd::Layer<lcd::FramebufferAl88>,
-    ),
-    screen_size: [u16; 2],
-) -> Graphics {
-    return { Graphics::new(screen_size, display_layer) };
 }
 
 // /// function for drawing the basic field

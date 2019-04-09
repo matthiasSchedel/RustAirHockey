@@ -46,8 +46,8 @@ impl Physics {
     /// game constructor
     pub fn new(width: u16, height: u16, ball_radius: u16) -> Physics {
         Physics {
-            width,
-            height,
+            width: width,
+            height: height,
             ball_pos: vec![0, 0],
             ball_speed: vec![0., 0.],
             ball_radius,

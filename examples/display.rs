@@ -21,12 +21,10 @@ use stm32f7_discovery::{
     gpio::{GpioPort, OutputPin},
     init,
     lcd::{self, Color, FramebufferArgb8888},
-    system_clock,touch,
-
-    
+    system_clock, touch,
 };
 
-3#[entry]
+#[entry]
 fn main() -> ! {
     let peripherals = Peripherals::take().unwrap();
     let mut rcc = peripherals.RCC;
@@ -69,44 +67,11 @@ fn main() -> ! {
     layer1.clear();
     layer2.clear();
 
-    // ab hier fancy Dinge, die nicht schön implmentiert sind...
-    let mut velocity_x: i32 = 3;
-    let mut velocity_y: i32 = 1;
+    let mut i2c_3 = init::init_i2c_3(peripherals.I2C3, &mut rcc);
+    i2c_3.test_1();
+    i2c_3.test_2();
 
-    let radius = 10;
-    let mut center_x = 170;
-    let mut center_y = 100;
-    let color = Color::from_hex(0xff0_000);
-
-    let border_width = 5;
-
-    let mut velocity_x2: i32 = 10;
-    let mut velocity_y2: i32 = 10;
-    let mut center_x2 = 100;
-    let mut center_y2 = 170;
-    let radius2 = 10;
-    let color2 = Color::from_hex(0x00f_f00);
-
-
-    // hier entsteht das "Spielfeld" - hier nur ein Rahmen mit Öffnungen am Rand.
-    for x in 0..480 {
-        for y in 0..border_width {
-            layer2.print_point_color_at(x, y, Color::from_hex(0x000_000));
-        }
-
-        for y in 272-border_width..272 {
-            layer2.print_point_color_at(x,y, Color::from_hex(0x000_000));
-        }
-    }
-
-    for y in 0..101 {
-        for x in 0..border_width {
-                layer2.print_point_color_at(x, y, Color::from_hex(0x000_000));
-        }
-        for x in 480-border_width..480 {
-                layer2.print_point_color_at(x, y, Color::from_hex(0x000_000));
-        }
-    }
+    // poll for new touch data
 
     for y in 171..272 {
         for x in 0..border_width {
@@ -136,48 +101,36 @@ fn main() -> ! {
     // und das ist der Main Loop
     loop {
         //und jetzt können wir alles machen, was wir auf Layern machen können.
+        let length = 20;
+        let hight = 10;
+        let HIGHT = 272;
+        let LENGTH = 480;
+        let mut max_length;
+        let mut max_hight;
+        let mut old_touchx: usize;
+        let mut old_touchy: usize;
 
-        // in jeder Iteration wird das ganze Feld neu gezeichnet
-        for x in 0..480 {
-            for y in 0..272 {
-                if in_circle(x, y, center_x, center_y, radius) {
-                    //entweder rot, wenn der Kreis grade hier ist
-                    layer1.print_point_color_at(x as usize, y as usize, color);
-                } else if in_circle(x, y, center_x2, center_y2, radius2) {
-                    //oder grün, wenn der andere Kreis hier ist
-                    layer1.print_point_color_at(x as usize, y as usize, color2);
-                } else {
-                    //oder blau, wenn hier grade nichts ist.
-                    layer1.print_point_color_at(x as usize,y as usize, Color::from_argb8888(0));
-                }
+        for touch in &touch::touches(&mut i2c_3).unwrap() {
+            // Check if rectangle is bigger then screen
+            if touch.x as usize + length > LENGTH {
+                max_length = LENGTH;
+            } else {
+                max_length = touch.x as usize + length;
             }
-        }
 
-
-        // hier errechnet sich die neue Position. Wenn keine Verschiebung möglich ist, bleibt es stehen und ändert die Richtung.
-        // das ist bedingt unpraktisch, wenn die Geschwindigkeit größer 1 ist, dreht das schon vor der Kollision.
-        if center_x + radius + velocity_x as usize <= limit_x as usize && center_x - radius as usize + velocity_x as usize >= 5 {
-            center_x += velocity_x as usize;
-        } else {
-            velocity_x *= -1;
-        }
-
-        if center_y + radius + velocity_y as usize <= limit_y as usize && center_y - radius as usize + velocity_y as usize >= 5 {
-            center_y += velocity_y as usize;
-        } else {
-            velocity_y *= -1;
-        }
-
-        if center_x2 + radius2 + velocity_x2 as usize <= limit_x as usize && center_x2 - radius2 as usize + velocity_x2 as usize >= 5 {
-            center_x2 += velocity_x2 as usize;
-        } else {
-            velocity_x2 *= -1;
-        }
-
-        if center_y2 + radius2 + velocity_y2 as usize <= limit_y as usize && center_y2 - radius2 as usize + velocity_y2 as usize >= 5 {
-            center_y2 += velocity_y2 as usize;
-        } else {
-            velocity_y2 *= -1;
+            if touch.y as usize + hight > HIGHT {
+                max_hight = HIGHT;
+            } else {
+                max_hight = touch.y as usize + hight;
+            }
+            //draw_rectangle(&mut layer1, touch.x as usize, touch.y as usize, max_length, max_hight, Color::from_hex(0xff0_000))
+            draw_circle(
+                &mut layer1,
+                touch.x as usize,
+                touch.y as usize,
+                20,
+                Color::from_hex(0xff0_000),
+            )
         }
 
         // und hier gibt es die Kollision zwischen Kugeln
@@ -241,7 +194,7 @@ fn main() -> ! {
 
             velocity_x2 = pulse_x as i32 - share_norm_x2 as i32+ share_tan_x2 as i32;
             velocity_y2 = pulse_y as i32- share_norm_y2 as i32 + share_tan_y2 as i32;
-            
+
 
 
 

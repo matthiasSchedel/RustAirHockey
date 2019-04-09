@@ -4,7 +4,7 @@ use crate::graphics::graphics::Graphics;
 const DRAW_LAYER_NO: u8 = 1;
 
 pub struct GraphicsHandler {
-  graphics: Graphics,
+  graphics: Graphics ,
   screen_size: [u16; 2],
 }
 
@@ -17,15 +17,14 @@ impl GraphicsHandler {
   }
   // Ball constructor
 
-  pub fn draw_ball(&self, ball_: Ball) {
+ pub fn draw_ball(&self, color: u32, pos: [u16;2], radius: u16) {
     self.graphics.draw_circle(
-      ball::COLOR,
-      ball_.position,
-      ball::RADIUS,
-      ball::HAS_STROKE,
-      ball::STROKE_COLOR,
-    );
+     color, pos, radius, false, color);
   }
 
   pub fn draw_playing_field(&self) {}
+
+  pub fn draw_player(&self, color: u32, pos: [u16;2], radius: u16){
+    self.graphics.draw_circle(color, pos, radius, false, color);
+  }
 }
