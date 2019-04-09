@@ -8,19 +8,17 @@ pub const HAS_STROKE: bool = false;
 
 use super::init::Handler;
 
-pub struct Ball<'a> {
+pub struct Ball {
     position: [u16; 2],
     speed: [f32; 2],
-    handler: &'a Handler
 
 }
-impl<'a> Ball<'a> {
+impl Ball {
     // Ball constructor
-    pub fn new(handler:&'a Handler) -> Ball<'a> {
+    pub fn new() -> Ball {
         Ball {
             position: START_POSITION,
             speed: START_SPEED,
-            handler: handler
         }
     }
 }

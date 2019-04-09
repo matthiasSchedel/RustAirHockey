@@ -7,7 +7,7 @@ use libm::F32Ext;
 const FRICTION: f32 = 0.95;
 const USE_FRICTION: bool = true;
 
-/// Physics struct
+// Physics struct
 pub struct Physics {
     // display width
     width: u16,

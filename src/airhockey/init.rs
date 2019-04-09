@@ -31,13 +31,13 @@ impl GeneralHardware {
 }
 
 pub struct Handler {
-    physics_handler: PhysicsHandler,
-    graphics_handler: GraphicsHandler,
-    input_handler: InputHandler,
+    pub physics_handler: PhysicsHandler,
+    pub graphics_handler: GraphicsHandler,
+    pub input_handler: InputHandler,
 }
 
 impl Handler {
-    fn new(
+    pub fn new(
         physics_handler: PhysicsHandler,
         graphics_handler: GraphicsHandler,
         input_handler: InputHandler,
@@ -55,8 +55,8 @@ impl Handler {
 //     };
 
 // Function init
-pub fn init<'a> (playerCount: u8) -> Game<'a> {
-    let game = Game::new(playerCount);
+pub fn init<'a> (playerCount: u8, handler: Handler) -> Game {
+    let game = Game::new(playerCount, handler);
     return game;
 }
 
@@ -74,13 +74,14 @@ pub fn init<'a> (playerCount: u8) -> Game<'a> {
 // }
 
 pub fn createHandler() -> Handler {
+    
     let hardware: (
         (
             lcd::Layer<lcd::FramebufferArgb8888>,
             lcd::Layer<lcd::FramebufferAl88>
         ),
         I2C<I2C3>
-    );
+    ) = init_general_hardware();
     let layers = ((hardware.0).0, (hardware.0).1);
     let graphics = Graphics::new(
         field::WIDTH_MAX, field::HEIGHT_MAX,

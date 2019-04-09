@@ -4,23 +4,21 @@ use super::init::Handler;
 
 pub const POINTS_PER_GOAL: u8 = 1;
 
-pub struct Score<'a> {
+pub struct Score {
     player_scores: Vec<u16>,
     max_score: u16,
-    handler:&'a Handler
 }
 
-impl<'a> Score<'a> {
+impl Score {
     // game constructor
-    pub fn new(number_players: u8, max_score: u16, handler:&'a Handler) -> Score<'a> {
+    pub fn new(number_players: u8, max_score: u16) -> Score {
         let mut player_scores: Vec<u16> = Vec::new();
         for p in 0..number_players {
             player_scores.push(0);
         }
         Score {
             player_scores: player_scores,
-            max_score: max_score,
-            handler: handler
+            max_score: max_score
         }
 
     }
