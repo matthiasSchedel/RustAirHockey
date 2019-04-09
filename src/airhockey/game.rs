@@ -37,7 +37,7 @@ impl Game {
         // self.score = Score::new(self.players.len() as u8,max_score);
         false;
     }
-    pub fn game_loop(&self) -> ! {
+    pub fn game_loop(&mut self) -> ! {
             // self.handle_inputs();
             // self.handle_physics();
             loop {
@@ -52,7 +52,8 @@ impl Game {
                 }
             }
             //input handling
-                //update players with new user input -> new player pos
+            self.update_players_with_user_input();
+            self.draw_players();
             //collision handling
                 //check ball for collision -> new ball pos
 
@@ -66,8 +67,11 @@ impl Game {
             // self.handle_graphcis();
     }
 
-    fn update_players_with_user_input(&self) {
-        //rufe methoden in klasse player auf
+    fn update_players_with_user_input(&mut self) {
+        for p in &mut self.players {
+            p.update_on_user_input(&mut self.handler);
+            p.move_player();
+        }
     }
 
     fn check_ball_for_collisons(&self) {
@@ -86,8 +90,10 @@ impl Game {
 
     }
 
-    fn draw_players(&self) {
-        
+    fn draw_players(& mut self) {
+        for p in & mut self.players {
+            p.draw(&mut self.handler);
+        }
     }
 
     fn check_win_condition(&self) -> bool {

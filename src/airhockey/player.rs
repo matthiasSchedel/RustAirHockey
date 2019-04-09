@@ -5,10 +5,7 @@ pub const COLOR: u32 = 0xfff000;
 pub const STROKE_COLOR: u32 = 0xfff000;
 pub const HAS_STROKE: bool = false;
 
-use super::{field };
-use super::input_handler::{self, InputHandler};
-use super::graphics_handler::GraphicsHandler;
-
+use super::{field};
 use super::init::Handler;
 
 // Player
@@ -62,13 +59,12 @@ impl Player {
         }
     }
     
-    pub fn draw(&self, handler:&Handler){
+    pub fn draw(&self, handler: &mut Handler){
         handler.graphics_handler.draw_player(self.color, [self.current_pos.0, self.current_pos.1], self.radius );
     }
     
     ///Move the player according to the target position
     pub fn move_player(& mut self){
-        //TODO implement delayed movement?
         if helper::unsigned_subtraction(self.current_pos.0, self.target_pos.1) < self.speed.0 
         && helper::unsigned_subtraction(self.current_pos.1, self.target_pos.1) < self.speed.1{
             self.speed = (0,0);
@@ -79,7 +75,7 @@ impl Player {
         }
     }
 
-    pub fn update_on_user_input(&mut self, handler: &mut Handler){
+    pub fn update_on_user_input(&mut self, handler: & mut Handler){
          if self.player_id == 0{
             handler.input_handler.fetch_input();
         }
@@ -97,9 +93,15 @@ impl Player {
         (self.current_pos.0, self.current_pos.1)
     }
 
-
     pub fn set_position(& mut self, x : u16, y:u16){
         self.current_pos.0 = x;
         self.current_pos.1 = y;
+    }
+
+    pub fn setColor(&mut self, color: u32){
+        self.color = color;
+    }
+    pub fn setRadius(&mut self, radius: u16){
+        self.radius = radius;
     }
 }
