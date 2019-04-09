@@ -78,18 +78,25 @@ impl Game {
     /// check ball for colls
     // constructs a physics-object from the current game state, checks for collision und updates ball position and speed
     fn check_ball_for_collisons(&self) {
+
+        // construct physics-object
         let physics = physics::Physics::new(
             field::WIDTH_MAX,
             field::HEIGHT_MAX,
             /*Ball::RADIUS*/ 10,
         );
+
+        // give current ball state as borrow
         physics.set_ball_pos(&self.ball.position[0], &self.ball.position[1]);
         physics.set_ball_speed(&self.ball.speed[0], &self.ball.speed[1]);
+        
+        // find active player - we can not collide with player on the far side of the field
         let active_player = if self.ball.position[0] < field::WIDTH_MAX / 2 {
             self.players[0]
         } else {
             self.players[1]
         };
+
 
         physics.update_ball_position(
             active_player.get_position().0,
