@@ -1,42 +1,26 @@
 //! Graphics controller.
-use crate::{
-    gpio::{GpioPort, OutputPin},
-    init,
-    lcd::{self, Color, FramebufferArgb8888},
-    system_clock, touch,
-};
-use alloc_cortex_m::CortexMHeap;
-use core::alloc::Layout as AllocLayout;
-use core::panic::PanicInfo;
-use rt::{entry, exception};
-use stm32f7::stm32f7x6::Peripherals;
+use crate::lcd::{self, FramebufferArgb8888};
 
-const STROKE_COLOR: u32 = 0xffff00;
-const USE_STROKE: bool = true;
-const PLAYER_SIZE: u16 = 10;
-const PUCK_SIZE: u16 = 6;
-const BACKGROUND_COLOR: u32 = 0xfff000;
-
-// Graphics struct
+/// Graphics struct
 pub struct Graphics {
-    // display layer
+    /// display layer
     display_layer: (
-            lcd::Layer<lcd::FramebufferArgb8888>,
-            lcd::Layer<lcd::FramebufferAl88>,
-        ),
-    // display width
+        lcd::Layer<lcd::FramebufferArgb8888>,
+        lcd::Layer<lcd::FramebufferAl88>,
+    ),
+    /// display width
     width: u16,
-    //display height
+    ///display height
     height: u16,
 }
 impl Graphics {
-    // game constructor
+    /// game constructor
     pub fn new(
         width: u16,
         height: u16,
-        display_layer:   (
+        display_layer: (
             lcd::Layer<lcd::FramebufferArgb8888>,
-            lcd::Layer<lcd::FramebufferAl88>
+            lcd::Layer<lcd::FramebufferAl88>,
         ),
     ) -> Graphics {
         Graphics {
@@ -45,12 +29,12 @@ impl Graphics {
             height: height,
         }
     }
-    // is touched method
+    /// is touched method
     pub fn is_touched(&self, p_id: usize) -> bool {
         return false;
     }
 
-    //draw a circle around pos x,y with radius - and
+    /// draw a circle around pos x,y with radius - and
     pub fn draw_circle(
         &self,
         color: u32,
@@ -70,16 +54,22 @@ impl Graphics {
             }
         }
     }
+    ///  clear a circle
     pub fn clear_circle(&self, color: u16, pos: [u16; 2], radius: f32) {}
 
+    ///  clear the field
     pub fn clear_field(&self, color: u16) {}
 
+    /// draw a field
     pub fn draw_field(&self, field_color: u16, border_color: u16, goal_size: u16) {}
 
+    /// draw a score
     pub fn draw_score(&self, player1_score: u8, player2_score: u8) {}
 
+    /// init
     pub fn init(&self) {}
 
+    /// draw a rectangle
     pub fn draw_rectangle(
         layer: &mut lcd::Layer<FramebufferArgb8888>,
         x_start: u16,

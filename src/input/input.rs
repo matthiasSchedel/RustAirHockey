@@ -28,9 +28,9 @@ impl Input {
     }
 
     /// Input
-    pub fn get_touch_positions(&self) -> alloc::vec::Vec<(u16,u16)> {
-        let positions: Vec<(u16,u16)> = Vec::new();
-        return {positions};
+    pub fn get_touch_positions(&self) -> alloc::vec::Vec<(u16, u16)> {
+        let positions: Vec<(u16, u16)> = Vec::new();
+        return { positions };
     }
 }
 

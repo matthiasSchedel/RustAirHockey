@@ -1,42 +1,33 @@
-#![feature(alloc)]
-#![feature(alloc_error_handler)]
-#![no_main]
-#![no_std]
-
-// use crate::{alloc,alloc_cortex_m, cortex_m, cortex_m_rt as rt, cortex_m_semihosting as sh, stm32f7, smoltcp};
-
+///! Init airhockey game
 use crate::i2c::I2C;
 use crate::{
     gpio::{GpioPort, OutputPin},
     init, lcd,
-    system_clock::{self, Hz},
+    system_clock::Hz,
 };
-use smoltcp::wire::EthernetAddress;
 use stm32f7::stm32f7x6::I2C3;
 use stm32f7::stm32f7x6::{CorePeripherals, Peripherals};
 
 use crate::{graphics::graphics::Graphics, input::input::Input, physics::physics::Physics};
 
 use super::{
-    ball, ball::Ball, player, player::Player, score, score::Score, field, game, game::Game, graphics_handler, graphics_handler::GraphicsHandler,
+    ball, ball::Ball, field, game, game::Game, graphics_handler, graphics_handler::GraphicsHandler,
     input_handler, input_handler::InputHandler, physics_handler, physics_handler::PhysicsHandler,
+    player, player::Player, score, score::Score,
 };
 
-struct GeneralHardware {}
-
-impl GeneralHardware {
-    fn new() -> GeneralHardware {
-        GeneralHardware {}
-    }
-}
-
+/// Handler object to access hardware components
 pub struct Handler {
+    /// struct field
     pub physics_handler: PhysicsHandler,
+    /// struct field
     pub graphics_handler: GraphicsHandler,
+    /// struct field
     pub input_handler: InputHandler,
 }
 
 impl Handler {
+    /// handler constructor
     pub fn new(
         physics_handler: PhysicsHandler,
         graphics_handler: GraphicsHandler,
@@ -50,43 +41,23 @@ impl Handler {
     }
 }
 
-// use crate::{
-//     controller::controller::Controller
-//     };
-
-// Function init
-pub fn init (playerCount: u8, handler: Handler) -> Game {
+/// Function init
+pub fn init(playerCount: u8, handler: Handler) -> Game {
     let game = Game::new(playerCount, handler);
     return game;
 }
-
-// struct Hardware {
-//     lcd_layer: (
-//             lcd::Layer<lcd::FramebufferArgb8888>,
-//             lcd::Layer<lcd::FramebufferAl88>)
-//     i2c:a,
-// }
-
-// impl Hardware {
-//     fn new() {
-
-//     }
-// }
-
-pub fn createHandler() -> Handler {
-    
+/// create handler function
+pub fn create_handler() -> Handler {
+    let fps: u16 = 30;
     let hardware: (
         (
             lcd::Layer<lcd::FramebufferArgb8888>,
-            lcd::Layer<lcd::FramebufferAl88>
+            lcd::Layer<lcd::FramebufferAl88>,
         ),
-        I2C<I2C3>
-    ) = init_general_hardware();
+        I2C<I2C3>,
+    ) = init_general_hardware(fps);
     let layers = ((hardware.0).0, (hardware.0).1);
-    let graphics = Graphics::new(
-        field::WIDTH_MAX, field::HEIGHT_MAX,
-        layers
-    );
+    let graphics = Graphics::new(field::WIDTH_MAX, field::HEIGHT_MAX, layers);
     let input = Input::new(field::WIDTH_MAX, field::HEIGHT_MAX, hardware.1);
     let physics = Physics::new(field::WIDTH_MAX, field::HEIGHT_MAX);
 
@@ -98,7 +69,9 @@ pub fn createHandler() -> Handler {
 }
 
 /// init the general hardware
-pub fn init_general_hardware() -> (
+pub fn init_general_hardware(
+    fps: u16,
+) -> (
     (
         lcd::Layer<lcd::FramebufferArgb8888>,
         lcd::Layer<lcd::FramebufferAl88>,
