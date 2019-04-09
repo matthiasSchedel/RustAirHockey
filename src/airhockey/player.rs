@@ -71,17 +71,20 @@ impl Player {
         self.draw(handler);
     }
 
-    //draw the player
-    fn draw(&self, handler: &Handler) {
-        handler.graphics_handler.draw_player(
-            self.color,
-            [self.current_pos.0, self.current_pos.1],
-            self.radius,
-        );
+    // //draw the player
+    // fn draw(&self, handler: &Handler) {
+    //     handler.graphics_handler.draw_player(
+    //         self.color,
+    //         [self.current_pos.0, self.current_pos.1],
+    //         self.radius,
+    //     );
+    
+    pub fn draw(&self, handler:&Handler){
+        handler.graphics_handler.draw_player(self.color, [self.current_pos.0, self.current_pos.1], self.radius );
     }
 
     ///Move the player according to the target position
-    fn move_player(&mut self) {
+    pub fn move_player(& mut self){
         //TODO implement delayed movement?
         if helper::unsigned_subtraction(self.current_pos.0, self.target_pos.1) < self.speed.0
             && helper::unsigned_subtraction(self.current_pos.1, self.target_pos.1) < self.speed.1
@@ -97,7 +100,10 @@ impl Player {
     }
 
     ///update player on user input
-    fn update_on_user_input(&mut self, handler: &mut Handler) {
+    pub fn update_on_user_input(&mut self, handler: &mut Handler){
+         if self.player_id == 0{
+            handler.input_handler.fetch_input();
+        }
         self.target_pos = handler.input_handler.get_target_position(
             self.current_pos,
             self.radius,

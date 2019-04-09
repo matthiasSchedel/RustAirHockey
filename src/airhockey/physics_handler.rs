@@ -3,7 +3,7 @@ use crate::physics::physics::Physics;
 
 /// physics handler struct
 pub struct PhysicsHandler {
-  physics: Physics,
+  pub physics: Physics,
   screen_size: [u16; 2],
 }
 

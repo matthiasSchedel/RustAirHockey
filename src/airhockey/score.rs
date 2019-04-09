@@ -25,18 +25,20 @@ impl Score {
         }
     }
     /// add to the score of a player
-    pub fn add_score(&self, player: u8) {}
+    pub fn add_score(&mut self, player: u8) {
+        self.player_scores[player as usize] =  self.player_scores[player as usize] + 1;
+    }
 
     /// return 0 if no player has won else player number
-    pub fn is_game_over(&self) -> (bool, u8) {
+    pub fn is_game_over(&mut self) -> (bool, u8) {
         let mut i: u16 = 1;
-        // for p in self.player_scores {
-        //     if (p >= self.max_score)
-        //     {
-        //         return (true, p as u8);
-        //     }
-        //     i += 1;
-        // }
+        for p in (0..self.player_scores.len()) {
+            if p >= self.max_score as usize
+            {
+                return (true, p as u8);
+            }
+            i += 1;
+        }
         return (false, 0);
     }
 }

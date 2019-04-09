@@ -2,7 +2,8 @@
 const MAX_SCORE: u16 = 10;
 
 use super::{
-    super::physics::physics, ball::Ball, field, init, init::Handler, player::Player, score::Score};
+    super::physics::physics, ball::Ball, field, init, init::Handler, player::Player, score::Score
+};
 use alloc::vec::Vec;
 
 /// points scored per goal
@@ -41,33 +42,38 @@ impl Game {
     }
 
     /// game loop
-    pub fn game_loop(&self) -> ! {
-        // self.handle_inputs();
-        // self.handle_physics();
+    pub fn game_loop(& mut self) -> ! {
         loop {
             // handle score
             let scored: (bool, u8) = self.evaluate_score();
             if scored.0 {
                 if self.score.is_game_over().0 {
-                    //gehe in anderean State
+                    //gehe in einen anderen State
                     loop {}
                 } else {
+                    self.update_score(scored.1);
                     // score board updaten
                 }
             }
             //input handling
             //update players with new user input -> new player pos
+            self.handle_inputs();
             //collision handling
+            self.handle_collisions();
             //check ball for collision -> new ball pos
 
             //graphics handling
-            //draw field
-            //draw score
-            //draw ball
-            //draw players
+            self.draw_field();
+            self.draw_score();
+            self.draw_players();
+            self.draw_ball();
         }
 
         // self.handle_graphcis();
+    }
+
+    fn update_score(& mut self, scoring_player: u8) {
+        self.score.add_score(scoring_player);
     }
 
     /// update player with user input
@@ -77,33 +83,21 @@ impl Game {
 
     /// check ball for colls
     // constructs a physics-object from the current game state, checks for collision und updates ball position and speed
-    fn check_ball_for_collisons(&self) {
+    fn check_ball_for_collisons(& mut self, mut handler: Handler) {
 
-        // construct physics-object
-        let physics = physics::Physics::new(
-            field::WIDTH_MAX,
-            field::HEIGHT_MAX,
-            /*Ball::RADIUS*/ 10,
-        );
+        handler.physics_handler.physics.set_ball_pos(&self.ball.position[0], &self.ball.position[1]);
+        handler.physics_handler.physics.set_ball_speed(&self.ball.speed[0], &self.ball.speed[1]);
+        let mut active_player: usize = 1;
+        if self.ball.position[0] < (field::WIDTH_MAX / 2) {
+           active_player = 0;
+        }
 
-        // give current ball state as borrow
-        physics.set_ball_pos(&self.ball.position[0], &self.ball.position[1]);
-        physics.set_ball_speed(&self.ball.speed[0], &self.ball.speed[1]);
-        
-        // find active player - we can not collide with player on the far side of the field
-        let active_player = if self.ball.position[0] < field::WIDTH_MAX / 2 {
-            self.players[0]
-        } else {
-            self.players[1]
-        };
-
-
-        physics.update_ball_position(
-            active_player.get_position().0,
-            active_player.get_position().1,
+        handler.physics_handler.physics.update_ball_position(
+            self.players[active_player].get_position().0,
+            self.players[active_player].get_position().1,
             /*active_player.radius*/ 10,
-            f32::from(active_player.get_speed().0),
-            f32::from(active_player.get_speed().1),
+            f32::from(self.players[active_player].get_speed().0),
+            f32::from(self.players[active_player].get_speed().1),
         );
     }
 
@@ -120,7 +114,7 @@ impl Game {
     fn draw_players(&self) {}
 
     /// check if a player has won and return winning player if true
-    fn check_win_condition(&self) -> bool {
+    fn check_win_condition(& mut self) -> bool {
         if self.score.is_game_over().0 {
             return true;
         } else {
@@ -154,7 +148,7 @@ impl Game {
     }
 
     /// get the collsiiosn
-    fn collisions(&self) {}
+    fn handle_collisions(&self) {}
 
     // pub fn init(&self) {
 

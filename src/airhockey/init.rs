@@ -59,7 +59,7 @@ pub fn create_handler() -> Handler {
     let layers = ((hardware.0).0, (hardware.0).1);
     let graphics = Graphics::new(field::WIDTH_MAX, field::HEIGHT_MAX, layers);
     let input = Input::new(field::WIDTH_MAX, field::HEIGHT_MAX, hardware.1);
-    let physics = Physics::new(field::WIDTH_MAX, field::HEIGHT_MAX);
+    let physics = Physics::new(field::WIDTH_MAX, field::HEIGHT_MAX, ball::RADIUS);
 
     return Handler::new(
         PhysicsHandler::new(physics),
@@ -85,8 +85,8 @@ pub fn init_general_hardware(
 
     let peripherals = Peripherals::take().unwrap();
     let mut rcc = peripherals.RCC;
-    let pwr = peripherals.PWR;
-    let flash = peripherals.FLASH;
+    let mut pwr = peripherals.PWR;
+    let mut flash = peripherals.FLASH;
     let mut fmc = peripherals.FMC;
     let mut ltdc = peripherals.LTDC;
     let sai_2 = peripherals.SAI2;
@@ -96,8 +96,8 @@ pub fn init_general_hardware(
     let ethernet_mac = peripherals.ETHERNET_MAC;
     let ethernet_dma = peripherals.ETHERNET_DMA;
 
-    init::init_systick(Hz(100), &mut systick, &rcc);
-    systick.enable_interrupt();
+    init::init_system_clock_216mhz(&mut rcc, &mut pwr, &mut flash);
+    init::enable_gpio_ports(&mut rcc);
 
     /// Initialise display port
     let gpio_a = GpioPort::new(peripherals.GPIOA);
@@ -114,6 +114,9 @@ pub fn init_general_hardware(
     let mut pins = init::pins(
         gpio_a, gpio_b, gpio_c, gpio_d, gpio_e, gpio_f, gpio_g, gpio_h, gpio_i, gpio_j, gpio_k,
     );
+
+    init::init_systick(Hz(100), &mut systick, &rcc);
+    systick.enable_interrupt();
 
     init::init_sdram(&mut rcc, &mut fmc);
     let mut lcd = init::init_lcd(&mut ltdc, &mut rcc);
