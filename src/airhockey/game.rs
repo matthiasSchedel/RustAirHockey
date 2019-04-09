@@ -2,9 +2,7 @@
 const MAX_SCORE: u16 = 10;
 
 use super::{
-    super::physics::physics, ball::Ball, field, init, init::Handler, player::Player, score::Score,
-    score::Score,
-};
+    super::physics::physics, ball::Ball, field, init, init::Handler, player::Player, score::Score};
 use alloc::vec::Vec;
 
 /// points scored per goal
