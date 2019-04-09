@@ -1,7 +1,7 @@
 //! score module
+use super::init::Handler;
 use crate::alloc;
 use alloc::vec::Vec;
-use super::init::Handler;
 
 /// points scored per goal
 pub const POINTS_PER_GOAL: u8 = 1;
@@ -21,26 +21,22 @@ impl Score {
         }
         Score {
             player_scores: player_scores,
-            max_score: max_score
+            max_score: max_score,
         }
-
     }
     /// add to the score of a player
-    pub fn add_score(&self, player:u8) {
+    pub fn add_score(&self, player: u8) {}
 
-    }
-    
     /// return 0 if no player has won else player number
     pub fn is_game_over(&self) -> (bool, u8) {
-        let mut i:u16 = 1;
+        let mut i: u16 = 1;
         // for p in self.player_scores {
-        //     if (p >= self.max_score) 
+        //     if (p >= self.max_score)
         //     {
         //         return (true, p as u8);
-        //     } 
+        //     }
         //     i += 1;
         // }
-        return (false,0);
+        return (false, 0);
     }
-
 }

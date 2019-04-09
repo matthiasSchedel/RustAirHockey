@@ -1,7 +1,10 @@
 //! Airhockey game.
 const MAX_SCORE: u16 = 10;
 
-use super::{player::Player, score::Score, ball::Ball, init::Handler, init, super::physics::physics, field, score::Score};
+use super::{
+    super::physics::physics, ball::Ball, field, init, init::Handler, player::Player, score::Score,
+    score::Score,
+};
 use alloc::vec::Vec;
 
 /// points scored per goal
@@ -77,17 +80,26 @@ impl Game {
     /// check ball for colls
     // constructs a physics-object from the current game state, checks for collision und updates ball position and speed
     fn check_ball_for_collisons(&self) {
-        let physics = physics::Physics::new(field::WIDTH_MAX, field::HEIGHT_MAX, /*Ball::RADIUS*/ 10);
+        let physics = physics::Physics::new(
+            field::WIDTH_MAX,
+            field::HEIGHT_MAX,
+            /*Ball::RADIUS*/ 10,
+        );
         physics.set_ball_pos(&self.ball.position[0], &self.ball.position[1]);
         physics.set_ball_speed(&self.ball.speed[0], &self.ball.speed[1]);
-        let active_player = if self.ball.position[0] < field::WIDTH_MAX / 2 { self.players[0]} else {self.players[1]};
+        let active_player = if self.ball.position[0] < field::WIDTH_MAX / 2 {
+            self.players[0]
+        } else {
+            self.players[1]
+        };
 
-        physics.update_ball_position(active_player.get_position().0,
-                                     active_player.get_position().1,
-                                     /*active_player.radius*/ 10,
-                                     f32::from(active_player.get_speed().0),
-                                     f32::from(active_player.get_speed().1));
-
+        physics.update_ball_position(
+            active_player.get_position().0,
+            active_player.get_position().1,
+            /*active_player.radius*/ 10,
+            f32::from(active_player.get_speed().0),
+            f32::from(active_player.get_speed().1),
+        );
     }
 
     /// draw field

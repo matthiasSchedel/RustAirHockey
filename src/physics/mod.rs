@@ -1,3 +1,3 @@
 //! physics module
-pub mod physics;
 pub mod init;
+pub mod physics;

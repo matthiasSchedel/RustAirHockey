@@ -8,7 +8,7 @@ pub struct PhysicsHandler {
 }
 
 impl PhysicsHandler {
- /// physics handler constructor 
+  /// physics handler constructor
   pub fn new(physics: Physics) -> PhysicsHandler {
     PhysicsHandler {
       physics: physics,

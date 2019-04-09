@@ -65,8 +65,8 @@ impl Physics {
 
     /// sets ball speed
     pub fn set_ball_speed(&mut self, &speed_x: &f32, &speed_y: &f32) {
-        self.ball_speed[0]= speed_x;
-        self.ball_speed[1]= speed_y;
+        self.ball_speed[0] = speed_x;
+        self.ball_speed[1] = speed_y;
     }
 
     /// updates the position (and speed) of the ball.
@@ -85,8 +85,13 @@ impl Physics {
             self.calculate_border_collision_point(player_x, player_y, player_radius);
 
         // this one needs a fix, as it might need other parameters.
-        let player_collision: CollisionObject =
-            self.calculate_ball_collision_point(player_x, player_y, player_radius, speed_x, speed_y);
+        let player_collision: CollisionObject = self.calculate_ball_collision_point(
+            player_x,
+            player_y,
+            player_radius,
+            speed_x,
+            speed_y,
+        );
 
         if border_collisions.has_collided {
             self.update_pos_from_coll_point(border_collisions);
