@@ -55,7 +55,7 @@ impl Handler {
 //     };
 
 // Function init
-pub fn init<'a> (playerCount: u8, handler: Handler) -> Game {
+pub fn init (playerCount: u8, handler: Handler) -> Game {
     let game = Game::new(playerCount, handler);
     return game;
 }
