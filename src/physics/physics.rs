@@ -67,6 +67,6 @@ impl Physics {
         return CollisionObject::new(false, old_x, old_y);
     }
 
-    //input some circle object
+    /// input some circle object
     pub fn calculate_circle_coll_with_ball(&self) {}
 }

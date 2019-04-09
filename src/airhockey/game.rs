@@ -9,22 +9,23 @@ const COLOR_ARRAY: [u32; 4] = [0xfff000, 0xfff000, 0xfff000, 0xfff000];
 
 
 
-pub struct Game<'a> {
-    players: Vec<Player<'a>>,
-    score: Score<'a>,
-    ball:Ball<'a>
+pub struct Game {
+    players: Vec<Player>,
+    score: Score,
+    ball:Ball,
+    handler:Handler
 }
-impl<'a> Game<'a> {
+impl Game {
     // game constructor
-    pub fn new(number_players: u8, handler: &'a Handler) -> Game<'a> {
-        let ball = Ball::new(&handler);
+     pub fn new(number_players: u8, handler: Handler) -> Game {
+        let ball = Ball::new();
         let mut players: Vec<Player> = Vec::new();
             for p in 0..number_players {
-                players.push(Player::new(p,&handler))
+                players.push(Player::new(p))
             }
-        let score = Score::new(players.len() as u8, MAX_SCORE, &handler);
+        let score = Score::new(players.len() as u8, MAX_SCORE);
         
-        return Game { ball: ball, players: players, score: score };
+        return Game { ball: ball, players: players, score: score, handler: handler };
     }
     // is touched method
     pub fn is_touched(&self, p_id: usize) -> bool {
@@ -40,17 +41,53 @@ impl<'a> Game<'a> {
             // self.handle_inputs();
             // self.handle_physics();
             loop {
-            let scored: u8 = self.evaluate_score();
-            if scored != 0 {
-                self.score.add_score(self.evaluate_score());
+            // handle score
+            let scored: (bool,u8) = self.evaluate_score();
+            if scored.0 {
                 if self.score.is_game_over().0 {
                     //gehe in anderean State
                     loop {}
+                } else {
+                    // score board updaten
                 }
             }
+            //input handling
+                //update players with new user input -> new player pos
+            //collision handling
+                //check ball for collision -> new ball pos
+
+            //graphics handling
+                //draw field
+                //draw score
+                //draw ball 
+                //draw players
             }
             
             // self.handle_graphcis();
+    }
+
+    fn update_players_with_user_input(&self) {
+        //rufe methoden in klasse player auf
+    }
+
+    fn check_ball_for_collisons(&self) {
+
+    }
+
+    fn draw_field(&self) {
+
+    }
+
+    fn draw_score(&self) {
+
+    }
+
+    fn draw_ball(&self) {
+
+    }
+
+    fn draw_players(&self) {
+        
     }
 
     fn check_win_condition(&self) -> bool {
@@ -71,8 +108,8 @@ impl<'a> Game<'a> {
         // self.physics.handle_physics();
     }
 
-    fn evaluate_score(&self) -> u8 {
-        return 0;
+    fn evaluate_score(&self) -> (bool,u8) {
+        return (false,0);
     }
 
     fn render(&self) {

@@ -31,13 +31,13 @@ impl GeneralHardware {
 }
 
 pub struct Handler {
-    physics_handler: PhysicsHandler,
-    graphics_handler: GraphicsHandler,
-    input_handler: InputHandler,
+    pub physics_handler: PhysicsHandler,
+    pub graphics_handler: GraphicsHandler,
+    pub input_handler: InputHandler,
 }
 
 impl Handler {
-    fn new(
+    pub fn new(
         physics_handler: PhysicsHandler,
         graphics_handler: GraphicsHandler,
         input_handler: InputHandler,
@@ -55,7 +55,7 @@ impl Handler {
 //     };
 
 // Function init
-pub fn init<'a> (playerCount: u8, handler: &'a Handler) -> Game<'a> {
+pub fn init<'a> (playerCount: u8, handler: Handler) -> Game {
     let game = Game::new(playerCount, handler);
     return game;
 }

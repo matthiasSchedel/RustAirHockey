@@ -136,9 +136,9 @@ fn main() -> ! {
     let handler = airhockey::init::createHandler();
     
     let airhockey_game = airhockey::init::init(2, &handler);
-    airhockey_game.start(10, 5, true);
+    // airhockey_game.start(10, 5, true);
     // start the game loop
-    airhockey_game.game_loop();
+    airhockey_game.game_loop();  // das ist die start methode
 
     // let graphics =
 

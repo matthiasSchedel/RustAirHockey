@@ -5,14 +5,14 @@ pub const COLOR: u32 = 0xfff000;
 pub const STROKE_COLOR: u32 = 0xfff000;
 pub const HAS_STROKE: bool = false;
 
-use super::field;
+use super::{field };
 use super::input_handler::{self, InputHandler};
 use super::graphics_handler::GraphicsHandler;
 
 use super::init::Handler;
 
 // Player
-pub struct Player<'a> {
+pub struct Player {
     player_id: u8,
     current_pos: (u16,u16),
     radius:u16,
@@ -24,13 +24,12 @@ pub struct Player<'a> {
     target_pos: (u16,u16),
     ///The speed the player is moving towards the target position
     speed: (u16,u16),
-    handler: &'a Handler
 }
 
-impl<'a> Player<'a> {
+impl Player {
     //Create new player
 
-    pub fn new(player_id: u8, handler:&'a Handler) -> Player<'a>{
+    pub fn new(player_id: u8) -> Player{
         let radius = RADIUS;
         let color = COLOR;
         //This has to be changed if more than two players exist
@@ -45,7 +44,6 @@ impl<'a> Player<'a> {
                 ///The target position is the same as the current position at initialization
                 target_pos: (field::WIDTH_MAX/4,field::HEIGHT_MAX/2),
                 speed: (0,0),
-                handler:handler
 
             }
         } else {
@@ -60,20 +58,19 @@ impl<'a> Player<'a> {
                 ///The target position is the same as the current position at initialization
                 target_pos: (3* field::WIDTH_MAX/4,field::HEIGHT_MAX/2),
                 speed:(0,0),
-                handler:handler
             }
         }
     }
     ///Checks for user input and updates the player accordingly
     ///To be called in the game's main loop
-    pub fn update_player(& mut self){
-        self.update_on_user_input();
+    pub fn update_player(& mut self, handler:&mut Handler){
+        self.update_on_user_input(handler);
         self.move_player();
-        self.draw();
+        self.draw(handler);
     }
 
-    fn draw(&self){
-        // self.handler.graphics_handler.draw_player(self.color,self.color, [self.current_pos.0, self.current_pos.1], self.radius );
+    fn draw(&self, handler:&Handler){
+        handler.graphics_handler.draw_player(self.color, [self.current_pos.0, self.current_pos.1], self.radius );
     }
     
     ///Move the player according to the target position
@@ -85,15 +82,15 @@ impl<'a> Player<'a> {
             self.current_pos = self.target_pos;
             
         } else{
-            // self.current_pos = (self.curent_pos.0 + self.speed.0,self.curent_pos.1 + self.speed.1);
+            self.current_pos = (self.current_pos.0 + self.speed.0,self.current_pos.1 + self.speed.1);
         }
     }
 
-    fn update_on_user_input(&self){
-        // self.target_pos = self.handler.input_handler.get_target_position(
-        //     self.current_pos, self.radius, self.x_min, self.x_max);
-        // self.speed = (helper::unsigned_subtraction(self.target_pos.0, self.current_pos.0)/20,
-        // helper::unsigned_subtraction(self.target_pos.1, self.current_pos.1)/20);
+    fn update_on_user_input(&mut self, handler: &mut Handler){
+        self.target_pos = handler.input_handler.get_target_position(
+            self.current_pos, self.radius, self.x_min, self.x_max);
+        self.speed = (helper::unsigned_subtraction(self.target_pos.0, self.current_pos.0)/20,
+        helper::unsigned_subtraction(self.target_pos.1, self.current_pos.1)/20);
     }
     ///Get the player id
     pub fn get_id(&self) -> u8{
