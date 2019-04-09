@@ -9,10 +9,10 @@ extern crate cortex_m_rt as rt;
 extern crate cortex_m_semihosting;
 extern crate stm32f7;
 extern crate stm32f7_discovery;
-extern crate m;
+extern crate libm;
 
 use alloc_cortex_m::CortexMHeap;
-use m::Float;
+use libm::F32Ext;
 use core::alloc::Layout as AllocLayout;
 use core::panic::PanicInfo;
 use rt::{entry, exception};
@@ -26,7 +26,7 @@ use stm32f7_discovery::{
     
 };
 
-#[entry]
+3#[entry]
 fn main() -> ! {
     let peripherals = Peripherals::take().unwrap();
     let mut rcc = peripherals.RCC;
@@ -193,7 +193,7 @@ fn main() -> ! {
             let dist = distsquare.sqrt();
 
             // wir normalisieren das
-            norm_x /= dist as i16;
+            norm_x = (f32::from(norm_x) / dist) as i16;
             norm_y /= dist as i16;
 
             // dann noch einen Tangentialvektor
@@ -241,6 +241,7 @@ fn main() -> ! {
 
             velocity_x2 = pulse_x as i32 - share_norm_x2 as i32+ share_tan_x2 as i32;
             velocity_y2 = pulse_y as i32- share_norm_y2 as i32 + share_tan_y2 as i32;
+            
 
 
 
