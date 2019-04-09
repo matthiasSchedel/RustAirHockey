@@ -52,7 +52,7 @@ impl Graphics {
 
     ///Draw a circle around pos x,y with radius - and
     pub fn draw_circle(
-        &self,
+        &mut self,
         color: u32,
         pos: [u16; 2],
         radius: u16,
@@ -67,13 +67,9 @@ impl Graphics {
 
         for y in pos_y - usize::from(radius)..= pos_y + usize::from(radius) {
             for x in usize::from(pos[0] - radius)..=usize::from(pos[0] + radius) {
-                x_test = x * x;
-                x_test += y * y + pos_y * pos_y;
-                x_test -= 2 * y * pos_y;
-                x_test += pos_x * pos_x; 
-                x_test -= 2 * x * pos_x;
+                x_test = x * x + y * y + pos_y * pos_y- 2 * y * pos_y+ pos_x * pos_x-2 * x * pos_x;
                 if x_test <= usize::from(radius) * usize::from(radius) {
-                    //layer.print_point_color_at(x as usize , y as usize , color);
+                    self.display_layer.1.print_point_color_at(x, y, Color::from_hex(color));
                 }
 
             }
