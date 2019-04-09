@@ -106,4 +106,8 @@ impl Player {
         self.current_pos.0 = x;
         self.current_pos.1 = y;
     }
+
+    pub fn get_speed(&self) -> (u16, u16) {
+        self.speed
+    }
 }

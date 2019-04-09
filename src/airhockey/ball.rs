@@ -9,8 +9,8 @@ pub const HAS_STROKE: bool = false;
 use super::init::Handler;
 
 pub struct Ball {
-    position: [u16; 2],
-    speed: [f32; 2],
+    pub position: [u16; 2],
+    pub speed: [f32; 2],
 
 }
 impl Ball {

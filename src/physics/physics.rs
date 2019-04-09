@@ -55,9 +55,15 @@ impl Physics {
     }
 
     /// beams the ball to a given position. Instant speed.
-    pub fn set_ball_pos(&mut self, pos_x: u16, pos_y: u16) {
+    pub fn set_ball_pos(&mut self, &pos_x: &u16, &pos_y: &u16) {
         self.ball_pos[0] = pos_x;
         self.ball_pos[1] = pos_y;
+    }
+
+    /// sets ball speed
+    pub fn set_ball_speed(&mut self, &speed_x: &f32, &speed_y: &f32) {
+        self.ball_speed[0]= speed_x;
+        self.ball_speed[1]= speed_y;
     }
 
     /// updates the position (and speed) of the ball.
