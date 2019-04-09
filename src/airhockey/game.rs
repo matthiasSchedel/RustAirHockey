@@ -8,18 +8,6 @@ const POINTS_PER_GOAL: u8 = 1;
 const COLOR_ARRAY: [u32; 4] = [0xfff000, 0xfff000, 0xfff000, 0xfff000];
 
 
-fn createGameFromElements<'a>(number_players: u8) -> Game<'a>{
-    let handler = init::createHandler();
-    let ball = Ball::new(&handler);
-    let mut players: Vec<Player> = Vec::new();
-        for p in 0..number_players {
-            players.push(Player::new(p,&handler))
-        }
-    let score = Score::new(players.len() as u8, MAX_SCORE, &handler);
-    
-    return Game { ball: ball, players: players, score: score };
- }
-
 
 pub struct Game<'a> {
     players: Vec<Player<'a>>,
@@ -28,9 +16,15 @@ pub struct Game<'a> {
 }
 impl<'a> Game<'a> {
     // game constructor
-    pub fn new(number_players: u8) -> Game<'a> {
-        let game: Game = createGameFromElements(number_players) ;
-        return game;
+    pub fn new(number_players: u8, handler: &'a Handler) -> Game<'a> {
+        let ball = Ball::new(&handler);
+        let mut players: Vec<Player> = Vec::new();
+            for p in 0..number_players {
+                players.push(Player::new(p,&handler))
+            }
+        let score = Score::new(players.len() as u8, MAX_SCORE, &handler);
+        
+        return Game { ball: ball, players: players, score: score };
     }
     // is touched method
     pub fn is_touched(&self, p_id: usize) -> bool {
@@ -42,17 +36,20 @@ impl<'a> Game<'a> {
         // self.score = Score::new(self.players.len() as u8,max_score);
         false;
     }
-    pub fn game_loop(&self) -> bool {
+    pub fn game_loop(&self) -> ! {
             // self.handle_inputs();
             // self.handle_physics();
+            loop {
             let scored: u8 = self.evaluate_score();
             if scored != 0 {
                 self.score.add_score(self.evaluate_score());
                 if self.score.is_game_over().0 {
-                    return false;
+                    //gehe in anderean State
+                    loop {}
                 }
             }
-            return true;
+            }
+            
             // self.handle_graphcis();
     }
 

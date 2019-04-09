@@ -55,8 +55,8 @@ impl Handler {
 //     };
 
 // Function init
-pub fn init<'a> (playerCount: u8) -> Game<'a> {
-    let game = Game::new(playerCount);
+pub fn init<'a> (playerCount: u8, handler: &'a Handler) -> Game<'a> {
+    let game = Game::new(playerCount, handler);
     return game;
 }
 
@@ -74,13 +74,14 @@ pub fn init<'a> (playerCount: u8) -> Game<'a> {
 // }
 
 pub fn createHandler() -> Handler {
+    
     let hardware: (
         (
             lcd::Layer<lcd::FramebufferArgb8888>,
             lcd::Layer<lcd::FramebufferAl88>
         ),
         I2C<I2C3>
-    );
+    ) = init_general_hardware();
     let layers = ((hardware.0).0, (hardware.0).1);
     let graphics = Graphics::new(
         field::WIDTH_MAX, field::HEIGHT_MAX,
