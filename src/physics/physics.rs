@@ -9,6 +9,7 @@ const USE_FRICTION: bool = true;
 
 /// Physics struct
 pub struct Physics {
+    /// display
     display: i32,
     // display width
     width: u16,

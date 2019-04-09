@@ -42,8 +42,8 @@ impl Handler {
 }
 
 /// Function init
-pub fn init(playerCount: u8, handler: Handler) -> Game {
-    let game = Game::new(playerCount, handler);
+pub fn init(player_count: u8, handler: Handler) -> Game {
+    let game = Game::new(player_count, handler);
     return game;
 }
 /// create handler function
@@ -81,20 +81,20 @@ pub fn init_general_hardware(
     /// initialising LCD screen
     let core_peripherals = CorePeripherals::take().unwrap();
     let mut systick = core_peripherals.SYST;
-    let mut nvic = core_peripherals.NVIC;
+    let nvic = core_peripherals.NVIC;
 
     let peripherals = Peripherals::take().unwrap();
     let mut rcc = peripherals.RCC;
-    let mut pwr = peripherals.PWR;
-    let mut flash = peripherals.FLASH;
+    let pwr = peripherals.PWR;
+    let flash = peripherals.FLASH;
     let mut fmc = peripherals.FMC;
     let mut ltdc = peripherals.LTDC;
-    let mut sai_2 = peripherals.SAI2;
-    let mut rng = peripherals.RNG;
-    let mut sdmmc = peripherals.SDMMC1;
-    let mut syscfg = peripherals.SYSCFG;
-    let mut ethernet_mac = peripherals.ETHERNET_MAC;
-    let mut ethernet_dma = peripherals.ETHERNET_DMA;
+    let sai_2 = peripherals.SAI2;
+    let rng = peripherals.RNG;
+    let sdmmc = peripherals.SDMMC1;
+    let syscfg = peripherals.SYSCFG;
+    let ethernet_mac = peripherals.ETHERNET_MAC;
+    let ethernet_dma = peripherals.ETHERNET_DMA;
 
     init::init_systick(Hz(100), &mut systick, &rcc);
     systick.enable_interrupt();
@@ -125,12 +125,12 @@ pub fn init_general_hardware(
 
     layer_1.clear();
     layer_2.clear();
-    let mut lcd_display: (
+    let lcd_display: (
         lcd::Layer<lcd::FramebufferArgb8888>,
         lcd::Layer<lcd::FramebufferAl88>,
     ) = (layer_1, layer_2);
 
     // Initialisig touch
-    let mut i2c_3 = init::init_i2c_3(peripherals.I2C3, &mut rcc);
+    let i2c_3 = init::init_i2c_3(peripherals.I2C3, &mut rcc);
     return (lcd_display, i2c_3);
 }
