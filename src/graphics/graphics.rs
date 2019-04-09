@@ -59,15 +59,23 @@ impl Graphics {
         draw_stroke: bool,
         stroke_color: u32,
     ) {
-        for y in pos[1] - radius..=pos[1] + radius {
-            for x in pos[0] - radius..=pos[0] + radius {
-                println!("x:{}", x);
-                if x * x + pos[0] * pos[0] - 2 * x * pos[0] + y * y + pos[1] * pos[1]
-                    - 2 * y * pos[1]
-                    <= radius * radius
-                {
+        let mut x_test = 0;
+        let pos_x = usize::from(pos[0]);
+        let pos_y = usize::from(pos[1]);
+        assert!(pos_x < 523);
+        assert!(pos_y < 293);
+
+        for y in pos_y - usize::from(radius)..= pos_y + usize::from(radius) {
+            for x in usize::from(pos[0] - radius)..=usize::from(pos[0] + radius) {
+                x_test = x * x;
+                x_test += y * y + pos_y * pos_y;
+                x_test -= 2 * y * pos_y;
+                x_test += pos_x * pos_x; 
+                x_test -= 2 * x * pos_x;
+                if x_test <= usize::from(radius) * usize::from(radius) {
                     //layer.print_point_color_at(x as usize , y as usize , color);
                 }
+
             }
         }
     }
@@ -81,6 +89,7 @@ impl Graphics {
 
     pub fn init(&self) {}
 
+    ///
     pub fn draw_rectangle(
         layer: &mut lcd::Layer<FramebufferArgb8888>,
         x_start: u16,

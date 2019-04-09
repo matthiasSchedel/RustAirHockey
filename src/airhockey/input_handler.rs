@@ -25,10 +25,6 @@ impl InputHandler {
         }
     }
 
-    pub fn calculate_new_pos_from_input(pos: (u16, u16)) -> (bool, (u16, u16)) {
-        return { (false, (0, 0)) };
-    }
-
     ///Get touch position of a player by aggregating over all relevant touches
     pub fn get_target_position(
         &mut self,
@@ -36,11 +32,13 @@ impl InputHandler {
         touch_radius: u16,
         half_x_min: u16,
         half_x_max: u16,
-    ) -> (u16, u16) {
+    ) -> (bool,(u16, u16)) {
         let filtered_touches = self.filter_touches_for_player(half_x_min, half_x_max);
         let mut position = (0, 0);
+        let mut is_touch = false;
 
         for touch in filtered_touches {
+            is_touch = true;
             //If the touch position is inside the radius of the player
             if helper::unsigned_subtraction(pos.0, touch.0) < 2 * touch_radius
                 && helper::unsigned_subtraction(pos.1, touch.1) < 2 * touch_radius
@@ -54,7 +52,7 @@ impl InputHandler {
                 position.1 = touch.1;
             }
         }
-        (position.0, position.1)
+        (is_touch, (position.0, position.1))
     }
     pub fn fetch_input(&mut self) {
         self.last_input_positions = self.input.get_touch_positions()

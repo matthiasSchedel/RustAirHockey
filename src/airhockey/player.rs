@@ -17,7 +17,7 @@ pub struct Player {
     ///Defining the half of the field where the player can move
     x_min: u16,
     x_max: u16,
-    ///The player is following the user's input (given by target_position)
+    ///The player is following the user's input (given by target_position)ar
     target_pos: (u16, u16),
     ///The speed the player is moving towards the target position
     speed: (u16, u16),
@@ -68,8 +68,8 @@ impl Player {
 
     ///Move the player according to the target position
     pub fn move_player(&mut self) {
-        if helper::unsigned_subtraction(self.current_pos.0, self.target_pos.1) < self.speed.0
-            && helper::unsigned_subtraction(self.current_pos.1, self.target_pos.1) < self.speed.1
+        if helper::unsigned_subtraction(self.current_pos.0, self.target_pos.1) <= self.speed.0
+            && helper::unsigned_subtraction(self.current_pos.1, self.target_pos.1) <= self.speed.1
         {
             self.speed = (0, 0);
             self.current_pos = self.target_pos;
@@ -85,12 +85,16 @@ impl Player {
         if self.player_id == 0 {
             handler.input_handler.fetch_input();
         }
-        self.target_pos = handler.input_handler.get_target_position(
+        let (is_touched, pos) = handler.input_handler.get_target_position(
             self.current_pos,
             self.radius,
             self.x_min,
             self.x_max,
         );
+        //Important! Only perform when there are touches!
+        if is_touched {
+            self.target_pos = pos;
+        }
         self.speed = (
             helper::unsigned_subtraction(self.target_pos.0, self.current_pos.0) / 20,
             helper::unsigned_subtraction(self.target_pos.1, self.current_pos.1) / 20,
