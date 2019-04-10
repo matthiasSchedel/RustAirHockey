@@ -63,22 +63,7 @@ impl Player {
             }
         }
     }
-    ///Checks for user input and updates the player accordingly
-    ///To be called in the game's main loop
-    pub fn update_player(&mut self, handler: &mut Handler) {
-        self.update_on_user_input(handler);
-        self.move_player();
-        self.draw(handler);
-    }
-
-    // //draw the player
-    // fn draw(&self, handler: &Handler) {
-    //     handler.graphics_handler.draw_player(
-    //         self.color,
-    //         [self.current_pos.0, self.current_pos.1],
-    //         self.radius,
-    //     );
-
+   
     pub fn draw(&self, handler: &mut Handler) {
         handler.graphics_handler.draw_player(
             self.color,
@@ -89,17 +74,20 @@ impl Player {
 
     ///Move the player according to the target position
     pub fn move_player(&mut self) {
+        let mut x = 0;
+        let mut y = 0;
         if i32::from(self.current_pos.0) - i32::from(self.target_pos.0) <= self.speed.0
             && i32::from(self.current_pos.1) - i32::from(self.target_pos.1) <= self.speed.1
         {
             self.speed = (0, 0);
-            self.current_pos = self.target_pos;
+            x= i32::from(self.target_pos.0);
+            y= i32::from(self.target_pos.1);
         } else {
-            self.current_pos = (
-                (i32::from(self.current_pos.0) + self.speed.0) as u16,
-                (i32::from(self.current_pos.1) + self.speed.1) as u16,
-            );
+            x = i32::from(self.current_pos.0) + self.speed.0;
+            y = i32::from(self.current_pos.1) + self.speed.1;
         }
+        //Always has to be inside the field borders
+        self.current_pos = field::get_position_still_in_field((x, y), self.current_pos, self.radius);
     }
 
     ///update player on user input
@@ -114,8 +102,8 @@ impl Player {
             self.x_max,
         );
         //Important! Only perform when there are touches!
-        if is_touched {
-            self.target_pos = pos;
+        if is_touched{
+            self.target_pos = field::get_position_still_in_field((i32::from(pos.0), i32::from(pos.1)), self.current_pos, self.radius);
         }
         self.speed = (
             (i32::from(self.target_pos.0) - i32::from(self.current_pos.0)) / 2,
