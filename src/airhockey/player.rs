@@ -1,7 +1,7 @@
 //! Airhockey Player.
 use super::helper;
 /// player radius
-pub const RADIUS: u16 = 10;
+pub const RADIUS: u16 = 20;
 /// player fill color
 pub const COLOR: u32 = 0xfff000;
 /// player radius
