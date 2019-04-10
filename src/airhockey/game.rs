@@ -3,7 +3,7 @@ const MAX_SCORE: u16 = 10;
 
 
 use super::{
-    super::physics::physics, ball::Ball, field, init, init::Handler, player::Player, score::Score,
+    super::physics::physics, ball::Ball, field, init, init::Handler, player::Player, score::Score,field::Field
 };
 use alloc::vec::Vec;
 
@@ -17,6 +17,7 @@ pub struct Game {
     players: Vec<Player>,
     score: Score,
     ball: Ball,
+    field: Field,
     handler: Handler,
 }
 impl Game {
@@ -24,6 +25,7 @@ impl Game {
     pub fn new(number_players: u8, handler: Handler) -> Game {
         let ball = Ball::new();
         let mut players: Vec<Player> = Vec::new();
+        let field = Field::new();
         for p in 0..number_players {
             players.push(Player::new(p))
         }
@@ -33,6 +35,7 @@ impl Game {
             ball: ball,
             players: players,
             score: score,
+            field: field,
             handler: handler,
         };
     }
@@ -70,12 +73,12 @@ impl Game {
             //update players with new user input -> new player pos
             self.handle_inputs();
             self.update_players_with_user_input();
-            self.draw_players();
+
             //collision handling
             self.handle_collisions();
-            //check ball for collision -> new ball pos
 
             //graphics handling
+            self.prepare_drawing();
             self.draw_field();
             self.draw_score();
             self.draw_players();
@@ -85,8 +88,17 @@ impl Game {
         // self.handle_graphcis();
     }
 
+    fn prepare_drawing(&self) {
+
+    }
+
     fn update_score(&mut self) -> bool {
-        self.score.check_goals_and_update_score(self.ball.position).0;
+        let score_res = self.score.check_goals_and_update_score(self.ball.position);
+        return (score_res.0);
+    }
+
+    fn draw_field(&mut self) {
+        self.field.draw(&mut self.handler);
     }
 
     /// update player with user input
@@ -124,17 +136,9 @@ impl Game {
 
     ///
     fn draw_ball(&mut self) {
-        self.handler.graphics_handler.draw_ball(
-            0xff_00_00, /*insert ball color*/
-            self.ball.position,
-            10, /* insert real radius*/
-        )
+        self.ball.draw(&mut self.handler);
     }
 
-    /// draw score
-    fn draw_field(&self) {
-        // self.handler.graphics_handler.
-    }
 
     fn draw_score(&mut self) {}
 
