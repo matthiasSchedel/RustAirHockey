@@ -3,12 +3,12 @@ use crate::physics::physics::Physics;
 
 /// physics handler struct
 pub struct PhysicsHandler {
-    pub physics: Physics,
+  pub physics: Physics,
   screen_size: [u16; 2],
 }
 
 impl PhysicsHandler {
-    /// physics handler constructor
+  /// physics handler constructor
   pub fn new(physics: Physics) -> PhysicsHandler {
     PhysicsHandler {
       physics: physics,
@@ -17,8 +17,8 @@ impl PhysicsHandler {
   }
   // Ball constructor
 
-    /// (true,_) if collision, (,_) and new speed after collection
-    pub fn calculate_border_coll(pos: [u16; 2]) -> (bool, [u16; 2]) {
-        return { (false, [0, 0]) };
-    }
+  /// (true,_) if collision, (,_) and new speed after collection
+  pub fn calculate_border_coll(pos: [u16; 2]) -> (bool, [u16; 2]) {
+    return { (false, [0, 0]) };
+  }
 }

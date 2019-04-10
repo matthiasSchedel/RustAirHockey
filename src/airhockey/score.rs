@@ -23,7 +23,6 @@ impl Score {
             player_scores: player_scores,
             max_score: max_score,
         }
-
     }
     /// add to the score of a player
     pub fn add_score(&mut self, player: u8) {
@@ -34,13 +33,11 @@ impl Score {
     pub fn is_game_over(&mut self) -> (bool, u8) {
         let mut i: u16 = 1;
         for p in (0..self.player_scores.len()) {
-            if p >= self.max_score as usize
-            {
+            if p >= self.max_score as usize {
                 return (true, p as u8);
             }
             i += 1;
         }
         return (false, 0);
     }
-
 }

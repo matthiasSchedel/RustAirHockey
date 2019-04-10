@@ -2,7 +2,7 @@
 const MAX_SCORE: u16 = 10;
 
 use super::{
-    super::physics::physics, ball::Ball, field, init, init::Handler, player::Player, score::Score
+    super::physics::physics, ball::Ball, field, init, init::Handler, player::Player, score::Score,
 };
 use alloc::vec::Vec;
 
@@ -42,7 +42,7 @@ impl Game {
     }
 
     /// game loop
-    pub fn game_loop(& mut self) -> ! {
+    pub fn game_loop(&mut self) -> ! {
         loop {
             // handle score
             let scored: (bool, u8) = self.evaluate_score();
@@ -74,7 +74,7 @@ impl Game {
         // self.handle_graphcis();
     }
 
-    fn update_score(& mut self, scoring_player: u8) {
+    fn update_score(&mut self, scoring_player: u8) {
         self.score.add_score(scoring_player);
     }
 
@@ -88,13 +88,18 @@ impl Game {
 
     /// check ball for colls
     // constructs a physics-object from the current game state, checks for collision und updates ball position and speed
-    fn check_ball_for_collisons(& mut self, mut handler: Handler) {
-
-        handler.physics_handler.physics.set_ball_pos(&self.ball.position[0], &self.ball.position[1]);
-        handler.physics_handler.physics.set_ball_speed(&self.ball.speed[0], &self.ball.speed[1]);
+    fn check_ball_for_collisons(&mut self, mut handler: Handler) {
+        handler
+            .physics_handler
+            .physics
+            .set_ball_pos(&self.ball.position[0], &self.ball.position[1]);
+        handler
+            .physics_handler
+            .physics
+            .set_ball_speed(&self.ball.speed[0], &self.ball.speed[1]);
         let mut active_player: usize = 1;
         if self.ball.position[0] < (field::WIDTH_MAX / 2) {
-           active_player = 0;
+            active_player = 0;
         }
 
         handler.physics_handler.physics.update_ball_position(
@@ -106,24 +111,30 @@ impl Game {
         );
     }
 
-    /// 
+    ///
     fn draw_ball(&mut self) {
-        self.handler.graphics_handler.draw_ball(0xff_00_00 /*insert ball color*/, self.ball.position, 10 /* insert real radius*/)
-     }
+        self.handler.graphics_handler.draw_ball(
+            0xff_00_00, /*insert ball color*/
+            self.ball.position,
+            10, /* insert real radius*/
+        )
+    }
 
     /// draw score
-    fn draw_field(&self) {}
+    fn draw_field(&self) {
+        // self.handler.graphics_handler.
+    }
 
     fn draw_score(&mut self) {}
 
     fn draw_players(&mut self) {
-        for p in & mut self.players {
+        for p in &mut self.players {
             p.draw(&mut self.handler);
         }
     }
 
     /// check if a player has won and return winning player if true
-    fn check_win_condition(& mut self) -> bool {
+    fn check_win_condition(&mut self) -> bool {
         if self.score.is_game_over().0 {
             return true;
         } else {

@@ -63,7 +63,7 @@ impl Player {
             }
         }
     }
-///Checks for user input and updates the player accordingly
+    ///Checks for user input and updates the player accordingly
     ///To be called in the game's main loop
     pub fn update_player(&mut self, handler: &mut Handler) {
         self.update_on_user_input(handler);
@@ -79,7 +79,7 @@ impl Player {
     //         self.radius,
     //     );
 
-    pub fn draw(&self, handler:&mut Handler) {
+    pub fn draw(&self, handler: &mut Handler) {
         handler.graphics_handler.draw_player(
             self.color,
             [self.current_pos.0, self.current_pos.1],
@@ -91,7 +91,6 @@ impl Player {
     pub fn move_player(&mut self) {
         if helper::unsigned_subtraction(self.current_pos.0, self.target_pos.1) <= self.speed.0
             && helper::unsigned_subtraction(self.current_pos.1, self.target_pos.1) <= self.speed.1
-
         {
             self.speed = (0, 0);
             self.current_pos = self.target_pos;

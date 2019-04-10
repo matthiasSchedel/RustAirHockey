@@ -28,15 +28,15 @@ impl GraphicsHandler {
     }
 
     pub fn draw_player(&mut self, color: u32, pos: [u16; 2], radius: u16) {
-self.graphics.draw_circle(color, pos, radius, false, color);
-}
+        self.graphics.draw_circle(color, pos, radius, false, color);
+    }
 
-pub fn draw_playing_field(&mut self) {
-    self.graphics.draw_field(
-        field::BACKGROUND_COLOR,
-        [field::WIDTH_MAX, field::HEIGHT_MAX],
-        field::BORDER_WIDTH,
-        field::GOAL_SIZE,
-    );
-}
+    pub fn draw_playing_field(&mut self) {
+        self.graphics.draw_field(
+            field::BACKGROUND_COLOR,
+            [field::WIDTH_MAX, field::HEIGHT_MAX],
+            field::BORDER_WIDTH,
+            field::GOAL_SIZE,
+        );
+    }
 }

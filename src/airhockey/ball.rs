@@ -1,12 +1,12 @@
 //! ball module
 /// draw radius of ball
-pub const RADIUS:u16 = 10;
+pub const RADIUS: u16 = 10;
 /// fill color of ball
 pub const COLOR: u32 = 0xfff000;
 /// start position of ball in game
-pub const START_POSITION: [u16;2] = [RADIUS,RADIUS];
+pub const START_POSITION: [u16; 2] = [RADIUS, RADIUS];
 /// start velocity of ball?
-pub const START_SPEED: [f32;2] = [0.0,0.0];
+pub const START_SPEED: [f32; 2] = [0.0, 0.0];
 /// has bool of ball
 pub const STROKE_COLOR: u32 = 0xfff010;
 /// has bool stroke?
@@ -28,4 +28,3 @@ impl Ball {
         }
     }
 }
-

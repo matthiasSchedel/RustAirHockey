@@ -1,10 +1,10 @@
 //! input handler module
 extern crate alloc;
-use super::helper;
 use super::field;
+use super::helper;
+use crate::touch::{self, Touch};
 use alloc::vec::Vec;
 use arrayvec::ArrayVec;
-use crate::touch::{self, Touch};
 
 use super::ball::{self, Ball};
 use crate::input::input::Input;
@@ -35,7 +35,7 @@ impl InputHandler {
         touch_radius: u16,
         half_x_min: u16,
         half_x_max: u16,
-    ) -> (bool,(u16, u16)) {
+    ) -> (bool, (u16, u16)) {
         let filtered_touches = self.filter_touches_for_player(half_x_min, half_x_max);
         let mut position = (0, 0);
         let mut is_touch = false;
