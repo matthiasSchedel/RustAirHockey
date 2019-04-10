@@ -51,7 +51,7 @@ impl Physics {
         Physics {
             width,
             height,
-            ball_pos: vec![0, 0],
+            ball_pos: vec![200, 200],
             ball_speed: vec![0., 0.],
             ball_radius,
         }
@@ -82,22 +82,22 @@ impl Physics {
         speed_y: f64,
     ) -> (u16, u16) {
         let border_collisions: CollisionObject =
-            self.calculate_border_collision_point(player_x, player_y, player_radius);
+            self.calculate_border_collision_point();
 
         // this one needs a fix, as it might need other parameters.
-        let player_collision: CollisionObject = self.calculate_ball_collision_point(
+        /*let player_collision: CollisionObject = self.calculate_ball_collision_point(
             player_x,
             player_y,
             player_radius,
             speed_x,
             speed_y,
-        );
+        );*/
 
         if border_collisions.has_collided {
             self.update_pos_from_coll_point(border_collisions)
-        } else if player_collision.has_collided {
+        } /*else if player_collision.has_collided {
             self.update_pos_from_coll_point(player_collision)
-        } else {
+        } */else {
             self.update_ball_pos_without_coll()
         }
     }
@@ -127,51 +127,46 @@ impl Physics {
         (self.ball_pos[0], self.ball_pos[1])
     }
 
-    fn update_ball_pos_without_coll(&mut self) -> (u16, u16){
+    fn update_ball_pos_without_coll(&mut self) -> (u16, u16) {
         //set new position
         self.ball_pos[0] += self.ball_speed[0] as u16;
         self.ball_pos[1] += self.ball_speed[1] as u16;
 
         //apply friction
-        if USE_FRICTION {
+        /*if USE_FRICTION {
             self.ball_speed[0] *= FRICTION;
             self.ball_speed[1] *= FRICTION;
-        }
+        }*/
 
         (self.ball_pos[0], self.ball_pos[1])
     }
 
     /// checks if and where a ball collides with the border and returns a corresponding collision object
-    fn calculate_border_collision_point(
-        &self,
-        player_x: u16,
-        player_y: u16,
-        player_radius: u16,
-    ) -> CollisionObject {
+    fn calculate_border_collision_point(&self) -> CollisionObject {
         let coll_x;
         let coll_y;
         let mut collision: bool = false;
 
         //x-Richtung: Fallen wir links raus? Rechts?
-        if i32::from(player_x) + self.ball_speed[0] as i32 + i32::from(player_radius) <= 0 {
+        if i32::from(self.ball_pos[0]) + self.ball_speed[0] as i32 - i32::from(self.ball_radius) <= 10 {
             collision = true;
             coll_x = 0;
-        } else if player_x + self.ball_speed[0] as u16 + player_radius >= self.width {
+        } else if i32::from(self.ball_pos[0]) + self.ball_speed[0] as i32 + i32::from(self.ball_radius) >= i32::from(self.width) -10{
             collision = true;
             coll_x = self.width;
         } else {
-            coll_x = player_x;
+            coll_x = self.ball_pos[0];
         }
 
         //y-Richtung: Fallen wir oben oder unten raus?
-        if i32::from(player_y) + self.ball_speed[1] as i32 + i32::from(player_radius) <= 0 {
+        if i32::from(self.ball_pos[1]) + self.ball_speed[1] as i32 - i32::from(self.ball_radius) <= 10 {
             collision = true;
             coll_y = 0;
-        } else if player_y + self.ball_speed[1] as u16 + player_radius >= self.height {
+        } else if i32::from(self.ball_pos[1]) + self.ball_speed[1] as i32 + i32::from(self.ball_radius) >= i32::from(self.height) -10 {
             collision = true;
             coll_y = self.height;
         } else {
-            coll_y = player_y;
+            coll_y = self.ball_pos[1];
         }
 
         CollisionObject::new(collision, coll_x, coll_y, 0., 0.)
@@ -252,7 +247,7 @@ impl Physics {
     pub fn calculate_circle_coll_with_ball(&self) {}
 
     ///get ball speed
-    pub fn get_ball_speed(&self) -> (f64, f64){
+    pub fn get_ball_speed(&self) -> (f64, f64) {
         (self.ball_speed[0], self.ball_speed[1])
     }
 }

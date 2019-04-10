@@ -114,37 +114,6 @@ impl Game {
         }
     }
 
-    /// check ball for colls
-    /// checks for collision und updates ball position and speed
-    fn check_ball_for_collisons(&mut self) {
-        self.handler
-            .physics_handler
-            .physics
-            .set_ball_pos(&self.ball.position[0], &self.ball.position[1]);
-        self.handler
-            .physics_handler
-            .physics
-            .set_ball_speed(&self.ball.speed[0], &self.ball.speed[1]);
-        let active_player = if self.ball.position[0] < (field::WIDTH_MAX / 2) { 0 } else { 1 };
-
-        let new_ball_pos = self.handler.physics_handler.physics.update_ball_position(
-            self.players[active_player].get_position().0,
-            self.players[active_player].get_position().1,
-            self.players[active_player].get_radius(),
-            f64::from(self.players[active_player].get_speed().0),
-            f64::from(self.players[active_player].get_speed().1),
-        );
-
-        let new_ball_speed = self.handler.physics_handler.physics.get_ball_speed();
-        self.ball.position = [new_ball_pos.0, new_ball_pos.1];
-        self.ball.speed = [new_ball_speed.0, new_ball_speed.1];
-    }
-
-    ///
-    fn draw_ball(&mut self) {
-        self.ball.draw(&mut self.handler);
-    }
-
     /// draw score
     fn draw_field(&mut self) {
         self.field.draw(&mut self.handler);
@@ -152,20 +121,9 @@ impl Game {
 
     fn draw_score(&mut self) {}
 
-    fn draw_players(&mut self) {
-        for p in &mut self.players {
-            p.draw(&mut self.handler);
-        }
-    }
-
     /// check if a player has won and return winning player if true
     fn check_win_condition(&mut self) -> bool {
-        if self.score.is_game_over().0 {
-            return true;
-        } else {
-            return false;
-            // print player self.score.is_game_over() has won
-        }
+        self.score.is_game_over().0
     }
 
     /// handler the player inputs
@@ -174,33 +132,22 @@ impl Game {
         // self.input.handle_player_inputs(); // handle all player inputs
     }
 
-    /// handle the physics
-    fn handle_physics(&self) {
-        // self.physics.handle_physics();
-    }
-
-    // /// evaluate the score
-    // fn update_score(&self) -> (bool, u8) {
-    //     self.score.check_goals_and_update_score(self.ball.position);
-    //     self.score.draw_score();
-    //     return (false, 0);
-    // }
-
-    /// render the game
-    fn render(&self) {
-
-        // for p in self.players {
-        // self.controller.graphics.draw_circle(COLOR_ARRAY[(p.player_id as usize)], p.get_position().0)
-        // }
-    }
-
     /// get the collsiiosn
     fn handle_collisions(&mut self) {
-        self.check_ball_for_collisons();
+        let active_player = if self.ball.position[0] < (field::WIDTH_MAX / 2) { 0 } else { 1 };
+        let ball_speed = (self.ball.speed[0], self.ball.speed[1]);
+        let player_position = self.players[active_player].get_position();
+        let player_radius = self.players[active_player].get_radius();
+        let player_speed = (f64::from(self.players[active_player].get_speed().0), 
+                            f64::from(self.players[active_player].get_speed().1));
+
+
+
+        self.handler.physics_handler.update_ball_speed(&ball_speed);
+        let new_ball_position = self.handler.physics_handler.update_ball_position(player_position, player_radius, player_speed);
+        let new_ball_speed = self.handler.physics_handler.get_ball_speed();
+
+        self.ball.position = [new_ball_position.0, new_ball_position.1];
+        self.ball.speed = [new_ball_speed.0, new_ball_speed.1]
     }
-
-    // pub fn init(&self) {
-
-    // }
-
 }
