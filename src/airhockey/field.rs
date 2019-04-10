@@ -10,18 +10,14 @@ pub const BORDER_WIDTH: u16 = 10;
 pub const GOAL_SIZE: u16 = 50;
 
 /// structrepresents a Field in airhockey game
-pub struct Field {
-
-}
+pub struct Field {}
 impl Field {
-    /// Field constructor
-    pub fn new() -> Field {
-        Field {
-            
-        }
-    }
+  /// Field constructor
+  pub fn new() -> Field {
+    Field {}
+  }
 
-    pub fn draw(&self, handler:&mut Handler) {
-      handler.graphics_handler.draw_playing_field();
-    }
+  pub fn draw(&self, handler: &mut Handler) {
+    handler.graphics_handler.draw_playing_field();
+  }
 }

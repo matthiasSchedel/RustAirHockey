@@ -1,9 +1,9 @@
 //! Airhockey game.
 const MAX_SCORE: u16 = 10;
 
-
 use super::{
-    super::physics::physics, ball::Ball, field, init, init::Handler, player::Player, score::Score,field::Field
+    super::physics::physics, ball::Ball, field, field::Field, init, init::Handler, player::Player,
+    score::Score,
 };
 use alloc::vec::Vec;
 
@@ -50,9 +50,7 @@ impl Game {
         return false;
     }
 
-    fn handle_game_over(&self) {
-
-    } 
+    fn handle_game_over(&self) {}
 
     /// game loop
     pub fn game_loop(&mut self) -> ! {
@@ -88,9 +86,7 @@ impl Game {
         // self.handle_graphcis();
     }
 
-    fn prepare_drawing(&self) {
-
-    }
+    fn prepare_drawing(&self) {}
 
     fn update_score(&mut self) -> bool {
         let score_res = self.score.check_goals_and_update_score(self.ball.position);
@@ -138,7 +134,6 @@ impl Game {
     fn draw_ball(&mut self) {
         self.ball.draw(&mut self.handler);
     }
-
 
     fn draw_score(&mut self) {}
 
