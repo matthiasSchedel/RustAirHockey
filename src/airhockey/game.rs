@@ -1,6 +1,7 @@
 //! Airhockey game.
 const MAX_SCORE: u16 = 10;
 
+
 use super::{
     super::physics::physics, ball::Ball, field, init, init::Handler, player::Player, score::Score,
 };
@@ -41,17 +42,27 @@ impl Game {
         return false;
     }
 
+    ///
+    pub fn check_goals() -> bool {
+        return false;
+    }
+
+    fn handle_game_over(&self) {
+
+    } 
+
     /// game loop
     pub fn game_loop(&mut self) -> ! {
         loop {
             // handle score
-            let scored: (bool, u8) = self.evaluate_score();
-            if scored.0 {
+            let scored: bool = self.update_score();
+            if scored {
                 if self.score.is_game_over().0 {
+                    self.handle_game_over();
                     //gehe in einen anderen State
                     loop {}
                 } else {
-                    self.update_score(scored.1);
+                    self.score.draw(&mut self.handler);
                     // score board updaten
                 }
             }
@@ -74,8 +85,8 @@ impl Game {
         // self.handle_graphcis();
     }
 
-    fn update_score(&mut self, scoring_player: u8) {
-        self.score.add_score(scoring_player);
+    fn update_score(&mut self) -> bool {
+        self.score.check_goals_and_update_score(self.ball.position).0;
     }
 
     /// update player with user input
@@ -154,10 +165,12 @@ impl Game {
         // self.physics.handle_physics();
     }
 
-    /// evaluate the score
-    fn evaluate_score(&self) -> (bool, u8) {
-        return (false, 0);
-    }
+    // /// evaluate the score
+    // fn update_score(&self) -> (bool, u8) {
+    //     self.score.check_goals_and_update_score(self.ball.position);
+    //     self.score.draw_score();
+    //     return (false, 0);
+    // }
 
     /// render the game
     fn render(&self) {

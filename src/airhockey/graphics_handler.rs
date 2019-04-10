@@ -3,6 +3,7 @@ use super::field;
 use super::{ball, ball::Ball};
 use super::{player, player::Player};
 use crate::graphics::graphics::Graphics;
+use alloc::vec::Vec;
 
 /// no of layer where to draw
 const DRAW_LAYER_NO: u8 = 1;
@@ -30,6 +31,10 @@ impl GraphicsHandler {
     pub fn draw_player(&mut self, color: u32, pos: [u16; 2], radius: u16) {
         self.graphics.draw_circle(color, pos, radius, false, color);
     }
+
+    pub fn draw_score(&mut self, player_scores: Vec<u16>) {
+    }
+
 
     pub fn draw_playing_field(&mut self) {
         self.graphics.draw_field(
