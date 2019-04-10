@@ -39,6 +39,10 @@ impl Game {
             handler: handler,
         };
     }
+
+    fn get_drawable_objects(&mut self) -> Vec<((u16, u16), u16, u32)> {
+        return vec![((0, 0), 0, 0)];
+    }
     /// is touched method
     pub fn is_touched(&self, p_id: usize) -> bool {
         self.players[p_id].get_position();
@@ -90,7 +94,9 @@ impl Game {
     fn prepare_drawing(&self) {}
 
     fn update_score(&mut self) -> bool {
-        self.score.check_goals_and_update_score(self.ball.position).0
+        self.score
+            .check_goals_and_update_score(self.ball.position)
+            .0
     }
 
     /// update player with user input
