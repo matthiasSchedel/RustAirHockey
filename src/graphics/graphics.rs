@@ -1,4 +1,7 @@
 //! Graphics controller.
+
+
+
 use crate::{
     gpio::{GpioPort, OutputPin},
     init,
@@ -160,6 +163,21 @@ impl Graphics {
             field_size[1],
             color,
         );
+    }
+
+    pub fn get_numbers(){
+        let one=include_bytes!("1.data");
+        let two=include_bytes!("2.data");
+        let three=include_bytes!("3.data");
+        let four=include_bytes!("4.data");
+        let five=include_bytes!("5.data");
+        let six=include_bytes!("6.data");
+        let seven=include_bytes!("7.data");
+        let eight=include_bytes!("8.data");
+        let nine=include_bytes!("9.data");
+
+        
+
     }
 }
 
