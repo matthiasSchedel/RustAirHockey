@@ -182,7 +182,7 @@ impl Game {
     }
 
     /// get the collsiiosn
-    fn handle_collisions(& mut self) {
+    fn handle_collisions(&mut self) {
         self.check_ball_for_collisons();
     }
     // pub fn init(&self) {
