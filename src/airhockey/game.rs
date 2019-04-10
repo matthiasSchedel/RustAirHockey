@@ -70,6 +70,7 @@ impl Game {
             //update players with new user input -> new player pos
             self.handle_inputs();
             self.update_players_with_user_input();
+            self.handler.graphics_handler.clear_dynamic_content();
             self.draw_players();
             //collision handling
             self.handle_collisions();
@@ -86,7 +87,8 @@ impl Game {
     }
 
     fn update_score(&mut self) -> bool {
-        self.score.check_goals_and_update_score(self.ball.position).0;
+        //self.score.check_goals_and_update_score(self.ball.position).0;
+        return false;
     }
 
     /// update player with user input

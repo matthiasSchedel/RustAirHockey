@@ -6,7 +6,7 @@ use crate::graphics::graphics::Graphics;
 use alloc::vec::Vec;
 
 /// no of layer where to draw
-const DRAW_LAYER_NO: u8 = 1;
+const DRAW_LAYER_NO: u8 = 0;
 
 /// graphics handler struct
 pub struct GraphicsHandler {
@@ -43,5 +43,9 @@ impl GraphicsHandler {
             field::BORDER_WIDTH,
             field::GOAL_SIZE,
         );
+    }
+
+    pub fn clear_dynamic_content(&mut self){
+        self.graphics.clear_layer(0);
     }
 }

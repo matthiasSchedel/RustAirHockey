@@ -45,10 +45,6 @@ impl Graphics {
             height: height,
         }
     }
-    /// is touched method
-    pub fn is_touched(&self, p_id: usize) -> bool {
-        return false;
-    }
 
     /// check if point is outside
     fn isPointOutside(&self, point: [u16; 2], pointsize: u16) -> bool {
@@ -56,7 +52,7 @@ impl Graphics {
             && (self.height > point[1] + pointsize || point[1] > 0);
     }
 
-    ///draw a circle around pos x,y with radius - and
+    ///draw a circle around pos x,y with radius
     pub fn draw_circle(
         &mut self,
         color: u32,
@@ -66,10 +62,10 @@ impl Graphics {
         stroke_color: u32,
     ) {
         let mut x_test = 0;
+        assert!(pos[0] < self.width);
+        assert!(pos[1] < self.height);
         let pos_x = usize::from(pos[0]);
         let pos_y = usize::from(pos[1]);
-        assert!(pos_x < 523);
-        assert!(pos_y < 293);
 
         for y in pos_y - usize::from(radius)..=pos_y + usize::from(radius) {
             for x in usize::from(pos[0] - radius)..=usize::from(pos[0] + radius) {
@@ -77,10 +73,19 @@ impl Graphics {
                     x * x + y * y + pos_y * pos_y - 2 * y * pos_y + pos_x * pos_x - 2 * x * pos_x;
                 if x_test <= usize::from(radius) * usize::from(radius) {
                     self.display_layer
-                        .1
+                        .0
                         .print_point_color_at(x, y, Color::from_hex(color));
                 }
             }
+        }
+    }
+    ///Clear the specified layer
+    pub fn clear_layer (&mut self, layer:u8){
+        assert!(layer == 0 || layer == 1);
+        if layer == 0 {
+        self.display_layer.0.clear();
+        } else {
+            self.display_layer.1.clear()
         }
     }
     ///  clear a circle
