@@ -45,6 +45,10 @@ impl GraphicsHandler {
         );
     }
 
+    pub fn draw_game_content(&mut self, drawables: &Vec<((u16,u16), u16, u32)>) {
+        self.graphics.draw_circles_implicit(drawables);
+    }
+
 
 
 

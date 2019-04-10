@@ -1,10 +1,13 @@
 //! ball module
+//!
+
+use super::field;
 /// draw radius of ball
 pub const RADIUS: u16 = 10;
 /// fill color of ball
 pub const COLOR: u32 = 0xfff000;
 /// start position of ball in game
-pub const START_POSITION: [u16; 2] = [RADIUS, RADIUS];
+pub const START_POSITION: [u16; 2] = [field::WIDTH_MAX/2, field::HEIGHT_MAX/2];
 /// start velocity of ball?
 pub const START_SPEED: [f64; 2] = [0.0, 0.0];
 /// has bool of ball

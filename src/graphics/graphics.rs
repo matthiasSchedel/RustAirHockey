@@ -3,11 +3,12 @@ use crate::{
     gpio::{GpioPort, OutputPin},
     init,
     lcd::{self, Color, FramebufferArgb8888},
-    system_clock, touch,
+    system_clock, touch, alloc
 };
 use alloc_cortex_m::CortexMHeap;
 use core::alloc::Layout as AllocLayout;
 use core::panic::PanicInfo;
+use alloc::vec::Vec;
 use rt::{entry, exception};
 use stm32f7::stm32f7x6::Peripherals;
 
@@ -73,7 +74,7 @@ impl Graphics {
                     x * x + y * y + pos_y * pos_y - 2 * y * pos_y + pos_x * pos_x - 2 * x * pos_x;
                 if x_test <= usize::from(radius) * usize::from(radius) {
                     self.display_layer
-                        .0
+                        .1
                         .print_point_color_at(x, y, Color::from_hex(color));
                 }
             }
@@ -112,7 +113,7 @@ impl Graphics {
     ) {
         for x in x_start..x_end {
             for y in y_start..y_end {
-                self.display_layer.1.print_point_color_at(
+                self.display_layer.0.print_point_color_at(
                     x as usize,
                     y as usize,
                     lcd::Color::from_hex(color),
@@ -175,44 +176,27 @@ impl Graphics {
             color,
         );
     }
+
+    pub fn draw_circles_implicit(&mut self, circles: &Vec<((u16,u16), u16, u32)>) {
+
+        for x in 0..self.width {
+            for y in 0..self.height {
+                let mut in_circle = false;
+                for circle in circles {
+                    if self.in_circle(x, y, [(circle.0).0, (circle.0).1], circle.1) {
+                        (self.display_layer.1).print_point_color_at(x as usize, y as usize, Color::from_hex(circle.2));
+                        in_circle = true;
+                    }
+                }
+                if !in_circle {
+                    (self.display_layer.1).print_point_color_at(x as usize, y as usize, Color::from_argb8888(0));
+                }
+            }
+        }
+    }
+
+    fn in_circle(&self, x: u16, y: u16, pos: [u16; 2], radius: u16) -> bool {
+        (i32::from(x)  - i32::from(pos[0]))*(i32::from(x) - i32::from(pos[0])) + (i32::from(y)-i32::from(pos[1]))*(i32::from(y)-i32::from(pos[1])) <= i32::from(radius)*i32::from(radius)
+    }
 }
 
-// /// function for drawing the basic field
-// pub fn draw_field(
-//     layer: &mut lcd::Layer<FramebufferArgb8888>,
-//     color: lcd::Color,
-// ){
-//     // import global size of filed
-//     let HEIGHT=airhockey::field::HEIGHT_MAX;
-//     let WIDTH=airhockey::field::WIDTH_MAX;;
-//     // define width of field
-//     let width=10;
-//     // define goalsize
-//     let goal_size=50;
-
-//     // lower rectangle
-//     draw_rectangle(layer, 0 , 0 , WIDTH  , width  , color);
-
-// /// function for random initializing the ball
-// pub fn initialize_ball_poisition(
-//     layer: &mut lcd::Layer<FramebufferArgb8888>,
-//     color: lcd::Color,
-
-// ){
-//     let x_position=random_int_generatror(200,250);
-//     let y_position=random_int_generatror(100,150);
-//     draw_circle(layer, x_position as u16, y_position as u16, 10,color);
-
-// }
-
-// pub fn random_int_generatror(
-//     // Uses toml
-//     // use rand::Rng;
-//     // use rand::SeedableRng;
-//     x_bound_low:u16,
-//     x_bound_high:u16,
-// )-> u16{
-//     let mut rand= rand::rngs::StdRng::seed_from_u64(54531212);
-//      let rdm_x=rand.gen_range(x_bound_low,x_bound_high);
-//      rdm_x as u16
-// }

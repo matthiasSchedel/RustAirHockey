@@ -18,9 +18,9 @@ use super::init::Handler;
 /// Player
 pub struct Player {
     player_id: u8,
-    pub current_pos: (u16, u16),
-    pub radius: u16,
-    pub color: u32,
+    current_pos: (u16, u16),
+    radius: u16,
+    color: u32,
     ///Defining the half of the field where the player can move
     x_min: u16,
     x_max: u16,
@@ -118,8 +118,8 @@ impl Player {
             self.target_pos = pos;
         }
         self.speed = (
-            (i32::from(self.target_pos.0) - i32::from(self.current_pos.0)) / 20,
-            (i32::from(self.target_pos.1) - i32::from(self.current_pos.1)) / 20,
+            (i32::from(self.target_pos.0) - i32::from(self.current_pos.0)) / 2,
+            (i32::from(self.target_pos.1) - i32::from(self.current_pos.1)) / 2,
         );
     }
     ///Get the player id
@@ -139,6 +139,14 @@ impl Player {
 
     pub fn get_speed(&self) -> (i32, i32) {
         self.speed
+    }
+
+    pub fn get_radius(&self) -> u16 {
+        self.radius
+    }
+
+    pub fn get_color(&self) -> u32 {
+        self.color
     }
 
     pub fn setColor(&mut self, color: u32) {

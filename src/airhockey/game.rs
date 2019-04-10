@@ -45,10 +45,10 @@ impl Game {
     fn get_drawable_objects(&mut self) -> Vec<((u16, u16), u16, u32)> {
         let mut drawables: Vec<((u16, u16), u16, u32)> = Vec::new();
         for p in & mut self.players {
-            drawables.push((p.current_pos,p.radius,p.color));
+            drawables.push((p.get_position(),p.get_radius(),p.get_color()));
         }
-        drawables.push(((self.ball.position[0],self.ball.position[0]),ball::RADIUS, ball::COLOR));
-        return vec![((0, 0), 0, 0)];
+        drawables.push(((self.ball.position[0],self.ball.position[1]),ball::RADIUS, ball::COLOR));
+        return drawables;
     }
     /// is touched method
     pub fn is_touched(&self, p_id: usize) -> bool {
@@ -82,8 +82,6 @@ impl Game {
             //update players with new user input -> new player pos
             self.handle_inputs();
             self.update_players_with_user_input();
-            self.handler.graphics_handler.clear_dynamic_content();
-            self.draw_players();
             //collision handling
             self.handle_collisions();
 
@@ -91,14 +89,15 @@ impl Game {
             self.prepare_drawing();
             self.draw_field();
             self.draw_score();
-            self.draw_players();
-            self.draw_ball();
         }
 
         // self.handle_graphcis();
     }
 
-    fn prepare_drawing(&self) {}
+    fn prepare_drawing(&mut self) {
+        let drawables = self.get_drawable_objects();
+        self.handler.graphics_handler.draw_game_content(&drawables);
+    }
 
     fn update_score(&mut self) -> bool {
         self.score
