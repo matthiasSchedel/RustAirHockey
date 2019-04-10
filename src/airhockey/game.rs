@@ -3,7 +3,7 @@ const MAX_SCORE: u16 = 10;
 
 use super::{
     super::physics::physics, ball::Ball, field, field::Field, init, init::Handler, player::Player,
-    score::Score,
+    score::Score, ball
 };
 use alloc::vec::Vec;
 
@@ -41,6 +41,11 @@ impl Game {
     }
 
     fn get_drawable_objects(&mut self) -> Vec<((u16, u16), u16, u32)> {
+        let mut drawables: Vec<((u16, u16), u16, u32)> = Vec::new();
+        for p in & mut self.players {
+            drawables.push((p.current_pos,p.radius,p.color));
+        }
+        drawables.push(((self.ball.position[0],self.ball.position[0]),ball::RADIUS, ball::COLOR));
         return vec![((0, 0), 0, 0)];
     }
     /// is touched method
