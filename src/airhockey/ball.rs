@@ -27,4 +27,39 @@ impl Ball {
             speed: START_SPEED,
         }
     }
+
+
+    pub fn draw(&self, handler: &mut Handler) {
+            handler.graphics_handler.draw_ball(
+            0xff_00_00, /*insert ball color*/
+            self.position,
+            10, /* insert real radius*/
+        )
+    }
 }
+
+        // check ball for colls
+    // constructs a physics-object from the current game state, checks for collision und updates ball position and speed
+    // fn check_ball_for_collisons(&mut self, &mut handler: Handler) {
+    //     handler
+    //         .physics_handler
+    //         .physics
+    //         .set_ball_pos(&self.ball.position[0], &self.ball.position[1]);
+    //     handler
+    //         .physics_handler
+    //         .physics
+    //         .set_ball_speed(&self.ball.speed[0], &self.ball.speed[1]);
+    //     let mut active_player: usize = 1;
+    //     if self.ball.position[0] < (field::WIDTH_MAX / 2) {
+    //         active_player = 0;
+    //     }
+
+    //     handler.physics_handler.physics.update_ball_position(
+    //         self.players[active_player].get_position().0,
+    //         self.players[active_player].get_position().1,
+    //         /*active_player.radius*/ 10,
+    //         f32::from(self.players[active_player].get_speed().0),
+    //         f32::from(self.players[active_player].get_speed().1),
+    //     );
+    // }
+
