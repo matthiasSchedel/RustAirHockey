@@ -18,9 +18,9 @@ use super::init::Handler;
 /// Player
 pub struct Player {
     player_id: u8,
-    current_pos: (u16, u16),
-    radius: u16,
-    color: u32,
+    pub current_pos: (u16, u16),
+    pub radius: u16,
+    pub color: u32,
     ///Defining the half of the field where the player can move
     x_min: u16,
     x_max: u16,
