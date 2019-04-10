@@ -8,7 +8,7 @@ pub const START_POSITION: [u16;2] = [RADIUS,RADIUS];
 /// start velocity of ball?
 pub const START_SPEED: [f32;2] = [0.0,0.0];
 /// has bool of ball
-pub const STROKE_COLOR: u32 = 0xfff000;
+pub const STROKE_COLOR: u32 = 0xfff010;
 /// has bool stroke?
 pub const HAS_STROKE: bool = false;
 
@@ -28,3 +28,4 @@ impl Ball {
         }
     }
 }
+

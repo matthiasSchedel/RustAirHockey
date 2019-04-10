@@ -50,7 +50,13 @@ impl Graphics {
         return false;
     }
 
-    ///Draw a circle around pos x,y with radius - and
+    /// check if point is outside
+    fn isPointOutside(&self, point: [u16; 2] ,pointsize:u16) -> bool {
+        return (self.width > point[0]+pointsize || point[0]-pointsize < 0)
+            && (self.height > point[1]+pointsize || point[1] > 0);
+    }
+
+    ///draw a circle around pos x,y with radius - and
     pub fn draw_circle(
         &mut self,
         color: u32,
@@ -81,8 +87,6 @@ impl Graphics {
     ///  clear the field
     pub fn clear_field(&self, color: u16) {}
 
-    /// draw a field
-    pub fn draw_field(&self, field_color: u16, border_color: u16, goal_size: u16) {}
 
     /// draw a score
     pub fn draw_score(&self, player1_score: u8, player2_score: u8) {}
@@ -92,18 +96,45 @@ impl Graphics {
 
     /// draw a rectangle
     pub fn draw_rectangle(
-        layer: &mut lcd::Layer<FramebufferArgb8888>,
+        &mut self,
+        /*layer: &mut lcd::Layer<FramebufferArgb8888>,*/
         x_start: u16,
         y_start: u16,
         x_end: u16,
         y_end: u16,
-        color: lcd::Color,
+        color: u32,
     ) {
         for x in x_start..x_end {
             for y in y_start..y_end {
-                layer.print_point_color_at(x as usize, y as usize, color);
+                self.display_layer.0.print_point_color_at(x as usize, y as usize, lcd::Color::from_hex(color));
             }
         }
+    }
+    ///method for drawing the field
+    pub fn draw_field(
+    &mut self,
+    color: u32,
+    field_size:[u16;2],
+    border_width:u16,
+    goal_size:u16,
+
+
+
+    ){
+    // lower rectangle
+    self.draw_rectangle(0 , 0 , field_size[0], border_width  , color);
+
+    // upper rectangle
+    self.draw_rectangle(0  , field_size[1]-border_width  , field_size[0]  , field_size[1]  , color);
+
+    // left side
+    self.draw_rectangle(0  , 0  , border_width  , (field_size[1]-goal_size)/2  , color);
+    self.draw_rectangle(0  , (field_size[1]+goal_size)/2  , border_width  ,  field_size[1]  , color);
+
+    // draw right side
+    self.draw_rectangle( field_size[0]-border_width  , 0  , field_size[0]  , (field_size[1]-goal_size)/2  , color);
+    self.draw_rectangle( field_size[0]-border_width  , (field_size[1]+goal_size)/2   , field_size[0]  ,  field_size[1]  , color);
+
     }
 }
 
@@ -123,18 +154,7 @@ impl Graphics {
 //     // lower rectangle
 //     draw_rectangle(layer, 0 , 0 , WIDTH  , width  , color);
 
-//     // upper rectangle
-//     draw_rectangle(layer, 0  , HEIGHT-width  , WIDTH  , HEIGHT  , color);
 
-//     // left side
-//     draw_rectangle(layer, 0  , 0  , width  , (HEIGHT-goal_size)/2  , color);
-//     draw_rectangle(layer, 0  , (HEIGHT+goal_size)/2  , width  ,  HEIGHT  , color);
-
-//     // draw right side
-//     draw_rectangle(layer, WIDTH-width  , 0  , WIDTH  , (HEIGHT-goal_size)/2  , color);
-//     draw_rectangle(layer, WIDTH-width  , (HEIGHT+goal_size)/2   , WIDTH  ,  HEIGHT  , color);
-
-// }
 
 // /// function for random initializing the ball
 // pub fn initialize_ball_poisition(
