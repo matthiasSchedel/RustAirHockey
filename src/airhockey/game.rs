@@ -90,7 +90,7 @@ impl Game {
 
     fn update_score(&mut self) -> bool {
         let score_res = self.score.check_goals_and_update_score(self.ball.position);
-        return (score_res.0);
+        return score_res.0;
     }
 
     fn draw_field(&mut self) {
@@ -107,12 +107,12 @@ impl Game {
 
     /// check ball for colls
     // constructs a physics-object from the current game state, checks for collision und updates ball position and speed
-    fn check_ball_for_collisons(&mut self, mut handler: Handler) {
-        handler
+    fn check_ball_for_collisons(&mut self) {
+        self.handler
             .physics_handler
             .physics
             .set_ball_pos(&self.ball.position[0], &self.ball.position[1]);
-        handler
+        self.handler
             .physics_handler
             .physics
             .set_ball_speed(&self.ball.speed[0], &self.ball.speed[1]);
@@ -121,7 +121,7 @@ impl Game {
             active_player = 0;
         }
 
-        handler.physics_handler.physics.update_ball_position(
+        self.handler.physics_handler.physics.update_ball_position(
             self.players[active_player].get_position().0,
             self.players[active_player].get_position().1,
             /*active_player.radius*/ 10,
@@ -182,8 +182,9 @@ impl Game {
     }
 
     /// get the collsiiosn
-    fn handle_collisions(&self) {}
-
+    fn handle_collisions(& mut self) {
+        self.check_ball_for_collisons();
+    }
     // pub fn init(&self) {
 
     // }
