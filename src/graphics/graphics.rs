@@ -112,7 +112,7 @@ impl Graphics {
     ) {
         for x in x_start..x_end {
             for y in y_start..y_end {
-                self.display_layer.0.print_point_color_at(
+                self.display_layer.1.print_point_color_at(
                     x as usize,
                     y as usize,
                     lcd::Color::from_hex(color),
@@ -162,6 +162,15 @@ impl Graphics {
             field_size[0] - border_width,
             (field_size[1] + goal_size) / 2,
             field_size[0],
+            field_size[1],
+            color,
+        );
+
+        // draw middle line
+        self.draw_rectangle(
+            field_size[0]/2 - border_width/4,
+            0,
+            field_size[0]/2 + border_width/4,
             field_size[1],
             color,
         );
