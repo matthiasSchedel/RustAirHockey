@@ -5,6 +5,8 @@ extern crate alloc;
 use crate::{i2c::I2C, stm32f7::stm32f7x6::I2C3, touch};
 use alloc::vec::Vec;
 
+use crate::airhockey::field;
+
 /// Input
 pub struct Input {
     // display width
@@ -34,6 +36,12 @@ impl Input {
             positions.push((touch.x, touch.y));
         }
         return { positions };
+    }
+        /// check if point is outside
+    fn is_out_of_field(&self, point: [u16; 2], pointsize: u16) -> bool {
+        let padding: u16 = pointsize + field::BORDER_WIDTH;
+        return (self.width - padding > point[0] || point[0] < padding)
+            && (self.height - padding > point[1] || point[1] < padding);
     }
 }
 

@@ -11,6 +11,8 @@ use core::panic::PanicInfo;
 use rt::{entry, exception};
 use stm32f7::stm32f7x6::Peripherals;
 
+use crate::airhockey::field;
+
 const STROKE_COLOR: u32 = 0xffff00;
 const USE_STROKE: bool = true;
 const PLAYER_SIZE: u16 = 10;
@@ -51,9 +53,10 @@ impl Graphics {
     }
 
     /// check if point is outside
-    fn isPointOutside(&self, point: [u16; 2], pointsize: u16) -> bool {
-        return (self.width > point[0] + pointsize || point[0] - pointsize < 0)
-            && (self.height > point[1] + pointsize || point[1] > 0);
+    fn is_out_of_field(&self, point: [u16; 2], pointsize: u16) -> bool {
+        let padding: u16 = pointsize + field::BORDER_WIDTH;
+        return (self.width - padding > point[0] || point[0] < padding)
+            && (self.height - padding > point[1] || point[1] < padding);
     }
 
     ///draw a circle around pos x,y with radius - and
@@ -65,6 +68,7 @@ impl Graphics {
         draw_stroke: bool,
         stroke_color: u32,
     ) {
+        if self.is_out_of_field(pos, radius) { return; }
         let mut x_test = 0;
         let pos_x = usize::from(pos[0]);
         let pos_y = usize::from(pos[1]);

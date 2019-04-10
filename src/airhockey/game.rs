@@ -69,7 +69,7 @@ impl Game {
             }
             //input handling
             //update players with new user input -> new player pos
-            self.handle_inputs();
+            // self.handle_inputs();
             self.update_players_with_user_input();
 
             //collision handling
@@ -86,7 +86,9 @@ impl Game {
         // self.handle_graphcis();
     }
 
-    fn prepare_drawing(&self) {}
+    fn prepare_drawing(&self) {
+        
+    }
 
     fn update_score(&mut self) -> bool {
         let score_res = self.score.check_goals_and_update_score(self.ball.position);
