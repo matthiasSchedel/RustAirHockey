@@ -86,9 +86,7 @@ impl Game {
         // self.handle_graphcis();
     }
 
-    fn prepare_drawing(&self) {
-        
-    }
+    fn prepare_drawing(&self) {}
 
     fn update_score(&mut self) -> bool {
         let score_res = self.score.check_goals_and_update_score(self.ball.position);

@@ -37,7 +37,7 @@ impl Input {
         }
         return { positions };
     }
-        /// check if point is outside
+    /// check if point is outside
     fn is_out_of_field(&self, point: [u16; 2], pointsize: u16) -> bool {
         let padding: u16 = pointsize + field::BORDER_WIDTH;
         return (self.width - padding > point[0] || point[0] < padding)
