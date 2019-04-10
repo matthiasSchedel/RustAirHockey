@@ -45,7 +45,12 @@ impl GraphicsHandler {
         );
     }
 
-    pub fn clear_dynamic_content(&mut self){
-        self.graphics.clear_layer(0);
-    }
+
+
+
+pub fn clear_dynamic_content(&mut self){
+self.graphics.clear_layer(0);
 }
+}
+
+

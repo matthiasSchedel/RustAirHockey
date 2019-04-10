@@ -20,6 +20,8 @@ pub struct Game {
     field: Field,
     handler: Handler,
 }
+
+
 impl Game {
     /// game constructor
     pub fn new(number_players: u8, handler: Handler) -> Game {
@@ -186,4 +188,5 @@ impl Game {
     // pub fn init(&self) {
 
     // }
+
 }
