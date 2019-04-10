@@ -30,7 +30,6 @@ use stm32f7_discovery::{airhockey, lcd, system_clock};
 static ALLOCATOR: CortexMHeap = CortexMHeap::empty();
 
 const HEAP_SIZE: usize = 50 * 1024; // in bytes
-const ETH_ADDR: EthernetAddress = EthernetAddress([0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef]);
 
 #[entry]
 fn main() -> ! {

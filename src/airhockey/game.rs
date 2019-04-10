@@ -106,7 +106,10 @@ impl Game {
         );
     }
 
-    fn draw_ball(&self) { }
+    /// 
+    fn draw_ball(&mut self) {
+        self.handler.graphics_handler.draw_ball(0xff_00_00 /*insert ball color*/, self.ball.position, 10 /* insert real radius*/)
+     }
 
     /// draw score
     fn draw_field(&self) {}
