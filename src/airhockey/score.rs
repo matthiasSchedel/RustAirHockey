@@ -7,7 +7,7 @@ use alloc::vec::Vec;
 pub const POINTS_PER_GOAL: u8 = 1;
 
 /// define the x coord of left right right goal used for goal checking
-const GOAL_X_POSITIONS: [u16;2] = [5, 488]; 
+const GOAL_X_POSITIONS: [u16; 2] = [5, 488];
 
 /// score struct in airhockey game
 pub struct Score {
@@ -49,15 +49,15 @@ impl Score {
         handler.graphics_handler.draw_score(score);
     }
 
-    pub fn check_goals_and_update_score(& mut self, pos: [u16;2]) -> (bool, u8) {
+    pub fn check_goals_and_update_score(&mut self, pos: [u16; 2]) -> (bool, u8) {
         if pos[0] < GOAL_X_POSITIONS[0] {
             self.player_scores[0] = self.player_scores[0] + 1;
-            (true,0)
+            (true, 0)
         } else if pos[1] < GOAL_X_POSITIONS[1] {
             self.player_scores[1] = self.player_scores[1] + 1;
-            (true,1)
+            (true, 1)
         } else {
-            (false,0)
+            (false, 0)
         }
     }
 }

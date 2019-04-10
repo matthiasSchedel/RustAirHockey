@@ -68,7 +68,9 @@ impl Graphics {
         draw_stroke: bool,
         stroke_color: u32,
     ) {
-        if self.is_out_of_field(pos, radius) { return; }
+        if self.is_out_of_field(pos, radius) {
+            return;
+        }
         let mut x_test = 0;
         let pos_x = usize::from(pos[0]);
         let pos_y = usize::from(pos[1]);

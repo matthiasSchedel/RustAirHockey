@@ -135,7 +135,9 @@ impl Game {
         self.ball.draw(&mut self.handler);
     }
 
-    fn draw_score(&mut self) {}
+    fn draw_score(&mut self) {
+        self.score.draw(&mut self.handler);
+    }
 
     fn draw_players(&mut self) {
         for p in &mut self.players {
