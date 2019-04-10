@@ -11,7 +11,7 @@ impl PhysicsHandler {
   /// physics handler constructor
   pub fn new(physics: Physics) -> PhysicsHandler {
     PhysicsHandler {
-      physics: physics,
+      physics,
       screen_size: [480, 272],
     }
   }

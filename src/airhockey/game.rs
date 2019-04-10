@@ -2,7 +2,7 @@
 const MAX_SCORE: u16 = 10;
 
 use super::{
-    super::physics::physics, ball::Ball, field, field::Field, init, init::Handler, player::Player,
+    ball::Ball, field, field::Field, init, init::Handler, player::Player,
     score::Score, ball
 };
 use alloc::vec::Vec;
@@ -33,13 +33,13 @@ impl Game {
         }
         let score = Score::new(players.len() as u8, MAX_SCORE);
 
-        return Game {
-            ball: ball,
-            players: players,
-            score: score,
-            field: field,
-            handler: handler,
-        };
+        Game {
+            ball,
+            players,
+            score,
+            field,
+            handler,
+        }
     }
 
     fn get_drawable_objects(&mut self) -> Vec<((u16, u16), u16, u32)> {
@@ -48,7 +48,7 @@ impl Game {
             drawables.push((p.get_position(),p.get_radius(),p.get_color()));
         }
         drawables.push(((self.ball.position[0],self.ball.position[1]),ball::RADIUS, ball::COLOR));
-        return drawables;
+        drawables
     }
     /// is touched method
     pub fn is_touched(&self, p_id: usize) -> bool {
@@ -82,6 +82,7 @@ impl Game {
             //update players with new user input -> new player pos
             self.handle_inputs();
             self.update_players_with_user_input();
+            
             //collision handling
             self.handle_collisions();
 
@@ -114,28 +115,29 @@ impl Game {
     }
 
     /// check ball for colls
-    // constructs a physics-object from the current game state, checks for collision und updates ball position and speed
-    fn check_ball_for_collisons(&mut self, mut handler: Handler) {
-        handler
+    /// checks for collision und updates ball position and speed
+    fn check_ball_for_collisons(&mut self) {
+        self.handler
             .physics_handler
             .physics
             .set_ball_pos(&self.ball.position[0], &self.ball.position[1]);
-        handler
+        self.handler
             .physics_handler
             .physics
             .set_ball_speed(&self.ball.speed[0], &self.ball.speed[1]);
-        let mut active_player: usize = 1;
-        if self.ball.position[0] < (field::WIDTH_MAX / 2) {
-            active_player = 0;
-        }
+        let active_player = if self.ball.position[0] < (field::WIDTH_MAX / 2) { 0 } else { 1 };
 
-        handler.physics_handler.physics.update_ball_position(
+        let new_ball_pos = self.handler.physics_handler.physics.update_ball_position(
             self.players[active_player].get_position().0,
             self.players[active_player].get_position().1,
-            /*active_player.radius*/ 10,
+            self.players[active_player].get_radius(),
             f64::from(self.players[active_player].get_speed().0),
             f64::from(self.players[active_player].get_speed().1),
         );
+
+        let new_ball_speed = self.handler.physics_handler.physics.get_ball_speed();
+        self.ball.position = [new_ball_pos.0, new_ball_pos.1];
+        self.ball.speed = [new_ball_speed.0, new_ball_speed.1];
     }
 
     ///
@@ -193,7 +195,9 @@ impl Game {
     }
 
     /// get the collsiiosn
-    fn handle_collisions(&self) {}
+    fn handle_collisions(&mut self) {
+        self.check_ball_for_collisons();
+    }
 
     // pub fn init(&self) {
 

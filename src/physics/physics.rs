@@ -2,7 +2,6 @@
 extern crate libm;
 use crate::alloc;
 use alloc::vec::Vec;
-use libm::F32Ext;
 use libm::F64Ext;
 
 const FRICTION: f64 = 0.95;
@@ -81,7 +80,7 @@ impl Physics {
         player_radius: u16,
         speed_x: f64,
         speed_y: f64,
-    ) {
+    ) -> (u16, u16) {
         let border_collisions: CollisionObject =
             self.calculate_border_collision_point(player_x, player_y, player_radius);
 
@@ -95,15 +94,15 @@ impl Physics {
         );
 
         if border_collisions.has_collided {
-            self.update_pos_from_coll_point(border_collisions);
+            self.update_pos_from_coll_point(border_collisions)
         } else if player_collision.has_collided {
-            self.update_pos_from_coll_point(player_collision);
+            self.update_pos_from_coll_point(player_collision)
         } else {
-            self.update_ball_pos_without_coll();
+            self.update_ball_pos_without_coll()
         }
     }
 
-    fn update_pos_from_coll_point(&mut self, coll: CollisionObject) {
+    fn update_pos_from_coll_point(&mut self, coll: CollisionObject) -> (u16, u16) {
         // border-collision
         if coll.collision_pos[0] == 0 || coll.collision_pos[0] == self.width {
             self.ball_speed[0] *= -1.0;
@@ -122,11 +121,13 @@ impl Physics {
         }
 
         // collision is handled - update position
-        self.ball_pos[0] += self.ball_speed[0] as u16;
-        self.ball_pos[1] += self.ball_speed[1] as u16;
+        self.ball_pos[0] = (f64::from(self.ball_pos[0]) + self.ball_speed[0]) as u16;
+        self.ball_pos[1] = (f64::from(self.ball_pos[1]) + self.ball_speed[1]) as u16;
+
+        (self.ball_pos[0], self.ball_pos[1])
     }
 
-    fn update_ball_pos_without_coll(&mut self) {
+    fn update_ball_pos_without_coll(&mut self) -> (u16, u16){
         //set new position
         self.ball_pos[0] += self.ball_speed[0] as u16;
         self.ball_pos[1] += self.ball_speed[1] as u16;
@@ -136,6 +137,8 @@ impl Physics {
             self.ball_speed[0] *= FRICTION;
             self.ball_speed[1] *= FRICTION;
         }
+
+        (self.ball_pos[0], self.ball_pos[1])
     }
 
     /// checks if and where a ball collides with the border and returns a corresponding collision object
@@ -247,4 +250,9 @@ impl Physics {
     }
     ///input some circle object
     pub fn calculate_circle_coll_with_ball(&self) {}
+
+    ///get ball speed
+    pub fn get_ball_speed(&self) -> (f64, f64){
+        (self.ball_speed[0], self.ball_speed[1])
+    }
 }
