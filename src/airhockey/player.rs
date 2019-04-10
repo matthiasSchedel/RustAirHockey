@@ -27,7 +27,7 @@ pub struct Player {
     ///The player is following the user's input (given by target_position)ar
     target_pos: (u16, u16),
     ///The speed the player is moving towards the target position
-    speed: (u16, u16),
+    speed: (i32, i32),
 }
 
 impl Player {
@@ -89,15 +89,15 @@ impl Player {
 
     ///Move the player according to the target position
     pub fn move_player(&mut self) {
-        if helper::unsigned_subtraction(self.current_pos.0, self.target_pos.1) <= self.speed.0
-            && helper::unsigned_subtraction(self.current_pos.1, self.target_pos.1) <= self.speed.1
+        if i32::from(self.current_pos.0) - i32::from(self.target_pos.0) <= self.speed.0
+            && i32::from(self.current_pos.1) - i32::from(self.target_pos.1) <= self.speed.1
         {
             self.speed = (0, 0);
             self.current_pos = self.target_pos;
         } else {
             self.current_pos = (
-                self.current_pos.0 + self.speed.0,
-                self.current_pos.1 + self.speed.1,
+                (i32::from(self.current_pos.0) + self.speed.0) as u16,
+                (i32::from(self.current_pos.1) + self.speed.1) as u16,
             );
         }
     }
@@ -118,8 +118,8 @@ impl Player {
             self.target_pos = pos;
         }
         self.speed = (
-            helper::unsigned_subtraction(self.target_pos.0, self.current_pos.0) / 20,
-            helper::unsigned_subtraction(self.target_pos.1, self.current_pos.1) / 20,
+            (i32::from(self.target_pos.0) - i32::from(self.current_pos.0)) / 20,
+            (i32::from(self.target_pos.1) - i32::from(self.current_pos.1)) / 20,
         );
     }
     ///Get the player id
@@ -137,7 +137,7 @@ impl Player {
         self.current_pos.1 = y;
     }
 
-    pub fn get_speed(&self) -> (u16, u16) {
+    pub fn get_speed(&self) -> (i32, i32) {
         self.speed
     }
 

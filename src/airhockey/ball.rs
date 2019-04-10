@@ -6,7 +6,7 @@ pub const COLOR: u32 = 0xfff000;
 /// start position of ball in game
 pub const START_POSITION: [u16; 2] = [RADIUS, RADIUS];
 /// start velocity of ball?
-pub const START_SPEED: [f32; 2] = [0.0, 0.0];
+pub const START_SPEED: [f64; 2] = [0.0, 0.0];
 /// has bool of ball
 pub const STROKE_COLOR: u32 = 0xfff010;
 /// has bool stroke?
@@ -17,7 +17,7 @@ use super::init::Handler;
 /// structrepresents a ball in airhockey game
 pub struct Ball {
     pub position: [u16; 2],
-    pub speed: [f32; 2],
+    pub speed: [f64; 2],
 }
 impl Ball {
     /// Ball constructor

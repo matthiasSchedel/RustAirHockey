@@ -87,8 +87,7 @@ impl Game {
     }
 
     fn update_score(&mut self) -> bool {
-        //self.score.check_goals_and_update_score(self.ball.position).0;
-        return false;
+        self.score.check_goals_and_update_score(self.ball.position).0
     }
 
     /// update player with user input
@@ -119,8 +118,8 @@ impl Game {
             self.players[active_player].get_position().0,
             self.players[active_player].get_position().1,
             /*active_player.radius*/ 10,
-            f32::from(self.players[active_player].get_speed().0),
-            f32::from(self.players[active_player].get_speed().1),
+            f64::from(self.players[active_player].get_speed().0),
+            f64::from(self.players[active_player].get_speed().1),
         );
     }
 

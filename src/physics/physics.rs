@@ -3,8 +3,9 @@ extern crate libm;
 use crate::alloc;
 use alloc::vec::Vec;
 use libm::F32Ext;
+use libm::F64Ext;
 
-const FRICTION: f32 = 0.95;
+const FRICTION: f64 = 0.95;
 /// friction used in simulation
 /// is friction used in simulation?
 const USE_FRICTION: bool = true;
@@ -16,7 +17,7 @@ pub struct Physics {
     //display height
     height: u16,
     ball_pos: Vec<u16>,
-    ball_speed: Vec<f32>,
+    ball_speed: Vec<f64>,
     ball_radius: u16,
 }
 
@@ -25,7 +26,7 @@ pub struct Physics {
 pub struct CollisionObject {
     has_collided: bool,
     collision_pos: Vec<u16>,
-    collision_speed: Vec<f32>,
+    collision_speed: Vec<f64>,
 }
 
 impl CollisionObject {
@@ -34,8 +35,8 @@ impl CollisionObject {
         has_collided: bool,
         pos_x: u16,
         pos_y: u16,
-        speed_x: f32,
-        speed_y: f32,
+        speed_x: f64,
+        speed_y: f64,
     ) -> CollisionObject {
         CollisionObject {
             has_collided,
@@ -64,7 +65,7 @@ impl Physics {
     }
 
     /// sets ball speed
-    pub fn set_ball_speed(&mut self, &speed_x: &f32, &speed_y: &f32) {
+    pub fn set_ball_speed(&mut self, &speed_x: &f64, &speed_y: &f64) {
         self.ball_speed[0] = speed_x;
         self.ball_speed[1] = speed_y;
     }
@@ -78,8 +79,8 @@ impl Physics {
         player_x: u16,
         player_y: u16,
         player_radius: u16,
-        speed_x: f32,
-        speed_y: f32,
+        speed_x: f64,
+        speed_y: f64,
     ) {
         let border_collisions: CollisionObject =
             self.calculate_border_collision_point(player_x, player_y, player_radius);
@@ -173,8 +174,8 @@ impl Physics {
         CollisionObject::new(collision, coll_x, coll_y, 0., 0.)
     }
 
-    fn calculate_point_distance(&self, position1: Vec<u16>) -> f32 {
-        f32::from(
+    fn calculate_point_distance(&self, position1: Vec<u16>) -> f64 {
+        f64::from(
             (position1[0] - self.ball_pos[0]) * (position1[0] - self.ball_pos[0])
                 + (position1[1] - self.ball_pos[1]) * (position1[1] - self.ball_pos[1]),
         )
@@ -187,18 +188,18 @@ impl Physics {
         player_x: u16,
         player_y: u16,
         player_radius: u16,
-        speed_x: f32,
-        speed_y: f32,
+        speed_x: f64,
+        speed_y: f64,
     ) -> CollisionObject {
         let player_pos = vec![player_x, player_y];
         let collision =
             self.calculate_point_distance(player_pos) <= (player_radius + self.ball_radius).into();
 
         //here be physics
-        let mut norm_x: f32 = f32::from(self.ball_pos[0]) - f32::from(player_x);
-        let mut norm_y: f32 = f32::from(self.ball_pos[1]) - f32::from(player_y);
+        let mut norm_x: f64 = f64::from(self.ball_pos[0]) - f64::from(player_x);
+        let mut norm_y: f64 = f64::from(self.ball_pos[1]) - f64::from(player_y);
 
-        let dist: f32 = norm_x * norm_x + norm_y * norm_y.sqrt();
+        let dist: f64 = norm_x * norm_x + norm_y * norm_y.sqrt();
 
         norm_x /= dist;
         norm_y /= dist;
