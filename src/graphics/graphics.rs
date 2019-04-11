@@ -183,20 +183,6 @@ impl Graphics {
         border_width: u16,
         goal_size: u16,
     ) {
-        self.draw_circle_in_field(
-            self::DOUBLE_DOT_COLOR,
-            [240, 25],
-            2,
-            false,
-            self::DOUBLE_DOT_COLOR,
-        );
-        self.draw_circle_in_field(
-            self::DOUBLE_DOT_COLOR,
-            [240, 35],
-            2,
-            false,
-            self::DOUBLE_DOT_COLOR,
-        );
         // lower rectangle
         self.draw_rectangle(0, 0, field_size[0], border_width, color);
 
@@ -242,6 +228,21 @@ impl Graphics {
             field_size[0] / 2 + border_width / 4,
             field_size[1],
             color,
+        );
+
+        self.draw_circle_in_field(
+            self::DOUBLE_DOT_COLOR,
+            [240, 25],
+            2,
+            false,
+            self::DOUBLE_DOT_COLOR,
+        );
+        self.draw_circle_in_field(
+            self::DOUBLE_DOT_COLOR,
+            [240, 35],
+            2,
+            false,
+            self::DOUBLE_DOT_COLOR,
         );
     }
 
