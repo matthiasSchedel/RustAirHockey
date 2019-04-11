@@ -1,10 +1,9 @@
 //! Graphics controller.
 extern crate libm;
-use crate::alloc;
 use libm::F64Ext;
 use crate::airhockey::helper;
 
-const FRICTION: f64 = 0.95;
+const FRICTION: f64 = 1.;
 /// friction used in simulation
 /// is friction used in simulation?
 const USE_FRICTION: bool = true;
@@ -81,6 +80,13 @@ impl Physics {
         speed_x: f64,
         speed_y: f64,
     ) -> (u16, u16) {
+        if self.ball_speed.0 > 2. * f64::from(player_radius) {
+            self.ball_speed.0 = 1.95 * f64::from(player_radius);
+        }
+
+        if self.ball_speed.1 > 2. * f64::from(player_radius) {
+            self.ball_speed.1 = 1.95 * f64::from(player_radius) ;
+        }
         let border_collisions: CollisionObject =
             self.calculate_border_collision_point();
 
@@ -98,7 +104,7 @@ impl Physics {
         } else if player_collision.has_collided {
             self.update_pos_from_coll_point(player_collision)
         } else {
-            self.update_ball_pos_without_coll()
+            self.update_ball_pos_without_coll(player_x, player_y, player_radius)
         }
     }
 
@@ -127,10 +133,13 @@ impl Physics {
         (self.ball_pos.0, self.ball_pos.1)
     }
 
-    fn update_ball_pos_without_coll(&mut self) -> (u16, u16) {
+    fn update_ball_pos_without_coll(&mut self, player_x: u16, player_y: u16, player_radius: u16) -> (u16, u16) {
+        
+        let bias: (u16, u16) = self.proactive_ball_player_collision_check(player_x, player_y, player_radius);
+        
         //set new position
-        self.ball_pos.0 += self.ball_speed.0 as u16;
-        self.ball_pos.1 += self.ball_speed.1 as u16;
+        self.ball_pos.0 += bias.0;
+        self.ball_pos.1 += bias.1;
 
         //apply friction
         if USE_FRICTION {
@@ -195,14 +204,22 @@ impl Physics {
             self.calculate_point_distance(player_pos) <= (player_radius + self.ball_radius).into();
 
         if !collision {
-                return CollisionObject::new(false, player_x, player_y, speed_x, speed_y);           
+            return CollisionObject::new(false, player_x, player_y, speed_x, speed_y);           
         }
 
         //here be physics
         let mut norm_x: f64 = f64::from(self.ball_pos.0) - f64::from(player_x);
         let mut norm_y: f64 = f64::from(self.ball_pos.1) - f64::from(player_y);
 
-        let dist: f64 = (norm_x * norm_x + norm_y * norm_y).sqrt();
+        let mut dist: f64 = (norm_x * norm_x + norm_y * norm_y).sqrt();
+
+        // check there is at least some distance
+        if dist < 0.000_000_119_209_29 /*that is EPSILON - but we don't have std::f32, so I inlined it.*/ {
+            // move ball out of player. update norm_x and dist
+            self.ball_pos.0 += player_radius;
+            norm_x += f64::from(player_radius);
+            dist = (norm_x * norm_x + norm_y * norm_y).sqrt();
+        }
 
         norm_x /= dist;
         norm_y /= dist;
@@ -210,19 +227,21 @@ impl Physics {
         let tan_x = norm_y;
         let tan_y = -norm_x;
 
-        let overlap = i32::from(self.ball_radius) + i32::from(player_radius) - dist as i32;
+        let overlap = (2.01*(f64::from(self.ball_radius) + f64::from(player_radius) - dist)) as i32;
 
-        // beides etwas auseinander schieben, um nicht sofort wieder zu kollidieren
-        if self.ball_speed.0 > 0. {
-            self.ball_pos.0 -= norm_x as u16 * overlap as u16;
-        } else {
-            self.ball_pos.0 += norm_x as u16 * overlap as u16;
-        }
-        
-        if self.ball_speed.1 > 0. {
-            self.ball_pos.1 -= norm_y as u16 * overlap as u16;
-        } else {
-            self.ball_pos.1 += norm_y as u16 * overlap as u16;
+        // falls es overlap gibt, beides etwas auseinander schieben, um nicht sofort wieder zu kollidieren
+        if overlap > 0 {
+            if self.ball_speed.0 > 0. {
+                self.ball_pos.0 -= norm_x as u16 * overlap as u16;
+            } else {
+                self.ball_pos.0 += norm_x as u16 * overlap as u16;
+            }
+            
+            if self.ball_speed.1 > 0. {
+                self.ball_pos.1 -= norm_y as u16 * overlap as u16;
+            } else {
+                self.ball_pos.1 += norm_y as u16 * overlap as u16;
+            }
         }
         
 
@@ -255,8 +274,8 @@ impl Physics {
         let pulse_x = share_norm_x + share_norm_x_player;
         let pulse_y = share_norm_y + share_norm_y_player;
 
-        let coll_speed_x = if pulse_x - share_norm_x + share_tan_x > 100. {100.} else {pulse_x - share_norm_x + share_tan_x};
-        let coll_speed_y = if pulse_y - share_norm_y + share_tan_y > 80. {80.} else {pulse_y - share_norm_y + share_tan_y};
+        let coll_speed_x = if pulse_x - share_norm_x + share_tan_x > 60. {60.} else {(pulse_x - share_norm_x + share_tan_x)};
+        let coll_speed_y = if pulse_y - share_norm_y + share_tan_y > 60. {60.} else {(pulse_y - share_norm_y + share_tan_y)};
 
         CollisionObject::new(collision, player_x, player_y, coll_speed_x, coll_speed_y)
     }
@@ -267,4 +286,46 @@ impl Physics {
     pub fn get_ball_speed(&self) -> (f64, f64) {
         (self.ball_speed.0, self.ball_speed.1)
     }
+
+    /// check for possible collision before setting new position
+    /// returns a for the normalized speed vector. i.e.: collision happens a * norm(speed) + position
+    pub fn proactive_ball_player_collision_check(&self, player_x: u16, player_y: u16, player_radius: u16) -> (u16, u16) {
+        
+        // für alle Linien gleich
+        let r = (self.ball_speed.0, self.ball_speed.1);
+        let r_length = ((self.ball_speed.0*self.ball_speed.0)+(self.ball_speed.1*self.ball_speed.1)).sqrt();
+        let r_norm = (r.0/r_length, r.1/r_length);
+
+
+        // Fußpunkte zur Kollisionserkennung
+        // +radius
+        let f1 = (0.,0.);
+
+        // durch den Mittelpunkt
+        let f2 = (0.,0.);
+        
+        // -radius 
+        let f3 = (0.,0.);
+
+        for a in 0..=r_length as u32 {
+            let p1 = (f1.0+f64::from(a) * r_norm.0, f1.1 + f64::from(a) * r_norm.1);
+            let p2 = (f2.0+f64::from(a) * r_norm.0, f2.1 + f64::from(a) * r_norm.1);
+            let p3 = (f3.0+f64::from(a) * r_norm.0, f3.1 + f64::from(a) * r_norm.1);
+
+            if self.in_circle(p1.0, p1.1, (player_x, player_y), player_radius) 
+                || self.in_circle(p2.0, p2.1, (player_x, player_y), player_radius) 
+                || self.in_circle(p3.0, p3.1, (player_x, player_y), player_radius) {
+                return ((f64::from(a) * r_norm.0) as u16, (f64::from(a) * r_norm.1) as u16);
+            }
+        }
+
+        (r.0 as u16 ,r.1 as u16)
+    }
+
+    fn in_circle(&self, x: f64, y: f64, center: (u16, u16), radius: u16) -> bool {
+        (x  - f64::from(center.0)) * (x - f64::from(center.0)) + (y - f64::from(center.1))*(y- f64::from(center.1))  
+            <= f64::from(radius)*f64::from(radius)
+    }
+
+
 }

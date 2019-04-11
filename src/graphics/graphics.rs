@@ -195,7 +195,7 @@ impl Graphics {
         }
     }
 
-    fn in_circle(&self, x: u16, y: u16, pos: [u16; 2], radius: u16) -> bool {
+    pub fn in_circle(&self, x: u16, y: u16, pos: [u16; 2], radius: u16) -> bool {
         (i32::from(x)  - i32::from(pos[0]))*(i32::from(x) - i32::from(pos[0])) + (i32::from(y)-i32::from(pos[1]))*(i32::from(y)-i32::from(pos[1])) <= i32::from(radius)*i32::from(radius)
     }
 }
