@@ -63,6 +63,32 @@ impl Graphics {
         return (self.width > point[0] + pointsize || point[0] - pointsize < 0)
             && (self.height > point[1] + pointsize || point[1] > 0);
     } */
+    fn draw_circle_in_field(
+        &mut self,
+        color: u32,
+        pos: [u16; 2],
+        radius: u16,
+        draw_stroke: bool,
+        stroke_color: u32,
+    ) {
+        let mut x_test = 0;
+        assert!(pos[0] < self.width);
+        assert!(pos[1] < self.height);
+        let pos_x = usize::from(pos[0]);
+        let pos_y = usize::from(pos[1]);
+
+        for y in pos_y - usize::from(radius)..=pos_y + usize::from(radius) {
+            for x in usize::from(pos[0] - radius)..=usize::from(pos[0] + radius) {
+                x_test =
+                    x * x + y * y + pos_y * pos_y - 2 * y * pos_y + pos_x * pos_x - 2 * x * pos_x;
+                if x_test <= usize::from(radius) * usize::from(radius) {
+                    self.display_layer
+                        .0
+                        .print_point_color_at(x, y, Color::from_hex(color));
+                }
+            }
+        }
+    }
 
     ///draw a circle around pos x,y with radius
     pub fn draw_circle(
@@ -149,14 +175,14 @@ impl Graphics {
         border_width: u16,
         goal_size: u16,
     ) {
-        self.draw_circle(
+        self.draw_circle_in_field(
             self::DOUBLE_DOT_COLOR,
             [240, 25],
             2,
             false,
             self::DOUBLE_DOT_COLOR,
         );
-        self.draw_circle(
+        self.draw_circle_in_field(
             self::DOUBLE_DOT_COLOR,
             [240, 35],
             2,
@@ -264,6 +290,7 @@ impl Graphics {
         }
     }
 
+    /// draw end_game
     pub fn draw_endgame(
         &mut self,
         // array with the information of number
