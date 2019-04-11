@@ -7,7 +7,7 @@ pub const HEIGHT_MAX: u16 = 272;
 /// field background color
 pub const BACKGROUND_COLOR: u32 = 0x00ffff;
 pub const BORDER_WIDTH: u16 = 10;
-pub const GOAL_SIZE: u16 = 80;
+pub const GOAL_SIZE: u16 = 100;
 
 const x_min: i32 = 10; //i32::from(BORDER_WIDTH);
 const x_max: i32 = 470; //i32::from(WIDTH_MAX) - i32::from(BORDER_WIDTH);

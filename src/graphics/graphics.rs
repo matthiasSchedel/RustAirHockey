@@ -23,8 +23,8 @@ const BACKGROUND_COLOR: u32 = 0xfff000;
 const NUMBER_HIGHT: u16 = 40;
 const NUMBER_WIDTH: u16 = 25;
 const DOUBLE_DOT_COLOR: u32 = 0x000000;
-const END_WIDTH: u16 = 300;
-const END_HIGHT: u16 = 200;
+const END_WIDTH: u16 = 400;
+const END_HEIGHT: u16 = 200;
 
 /// Graphics struct
 pub struct Graphics {
@@ -321,9 +321,9 @@ impl Graphics {
         let mut color_score:lcd::Color=lcd::Color::rgb(
             0, 0, 0
             );
-        for i in 0..8000 {
+        for i in 0..80_000 {
             x_pos = i % self::END_WIDTH as u32;
-            y_pos = i / self::END_HIGHT as u32;
+            y_pos = i / self::END_WIDTH as u32;
 
             color_score=lcd::Color::rgba(
             self.numbers[winning_player as usize][(4*i) as usize],

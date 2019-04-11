@@ -39,12 +39,10 @@ impl Score {
 
     /// return 0 if no player has won else player number
     pub fn is_game_over(&mut self) -> (bool, u8) {
-        let mut i: u16 = 1;
         for p in 0..self.player_scores.len() {
-            if p >= 9 as usize {
+            if self.player_scores[p] >= 5 {
                 return (true, p as u8);
             }
-            i += 1;
         }
         return (false, 0);
     }
