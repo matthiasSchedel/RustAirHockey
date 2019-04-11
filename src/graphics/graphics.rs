@@ -107,8 +107,7 @@ impl Graphics {
     /// draw a score
     pub fn draw_score(
         &mut self, 
-        player1_score: u8, 
-        player2_score: u8,
+        player_scores: Vec<u16>, 
         number_array:[lcd::Color;1000],
         ) {
         // Draws two number and : 2:1
