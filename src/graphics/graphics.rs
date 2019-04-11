@@ -38,6 +38,7 @@ pub struct Graphics {
     width: u16,
     ///display height
     height: u16,
+    numbers:[lcd::Color;10000]
 }
 impl Graphics {
     /// game constructor
@@ -48,11 +49,13 @@ impl Graphics {
             lcd::Layer<lcd::FramebufferArgb8888>,
             lcd::Layer<lcd::FramebufferAl88>,
         ),
+       numbers:[lcd::Color;10000] 
     ) -> Graphics {
         Graphics {
             display_layer: display_layer,
             width: width,
             height: height,
+            numbers: numbers
         }
     }
 
@@ -107,15 +110,15 @@ impl Graphics {
     /// draw a score
     pub fn draw_score(
         &mut self, 
-        player_scores: Vec<u16>, 
-        number_array:[lcd::Color;1000],
+        player_scores: Vec<u16> 
         ) {
+        
         // Draws two number and : 2:1
 
         // First number
-        self.draw_number(number_array,[225,15]);
+        self.draw_number([225,15]);
         // Second number
-        self.draw_number(number_array,[265,15]);
+        self.draw_number([265,15]);
 
         // Double dot
         self.draw_circle(self::DOUBLE_DOT_COLOR, [240,25],2,false, self::DOUBLE_DOT_COLOR);
@@ -225,8 +228,7 @@ impl Graphics {
     /// draw numbers on screen at positi
     pub fn draw_number(
         &mut self,
-        // array with the information of number
-        number_array:[lcd::Color;1000],
+
         // upper left position of number rectangle
         position:[u16;2],
         // Dimension of number rectangle
@@ -241,7 +243,7 @@ impl Graphics {
                  self.display_layer.0.print_point_color_at(
                      x_pos as usize + position[0] as usize,
                     y_pos as usize+ position[1] as usize,
-                    number_array[i as usize]
+                    self.numbers[i as usize]
                 );
                 
 
@@ -274,130 +276,5 @@ impl Graphics {
 
         }
  
-
-
-
-
-    /// Function to lad all values and return reference of array
-    pub unsafe fn load_numbers()->[[lcd::Color;10];1000]{
-    
-        //unpack as array 4 values describe one pixel
-        let mut numbers:[[lcd::Color;10];1000];
-        numbers = uninitialized();
-
-        // Loading the graphics
-        let zero=include_bytes!("0.data");
-        let one=include_bytes!("1.data");
-        let two=include_bytes!("2.data");
-        let three=include_bytes!("3.data");
-        let four=include_bytes!("4.data");
-        let five=include_bytes!("5.data");
-        let six=include_bytes!("6.data");
-        let seven=include_bytes!("7.data");
-        let eight=include_bytes!("8.data");
-        let nine=include_bytes!("9.data");
-
-
-
-        for i in 0..one.len(){
-            // sorting the list to the rgb fields
-            // red
-            if i%4==0{
-                numbers[0][i/4].red=zero[i];
-                numbers[1][i/4].red=one[i];
-                numbers[2][i/4].red=two[i];
-                numbers[3][i/4].red=three[i];
-                numbers[4][i/4].red=four[i];
-                numbers[5][i/4].red=five[i];
-                numbers[6][i/4].red=six[i];
-                numbers[7][i/4].red=seven[i];
-                numbers[8][i/4].red=eight[i];
-                numbers[9][i/4].red=nine[i];
-
-            }
-            //green
-            else if i%4==3{
-                numbers[0][i/4].green=zero[i];
-                numbers[1][i/4].green=one[i];
-                numbers[2][i/4].green=two[i];
-                numbers[3][i/4].green=three[i];
-                numbers[4][i/4].green=four[i];
-                numbers[5][i/4].green=five[i];
-                numbers[6][i/4].green=six[i];
-                numbers[7][i/4].green=seven[i];
-                numbers[8][i/4].green=eight[i];
-                numbers[9][i/4].green=nine[i];
-            }
-            //blue
-            else if i%4==2{
-                numbers[0][i/4].blue=zero[i];
-                numbers[1][i/4].blue=one[i];
-                numbers[2][i/4].blue=two[i];
-                numbers[3][i/4].blue=three[i];
-                numbers[4][i/4].blue=four[i];
-                numbers[5][i/4].blue=five[i];
-                numbers[6][i/4].blue=six[i];
-                numbers[7][i/4].blue=seven[i];
-                numbers[8][i/4].blue=eight[i];
-                numbers[9][i/4].blue=nine[i];
-            }
-            // alpha
-            else {
-                numbers[0][i/4].alpha=zero[i];
-                numbers[1][i/4].alpha=one[i];
-                numbers[2][i/4].alpha=two[i];
-                numbers[3][i/4].alpha=three[i];
-                numbers[4][i/4].alpha=four[i];
-                numbers[5][i/4].alpha=five[i];
-                numbers[6][i/4].alpha=six[i];
-                numbers[7][i/4].alpha=seven[i];
-                numbers[8][i/4].alpha=eight[i];
-                numbers[9][i/4].alpha=nine[i];
-            }
-         }
-
-        numbers
-    }
-
-
-pub unsafe fn load_end_game()->[[lcd::Color;2];60000]
-    {
-
-        let mut player:[[lcd::Color;2];60000];
-
-        player = uninitialized();
-        let player_1=include_bytes!("Player1.data");
-        let player_2=include_bytes!("Player2.data");
-        
-
-        for i in 0..player_1.len(){
-                // sorting the list to the rgb fields
-                // red
-                if i%4==0{
-                player[0][i/4].red=player_1[i];
-                player[1][i/4].red=player_2[i];
-
-                }
-                //green
-                else if i%4==3{
-                    player[0][i/4].green=player_1[i];
-                    player[1][i/4].green=player_2[i];
-                }
-                //blue
-                else if i%4==2{
-                    player[0][i/4].blue=player_1[i];
-                    player[1][i/4].blue=player_2[i];
-
-                }
-                // alpha
-                else {
-                    player[0][i/4].alpha=player_1[i];
-                    player[1][i/4].alpha=player_2[i];
-                }
-    
-
-            }
-        player
-    }
 }
 
