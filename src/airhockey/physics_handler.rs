@@ -1,4 +1,5 @@
 //! physics handler module
+use crate::airhockey::score::Score;
 use crate::physics::physics::Physics;
 
 /// physics handler struct
@@ -28,6 +29,7 @@ impl PhysicsHandler {
         player_position: (u16, u16),
         player_radius: u16,
         player_speed: (f64, f64),
+        score: &mut Score,
     ) -> (u16, u16) {
         self.physics.update_ball_position(
             player_position.0,
@@ -35,6 +37,7 @@ impl PhysicsHandler {
             player_radius,
             player_speed.0,
             player_speed.1,
+            score
         )
     }
 

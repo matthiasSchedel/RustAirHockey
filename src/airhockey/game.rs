@@ -83,8 +83,8 @@ impl Game {
             self.draw_field();
             self.draw_score();
             // handle score
-            let scored: bool = self.update_score();
-            if scored {
+            // let scored: bool = self.update_score();
+            /* if scored {*/
                 let (is_over, winning_player) = self.score.is_game_over();
                 if is_over {
                     self.handle_game_over(winning_player);
@@ -94,8 +94,8 @@ impl Game {
                 } else {
                     self.score.draw(&mut self.handler);
                     // score board updaten
-                }
-            }
+                } /*
+            } */
         }
 
         // self.handle_graphcis();
@@ -158,6 +158,7 @@ impl Game {
             player_position,
             player_radius,
             player_speed,
+            &mut self.score,
         );
         let new_ball_speed = self.handler.physics_handler.get_ball_speed();
 
