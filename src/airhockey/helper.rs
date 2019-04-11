@@ -1,7 +1,16 @@
 //! helper module
 use alloc::vec::Vec;
 use arrayvec::ArrayVec;
+extern crate libm;
+use libm::F64Ext;
 
+pub  fn calculate_point_distance(position1: (u16, u16), position2: (u16, u16)) -> f64 {
+        let x:f64 = f64::from(
+            u32::from(unsigned_subtraction(position1.0, position2.0)) * u32::from(unsigned_subtraction(position1.0, position2.0))
+                + u32::from(unsigned_subtraction(position1.1, position2.1)) * u32::from(unsigned_subtraction(position1.1, position2.1))
+        );
+        x.sqrt()
+    }
 /// Perform subtraction on unsigned values (absolute difference)
 pub fn unsigned_subtraction(x: u16, y: u16) -> u16 {
     if x < y {

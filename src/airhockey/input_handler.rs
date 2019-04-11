@@ -37,6 +37,7 @@ impl InputHandler {
         half_x_max: u16,
     ) -> (bool, (u16, u16)) {
         let filtered_touches = self.filter_touches_for_player(half_x_min, half_x_max);
+        let mut touch_min_dist: f64 = 1000.0; 
         let mut position = (
             (half_x_max - half_x_min) / 2 + half_x_min,
             (self.screen_size[1] / 2) as u16,
@@ -46,17 +47,22 @@ impl InputHandler {
         for touch in filtered_touches {
             is_touch = true;
             //If the touch position is inside the radius of the player
-            if helper::unsigned_subtraction(pos.0, touch.0) < 2 * touch_radius
-                && helper::unsigned_subtraction(pos.1, touch.1) < 2 * touch_radius
-            {
-                position.0 = touch.0; //helper::average_vector([touch.0, position.0].to_vec());
-                position.1 = touch.1; // helper::average_vector([touch.1, position.1].to_vec());
-            } else {
-                //TODO choose position closest to player
-                //Choose abtrirary touch position (will be the last value in the list)
-                position.0 = touch.0;
-                position.1 = touch.1;
-                // is_touch = false;
+            // if helper::unsigned_subtraction(pos.0, touch.0) < 2 * touch_radius
+            //     && helper::unsigned_subtraction(pos.1, touch.1) < 2 * touch_radius
+            // {
+            //     position.0 = touch.0; //helper::average_vector([touch.0, position.0].to_vec());
+            //     position.1 = touch.1; // helper::average_vector([touch.1, position.1].to_vec());
+            // } else {
+            //     //TODO choose position closest to player
+            //     //Choose abtrirary touch position (will be the last value in the list)
+            //     position.0 = touch.0;
+            //     position.1 = touch.1;
+            //     // is_touch = false;
+            // }
+            let touch_curr_dist : f64 = helper::calculate_point_distance(pos, touch);
+            if touch_curr_dist < touch_min_dist {
+                touch_min_dist = touch_curr_dist;
+                position = touch;
             }
         }
         (is_touch, (position.0, position.1))
