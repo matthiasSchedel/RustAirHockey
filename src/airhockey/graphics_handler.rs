@@ -36,7 +36,6 @@ impl GraphicsHandler {
         self.graphics.draw_score(player_scores)
     }
 
-
     pub fn draw_playing_field(&mut self) {
         self.graphics.draw_field(
             field::BACKGROUND_COLOR,
@@ -46,16 +45,15 @@ impl GraphicsHandler {
         );
     }
 
-    pub fn draw_game_content(&mut self, drawables: &Vec<((u16,u16), u16, u32)>) {
+    pub fn draw_game_content(&mut self, drawables: &Vec<((u16, u16), u16, u32)>) {
         self.graphics.draw_circles_implicit(drawables);
     }
 
+    pub fn draw_game_over(&mut self, winnning_player: u8) {
+        self.graphics.draw_endgame([100, 50], winnning_player);
+    }
 
-
-
-pub fn clear_dynamic_content(&mut self){
-self.graphics.clear_layer(0);
+    pub fn clear_dynamic_content(&mut self) {
+        self.graphics.clear_layer(0);
+    }
 }
-}
-
-

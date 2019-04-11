@@ -5,12 +5,12 @@ use alloc::vec::Vec;
 
 /// points scored per goal
 pub const POINTS_PER_GOAL: u8 = 1;
-pub const NUMBER_WIDTH:u16=25;
-pub const NUMBER_HIGHT:u16=40;
-pub const DOT_COLOR:u32=0x000000;
+pub const NUMBER_WIDTH: u16 = 25;
+pub const NUMBER_HIGHT: u16 = 40;
+pub const DOT_COLOR: u32 = 0x000000;
 
 /// define the x coord of left right right goal used for goal checking
-const GOAL_X_POSITIONS: [u16;2] = [5, 488]; 
+const GOAL_X_POSITIONS: [u16; 2] = [15, 470];
 
 /// score struct in airhockey game
 pub struct Score {
@@ -32,14 +32,16 @@ impl Score {
     }
     /// add to the score of a player
     pub fn add_score(&mut self, player: u8) {
-        self.player_scores[player as usize] = self.player_scores[player as usize] + 1;
+        if self.player_scores[player as usize] < 9 {
+            self.player_scores[player as usize] = self.player_scores[player as usize] + 1;
+        }
     }
 
     /// return 0 if no player has won else player number
     pub fn is_game_over(&mut self) -> (bool, u8) {
         let mut i: u16 = 1;
         for p in 0..self.player_scores.len() {
-            if p >= self.max_score as usize {
+            if p >= 9 as usize {
                 return (true, p as u8);
             }
             i += 1;
@@ -52,15 +54,15 @@ impl Score {
         handler.graphics_handler.draw_score(score);
     }
 
-    pub fn check_goals_and_update_score(& mut self, pos: [u16;2]) -> (bool, u8) {
+    pub fn check_goals_and_update_score(&mut self, pos: [u16; 2]) -> (bool, u8) {
         if pos[0] < GOAL_X_POSITIONS[0] {
             self.player_scores[0] = self.player_scores[0] + 1;
-            (true,0)
-        } else if pos[1] < GOAL_X_POSITIONS[1] {
+            (true, 0)
+        } else if pos[1] > GOAL_X_POSITIONS[1] {
             self.player_scores[1] = self.player_scores[1] + 1;
-            (true,1)
+            (true, 1)
         } else {
-            (false,0)
+            (false, 0)
         }
     }
 }
