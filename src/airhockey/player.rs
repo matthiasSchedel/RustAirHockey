@@ -1,7 +1,7 @@
 //! Airhockey Player.
 use super::helper;
 /// player radius
-pub const RADIUS: u16 = 20;
+pub const RADIUS: u16 = 30;
 /// player fill color
 pub const COLOR: u32 = 0xfff000;
 /// player radius
@@ -63,7 +63,7 @@ impl Player {
             }
         }
     }
-   
+
     pub fn draw(&self, handler: &mut Handler) {
         handler.graphics_handler.draw_player(
             self.color,
@@ -80,14 +80,19 @@ impl Player {
             && i32::from(self.current_pos.1) - i32::from(self.target_pos.1) <= self.speed.1
         {
             self.speed = (0, 0);
-            x= i32::from(self.target_pos.0);
-            y= i32::from(self.target_pos.1);
+            x = i32::from(self.target_pos.0);
+            y = i32::from(self.target_pos.1);
         } else {
             x = i32::from(self.current_pos.0) + self.speed.0;
             y = i32::from(self.current_pos.1) + self.speed.1;
         }
         //Always has to be inside the field borders
-        self.current_pos = field::get_position_still_in_field((x, y), self.current_pos, self.radius);
+        self.current_pos = field::get_position_still_in_field(
+            (i32::from(self.x_min), i32::from(self.x_max)),
+            (x, y),
+            self.current_pos,
+            self.radius,
+        );
     }
 
     ///update player on user input
@@ -102,8 +107,13 @@ impl Player {
             self.x_max,
         );
         //Important! Only perform when there are touches!
-        if is_touched{
-            self.target_pos = field::get_position_still_in_field((i32::from(pos.0), i32::from(pos.1)), self.current_pos, self.radius);
+        if is_touched {
+            self.target_pos = field::get_position_still_in_field(
+                (i32::from(self.x_min), i32::from(self.x_max)),
+                (i32::from(pos.0), i32::from(pos.1)),
+                self.current_pos,
+                self.radius,
+            );
         }
         self.speed = (
             (i32::from(self.target_pos.0) - i32::from(self.current_pos.0)) / 2,
