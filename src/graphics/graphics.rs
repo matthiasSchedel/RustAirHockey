@@ -37,7 +37,8 @@ pub struct Graphics {
     width: u16,
     ///display height
     height: u16,
-    numbers: [lcd::Color; 10000],
+    numbers:[&'static [u8;320000]; 2],
+    game_over_images:[&'static [u8;320000]; 2
 }
 impl Graphics {
     /// game constructor
@@ -48,13 +49,15 @@ impl Graphics {
             lcd::Layer<lcd::FramebufferArgb8888>,
             lcd::Layer<lcd::FramebufferAl88>,
         ),
-        numbers: [lcd::Color; 10000],
+       numbers:[&'static [u8;320000]; 2],
+        game_over_images:[&'static [u8;320000]; 2]
     ) -> Graphics {
         Graphics {
             display_layer: display_layer,
             width: width,
             height: height,
             numbers: numbers,
+            game_over_images: game_over_images
         }
     }
 
@@ -137,11 +140,16 @@ impl Graphics {
         // Draws two number and : 2:1
 
         // First number
-        self.draw_number([190, 15]);
+        self.draw_number([190, 15], player_scores[0]as u8);
         // Second number
-        self.draw_number([265, 15]);
+        self.draw_number([265, 15], player_scores[1] as u8);
 
         // Double dot
+    }
+
+
+    pub fn draw_game_over(&mut self, player: u8) {
+
     }
 
     /// init
@@ -267,13 +275,14 @@ impl Graphics {
             + (i32::from(y) - i32::from(pos[1])) * (i32::from(y) - i32::from(pos[1]))
             <= i32::from(radius) * i32::from(radius)
     }
+
+
     /// draw numbers on screen at positi
     pub fn draw_number(
         &mut self,
-
         // upper left position of number rectangle
         position: [u16; 2],
-        // Dimension of number rectangle
+        score: u8, // Dimension of number rectangle
     ) {
         let mut x_pos: u16;
         let mut y_pos: u16;
@@ -285,7 +294,7 @@ impl Graphics {
             self.display_layer.0.print_point_color_at(
                 x_pos as usize + position[0] as usize,
                 y_pos as usize + position[1] as usize,
-                self.numbers[i as usize],
+                self.numbers[score as usize][i as usize],
             );
         }
     }
@@ -294,21 +303,21 @@ impl Graphics {
     pub fn draw_endgame(
         &mut self,
         // array with the information of number
-        number_array: [lcd::Color; 60000],
-        // upper left position of number rectangle
-        position: [u16; 2],
+        position: [u32; 2],
+        winning_player: u8
         // Dimension of number rectangle
     ) {
-        let mut x_pos: u16;
-        let mut y_pos: u16;
+        let mut x_pos: u32;
+        let mut y_pos: u32;
         for i in 0..6000 {
-            x_pos = i % self::END_WIDTH;
-            y_pos = i / self::END_HIGHT;
+            x_pos = i % self::END_WIDTH as u32;
+            y_pos = i / self::END_HIGHT as u32;
             self.display_layer.0.print_point_color_at(
                 x_pos as usize + position[0] as usize,
                 y_pos as usize + position[1] as usize,
-                number_array[i as usize],
+                self.game_over_images[winning_player as usize][i as usize],
             );
         }
     }
+
 }

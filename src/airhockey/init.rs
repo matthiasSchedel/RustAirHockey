@@ -1,12 +1,12 @@
-///! Init airhockey game
-
-use core::mem::uninitialized;
 use crate::i2c::I2C;
 use crate::{
     gpio::{GpioPort, OutputPin},
-    init, lcd::{self,Color},
+    init,
+    lcd::{self, Color},
     system_clock::Hz,
 };
+///! Init airhockey game
+use core::mem::uninitialized;
 use stm32f7::stm32f7x6::I2C3;
 use stm32f7::stm32f7x6::{CorePeripherals, Peripherals};
 
@@ -59,8 +59,18 @@ pub fn create_handler() -> Handler {
         I2C<I2C3>,
     ) = init_general_hardware(fps);
     let layers = ((hardware.0).0, (hardware.0).1);
-    let numbers = load_numbers_from_disk();
-    let graphics = Graphics::new(field::WIDTH_MAX, field::HEIGHT_MAX, layers, numbers);
+
+     let numbers = load_numbers();
+     let game_over_images = load_end_game();
+    
+
+    let graphics = Graphics::new(
+        field::WIDTH_MAX,
+        field::HEIGHT_MAX,
+        layers,
+        numbers,
+        game_over_images,
+    );
     let input = Input::new(field::WIDTH_MAX, field::HEIGHT_MAX, hardware.1);
     let physics = Physics::new(field::WIDTH_MAX, field::HEIGHT_MAX, ball::RADIUS);
 
@@ -71,133 +81,32 @@ pub fn create_handler() -> Handler {
     );
 }
 
-fn load_numbers_from_disk() -> [lcd::Color;10000]{
-    [lcd::Color::rgb(0,0,0);10000]
-    
-}
-
- /// Function to lad all values and return reference of array
-    pub unsafe fn load_numbers()->[[lcd::Color;10];1000]{
-    
-        //unpack as array 4 values describe one pixel
-        let mut numbers:[[lcd::Color;10];1000];
-        numbers = uninitialized();
-
+/// Function to lad all values and return reference of array
+pub fn load_numbers() ->[&'static [u8; 4000]; 10]{
+    //unpack as array 4 values describe one pixel
+    let numbers: [&[u8; 4000]; 10] = [
         // Loading the graphics
-        let zero=include_bytes!("./data/0.data");
-        let one=include_bytes!("./data/1.data");
-        let two=include_bytes!("./data/2.data");
-        let three=include_bytes!("./data/3.data");
-        let four=include_bytes!("./data/4.data");
-        let five=include_bytes!("./data/5.data");
-        let six=include_bytes!("./data/6.data");
-        let seven=include_bytes!("./data/7.data");
-        let eight=include_bytes!("./data/8.data");
-        let nine=include_bytes!("./data/9.data");
-
-
-
-        for i in 0..one.len(){
-            // sorting the list to the rgb fields
-            // red
-            if i%4==0{
-                numbers[0][i/4].red=zero[i];
-                numbers[1][i/4].red=one[i];
-                numbers[2][i/4].red=two[i];
-                numbers[3][i/4].red=three[i];
-                numbers[4][i/4].red=four[i];
-                numbers[5][i/4].red=five[i];
-                numbers[6][i/4].red=six[i];
-                numbers[7][i/4].red=seven[i];
-                numbers[8][i/4].red=eight[i];
-                numbers[9][i/4].red=nine[i];
-
-            }
-            //green
-            else if i%4==3{
-                numbers[0][i/4].green=zero[i];
-                numbers[1][i/4].green=one[i];
-                numbers[2][i/4].green=two[i];
-                numbers[3][i/4].green=three[i];
-                numbers[4][i/4].green=four[i];
-                numbers[5][i/4].green=five[i];
-                numbers[6][i/4].green=six[i];
-                numbers[7][i/4].green=seven[i];
-                numbers[8][i/4].green=eight[i];
-                numbers[9][i/4].green=nine[i];
-            }
-            //blue
-            else if i%4==2{
-                numbers[0][i/4].blue=zero[i];
-                numbers[1][i/4].blue=one[i];
-                numbers[2][i/4].blue=two[i];
-                numbers[3][i/4].blue=three[i];
-                numbers[4][i/4].blue=four[i];
-                numbers[5][i/4].blue=five[i];
-                numbers[6][i/4].blue=six[i];
-                numbers[7][i/4].blue=seven[i];
-                numbers[8][i/4].blue=eight[i];
-                numbers[9][i/4].blue=nine[i];
-            }
-            // alpha
-            else {
-                numbers[0][i/4].alpha=zero[i];
-                numbers[1][i/4].alpha=one[i];
-                numbers[2][i/4].alpha=two[i];
-                numbers[3][i/4].alpha=three[i];
-                numbers[4][i/4].alpha=four[i];
-                numbers[5][i/4].alpha=five[i];
-                numbers[6][i/4].alpha=six[i];
-                numbers[7][i/4].alpha=seven[i];
-                numbers[8][i/4].alpha=eight[i];
-                numbers[9][i/4].alpha=nine[i];
-            }
-         }
-
-        numbers
-    }
-
-
-unsafe fn load_end_game()->[[lcd::Color;2];60000]
-    {
-
-        let mut player:[[lcd::Color;2];60000];
-
-        player = uninitialized();
-        let player_1=include_bytes!("./data/Player1.data");
-        let player_2=include_bytes!("./data/Player2.data");
-        
-
-        for i in 0..player_1.len(){
-                // sorting the list to the rgb fields
-                // red
-                if i%4==0{
-                player[0][i/4].red=player_1[i];
-                player[1][i/4].red=player_2[i];
-
-                }
-                //green
-                else if i%4==3{
-                    player[0][i/4].green=player_1[i];
-                    player[1][i/4].green=player_2[i];
-                }
-                //blue
-                else if i%4==2{
-                    player[0][i/4].blue=player_1[i];
-                    player[1][i/4].blue=player_2[i];
-
-                }
-                // alpha
-                else {
-                    player[0][i/4].alpha=player_1[i];
-                    player[1][i/4].alpha=player_2[i];
-                }
-    
-
-            }
-        player
+        include_bytes!("./data/0.data"),
+        include_bytes!("./data/1.data"),
+        include_bytes!("./data/2.data"),
+        include_bytes!("./data/3.data"),
+        include_bytes!("./data/4.data"),
+        include_bytes!("./data/5.data"),
+        include_bytes!("./data/6.data"),
+        include_bytes!("./data/7.data"),
+        include_bytes!("./data/8.data"),
+        include_bytes!("./data/9.data"),
+    ];
+    return (numbers)
 }
 
+fn load_end_game() -> [&'static [u8;320000]; 2]  {
+    let player: [&[u8; 320000]; 2] = [
+        include_bytes!("./data/Player1.data"),
+        include_bytes!("./data/Player2.data")
+    ];
+    return (player)
+}
 
 /// init the general hardware
 pub fn init_general_hardware(
