@@ -116,8 +116,8 @@ impl Player {
             );
         }
         self.speed = (
-            (i32::from(self.target_pos.0) - i32::from(self.current_pos.0)) / 2,
-            (i32::from(self.target_pos.1) - i32::from(self.current_pos.1)) / 2,
+            ((f32::from(self.target_pos.0) - f32::from(self.current_pos.0)) / 1.5) as i32,
+            ((f32::from(self.target_pos.1) - f32::from(self.current_pos.1)) / 1.5) as i32,
         );
     }
     ///Get the player id

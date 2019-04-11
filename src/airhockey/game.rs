@@ -27,7 +27,7 @@ impl Game {
         let mut players: Vec<Player> = Vec::new();
         let field = Field::new();
         for p in 0..number_players {
-            players.push(Player::new(p))
+            players.push(Player::new(p));
         }
         let score = Score::new(players.len() as u8, MAX_SCORE);
 

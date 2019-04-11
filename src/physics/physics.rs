@@ -7,7 +7,7 @@ use crate::airhockey::field;
 use crate::airhockey::score;
 use crate::airhockey::helper;
 
-const FRICTION: f64 = 0.95;
+const FRICTION: f64 = 0.99;
 /// friction used in simulation
 /// is friction used in simulation?
 const USE_FRICTION: bool = true;

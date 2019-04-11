@@ -326,10 +326,10 @@ impl Graphics {
             y_pos = i / self::END_WIDTH as u32;
 
             color_score=lcd::Color::rgba(
-            self.numbers[winning_player as usize][(4*i) as usize],
-            self.numbers[winning_player as usize][((4*i)+1) as usize],
-            self.numbers[winning_player as usize][((4*i)+2) as usize],
-            self.numbers[winning_player as usize][((4*i)+3) as usize]
+            self.game_over_images[winning_player as usize][(4*i) as usize],
+            self.game_over_images[winning_player as usize][((4*i)+1) as usize],
+            self.game_over_images[winning_player as usize][((4*i)+2) as usize],
+            self.game_over_images[winning_player as usize][((4*i)+3) as usize]
             );
 
             // color_score.red=self.numbers[winning_player as usize][(4*i) as usize];

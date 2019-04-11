@@ -50,7 +50,7 @@ impl GraphicsHandler {
     }
 
     pub fn draw_game_over(&mut self, winnning_player: u8) {
-        self.graphics.draw_endgame([100, 50], winnning_player);
+        self.graphics.draw_endgame([40, 36], winnning_player);
     }
 
     pub fn clear_dynamic_content(&mut self) {
