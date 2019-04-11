@@ -53,12 +53,6 @@ impl Graphics {
         return false;
     }
 
-    /// check if point is outside
-    fn isPointOutside(&self, point: [u16; 2], pointsize: u16) -> bool {
-        return (self.width > point[0] + pointsize || point[0] - pointsize < 0)
-            && (self.height > point[1] + pointsize || point[1] > 0);
-    }
-
     ///draw a circle around pos x,y with radius - and
     pub fn draw_circle(
         &mut self,
@@ -165,7 +159,32 @@ impl Graphics {
         );
     }
 
+    pub fn draw_numbers(
+        &mut self,
+        number_array:[[lcd::Color;25];40],
+        position:[u16;2],
+        ){
+            for x in position[0] as usize..position[0] as usize{
+                for y in position[1].. position[1]+2{
+                     self.display_layer.0.print_point_color_at(
+                    x as usize,
+                    y as usize,
+                    number_array[x as usize ][y as usize]);
+                }
+            }
+
+
+
+
+    }
+
     pub fn get_numbers(){
+
+        //define pixel size
+        let number_width:usize=25;
+        let number_hight:usize=40;
+
+        // Loading the graphics
         let one=include_bytes!("1.data");
         let two=include_bytes!("2.data");
         let three=include_bytes!("3.data");
@@ -176,7 +195,35 @@ impl Graphics {
         let eight=include_bytes!("8.data");
         let nine=include_bytes!("9.data");
 
+        //unpack as array 4 values describe one pixel
+        let number:[lcd::Color;1000];
+        let array_number:[[lcd::Color;25];40];
+
+
         
+        for i in 0..one.len(){
+            // sorting the list to the rgb fields
+            // red
+            if i%4==0{
+                number[i/4].red=one[i];
+            }
+            //green
+            else if i%4==3{
+                number[i/4].green=one[i];
+            }
+            //blue
+            else if i%4==2{
+                number[i/4].blue=one[i];
+            }
+            // alpha
+            else {
+                number[i/4].alpha=one[i];
+            }
+
+            // merging to right array
+            array_number[i/number_width][i%number_width]=number[i];
+         }
+
 
     }
 }
