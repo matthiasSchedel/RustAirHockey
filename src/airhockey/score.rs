@@ -33,7 +33,7 @@ impl Score {
     }
     /// add to the score of a player
     pub fn add_score(&mut self, player: u8) {
-        if self.player_scores[player as usize] < 10 {
+        if self.player_scores[player as usize] < 9 {
             self.player_scores[player as usize] = self.player_scores[player as usize] + 1;
         }
     }
