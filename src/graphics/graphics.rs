@@ -173,8 +173,8 @@ impl Graphics {
             let mut y_pos:u16;
             for i in 0..1000{
                 // unpack 1darray to 2darray
-                x_pos=i/number_width;
-                y_pos=i%number_width;
+                x_pos=i%number_width;
+                y_pos=i/number_width;
 
                  self.display_layer.0.print_point_color_at(
                      x_pos as usize + position[0] as usize,
@@ -206,27 +206,25 @@ impl Graphics {
         let nine=include_bytes!("9.data");
 
         //unpack as array 4 values describe one pixel
-        let number:[lcd::Color;1000];
+        let number_one:[lcd::Color;1000];
 
-
-        
         for i in 0..one.len(){
             // sorting the list to the rgb fields
             // red
             if i%4==0{
-                number[i/4].red=one[i];
+                number_one[i/4].red=one[i];
             }
             //green
             else if i%4==3{
-                number[i/4].green=one[i];
+                number_one[i/4].green=one[i];
             }
             //blue
             else if i%4==2{
-                number[i/4].blue=one[i];
+                number_one[i/4].blue=one[i];
             }
             // alpha
             else {
-                number[i/4].alpha=one[i];
+                number_one[i/4].alpha=one[i];
             }
 
          }
