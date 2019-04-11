@@ -22,7 +22,7 @@ const PUCK_SIZE: u16 = 6;
 const BACKGROUND_COLOR: u32 = 0xfff000;
 const NUMBER_HIGHT: u16 = 40;
 const NUMBER_WIDTH: u16 = 25;
-const DOUBLE_DOT_COLOR: u32 = 0xffff00;
+const DOUBLE_DOT_COLOR: u32 = 0x000000;
 const END_WIDTH: u16 = 300;
 const END_HIGHT: u16 = 200;
 
@@ -37,8 +37,8 @@ pub struct Graphics {
     width: u16,
     ///display height
     height: u16,
-    numbers:[&'static [u8;320000]; 2],
-    game_over_images:[&'static [u8;320000]; 2
+    numbers:[&'static [u8;4000]; 10],
+    game_over_images:[&'static [u8;320000]; 2],
 }
 impl Graphics {
     /// game constructor
@@ -49,7 +49,7 @@ impl Graphics {
             lcd::Layer<lcd::FramebufferArgb8888>,
             lcd::Layer<lcd::FramebufferAl88>,
         ),
-       numbers:[&'static [u8;320000]; 2],
+       numbers:[&'static [u8;4000]; 10],
         game_over_images:[&'static [u8;320000]; 2]
     ) -> Graphics {
         Graphics {
@@ -286,15 +286,23 @@ impl Graphics {
     ) {
         let mut x_pos: u16;
         let mut y_pos: u16;
+        let mut color_score:lcd::Color;
         for i in 0..1000 {
             // unpack 1darray to 2darray
             x_pos = i % self::NUMBER_WIDTH;
             y_pos = i / self::NUMBER_HIGHT;
 
+            color_score=lcd::Color::rgba(
+            self.numbers[score as usize][(4*i) as usize],
+            self.numbers[score as usize][((4*i)+1) as usize],
+            self.numbers[score as usize][((4*i)+2) as usize],
+            self.numbers[score as usize][((4*i)+3) as usize]);
+
+
             self.display_layer.0.print_point_color_at(
                 x_pos as usize + position[0] as usize,
                 y_pos as usize + position[1] as usize,
-                self.numbers[score as usize][i as usize],
+                color_score,
             );
         }
     }
@@ -309,13 +317,30 @@ impl Graphics {
     ) {
         let mut x_pos: u32;
         let mut y_pos: u32;
-        for i in 0..6000 {
+        let mut color_score:lcd::Color=lcd::Color::rgb(
+            0, 0, 0
+            );
+        for i in 0..8000 {
             x_pos = i % self::END_WIDTH as u32;
             y_pos = i / self::END_HIGHT as u32;
+
+            color_score=lcd::Color::rgba(
+            self.numbers[winning_player as usize][(4*i) as usize],
+            self.numbers[winning_player as usize][((4*i)+1) as usize],
+            self.numbers[winning_player as usize][((4*i)+2) as usize],
+            self.numbers[winning_player as usize][((4*i)+3) as usize]
+            );
+
+            // color_score.red=self.numbers[winning_player as usize][(4*i) as usize];
+            // color_score.green=self.numbers[winning_player as usize][(4*i)+1 as usize];
+            // color_score.blue=self.numbers[winning_player as usize][(4*i)+2 as usize];
+            // color_score.alpha=self.numbers[winning_player as usize][(4*i)+3 as usize];
+
+
             self.display_layer.0.print_point_color_at(
                 x_pos as usize + position[0] as usize,
                 y_pos as usize + position[1] as usize,
-                self.game_over_images[winning_player as usize][i as usize],
+                color_score,
             );
         }
     }
