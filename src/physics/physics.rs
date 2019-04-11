@@ -2,6 +2,7 @@
 extern crate libm;
 use crate::alloc;
 use libm::F64Ext;
+use crate::airhockey::helper;
 
 const FRICTION: f64 = 0.95;
 /// friction used in simulation
@@ -171,12 +172,13 @@ impl Physics {
         CollisionObject::new(collision, coll_x, coll_y, 0., 0.)
     }
 
+    //Pythagoras
     fn calculate_point_distance(&self, position1: (u16, u16)) -> f64 {
-        f64::from(
-            (position1.0 - self.ball_pos.0) * (position1.0 - self.ball_pos.0)
-                + (position1.1 - self.ball_pos.1) * (position1.1 - self.ball_pos.1),
-        )
-        .sqrt()
+        let x:f64 = f64::from(
+            u32::from(helper::unsigned_subtraction(position1.0, self.ball_pos.0)) * u32::from(helper::unsigned_subtraction(position1.0, self.ball_pos.0))
+                + u32::from(helper::unsigned_subtraction(position1.1, self.ball_pos.1)) * u32::from(helper::unsigned_subtraction(position1.1, self.ball_pos.1))
+        );
+        x.sqrt()
     }
 
     /// checks if and where a ball collides with a player and returns a corresponding collision object

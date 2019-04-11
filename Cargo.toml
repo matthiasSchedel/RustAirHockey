@@ -59,6 +59,9 @@ debug = true
 lto = true # better optimizations
 incremental = false # TODO: remove after https://github.com/rust-lang/cargo/pull/6610 lands in nightly
 
+[profile.dev]
+overflow-checks=false
+
 [patch.crates-io.cortex-m-rt]
 # TODO: replace with crates.io version when new version is released
 git = "https://github.com/rust-embedded/cortex-m-rt.git"

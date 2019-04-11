@@ -47,11 +47,11 @@ impl Graphics {
         }
     }
 
-    /// check if point is outside
+    /* /// check if point is outside
     fn isPointOutside(&self, point: [u16; 2], pointsize: u16) -> bool {
         return (self.width > point[0] + pointsize || point[0] - pointsize < 0)
             && (self.height > point[1] + pointsize || point[1] > 0);
-    }
+    } */
 
     ///draw a circle around pos x,y with radius
     pub fn draw_circle(
