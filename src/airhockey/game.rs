@@ -2,15 +2,14 @@
 const MAX_SCORE: u16 = 10;
 
 use super::{
-    ball::Ball, field, field::Field, init, init::Handler, player::Player,
-    score::Score, ball
+    ball, ball::Ball, field, field::Field, init, init::Handler, player::Player, score::Score,
 };
 use alloc::vec::Vec;
 
 /// points scored per goal
 const POINTS_PER_GOAL: u8 = 1;
 /// player colors array
-const COLOR_ARRAY: [u32; 4] = [0xfff000, 0xfff000, 0xfff000, 0xfff000];
+const COLOR_ARRAY: [u32; 4] = [0xff0000, 0x00ff00, 0xfff000, 0xfff000];
 
 /// game struct
 pub struct Game {
@@ -20,7 +19,6 @@ pub struct Game {
     field: Field,
     handler: Handler,
 }
-
 
 impl Game {
     /// game constructor
@@ -44,10 +42,14 @@ impl Game {
 
     fn get_drawable_objects(&mut self) -> Vec<((u16, u16), u16, u32)> {
         let mut drawables: Vec<((u16, u16), u16, u32)> = Vec::new();
-        for p in & mut self.players {
-            drawables.push((p.get_position(),p.get_radius(),p.get_color()));
+        for p in &mut self.players {
+            drawables.push((p.get_position(), p.get_radius(), p.get_color()));
         }
-        drawables.push(((self.ball.position[0],self.ball.position[1]),ball::RADIUS, ball::COLOR));
+        drawables.push((
+            (self.ball.position[0], self.ball.position[1]),
+            ball::RADIUS,
+            ball::COLOR,
+        ));
         drawables
     }
     /// is touched method
@@ -82,7 +84,7 @@ impl Game {
             //update players with new user input -> new player pos
             self.handle_inputs();
             self.update_players_with_user_input();
-            
+
             //collision handling
             self.handle_collisions();
 
@@ -134,17 +136,25 @@ impl Game {
 
     /// get the collsiiosn
     fn handle_collisions(&mut self) {
-        let active_player = if self.ball.position[0] < (field::WIDTH_MAX / 2) { 0 } else { 1 };
+        let active_player = if self.ball.position[0] < (field::WIDTH_MAX / 2) {
+            0
+        } else {
+            1
+        };
         let ball_speed = (self.ball.speed[0], self.ball.speed[1]);
         let player_position = self.players[active_player].get_position();
         let player_radius = self.players[active_player].get_radius();
-        let player_speed = (f64::from(self.players[active_player].get_speed().0), 
-                            f64::from(self.players[active_player].get_speed().1));
-
-
+        let player_speed = (
+            f64::from(self.players[active_player].get_speed().0),
+            f64::from(self.players[active_player].get_speed().1),
+        );
 
         self.handler.physics_handler.update_ball_speed(&ball_speed);
-        let new_ball_position = self.handler.physics_handler.update_ball_position(player_position, player_radius, player_speed);
+        let new_ball_position = self.handler.physics_handler.update_ball_position(
+            player_position,
+            player_radius,
+            player_speed,
+        );
         let new_ball_speed = self.handler.physics_handler.get_ball_speed();
 
         self.ball.position = [new_ball_position.0, new_ball_position.1];

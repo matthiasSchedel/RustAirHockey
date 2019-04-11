@@ -3,8 +3,8 @@ use super::helper;
 /// player radius
 pub const RADIUS: u16 = 30;
 /// player fill color
-pub const COLOR: u32 = 0xfff000;
-/// player radius
+pub const COLOR: [u32; 2] = [0xff0000, 0x00ff00];
+/// player radiusCOL
 pub const STROKE_COLOR: u32 = 0xfff000;
 /// has the player stroke?
 pub const HAS_STROKE: bool = false;
@@ -34,7 +34,7 @@ impl Player {
     /// Create new player
     pub fn new(player_id: u8) -> Player {
         let radius = RADIUS;
-        let color = COLOR;
+        let color = COLOR[player_id as usize];
         //This has to be changed if more than two players exist
         if player_id == 0 {
             Player {
