@@ -161,22 +161,32 @@ impl Graphics {
 
     pub fn draw_numbers(
         &mut self,
-        number_array:[[lcd::Color;25];40],
+        // array with the information of number
+        number_array:[lcd::Color;1000],
+        // upper left position of number rectangle
         position:[u16;2],
+        // Dimension of number rectangle
+        number_width:u16,
+        number_hight:u16,
         ){
-            for x in position[0] as usize..position[0] as usize{
-                for y in position[1].. position[1]+2{
-                     self.display_layer.0.print_point_color_at(
-                    x as usize,
-                    y as usize,
-                    number_array[x as usize ][y as usize]);
-                }
+            let mut x_pos:u16;
+            let mut y_pos:u16;
+            for i in 0..1000{
+                // unpack 1darray to 2darray
+                x_pos=i/number_width;
+                y_pos=i%number_width;
+
+                 self.display_layer.0.print_point_color_at(
+                     x_pos as usize + position[0] as usize,
+                    y_pos as usize+ position[1] as usize,
+                    number_array[i as usize]
+                );
+                
+
             }
 
+            }
 
-
-
-    }
 
     pub fn get_numbers(){
 
@@ -197,7 +207,6 @@ impl Graphics {
 
         //unpack as array 4 values describe one pixel
         let number:[lcd::Color;1000];
-        let array_number:[[lcd::Color;25];40];
 
 
         
@@ -220,8 +229,6 @@ impl Graphics {
                 number[i/4].alpha=one[i];
             }
 
-            // merging to right array
-            array_number[i/number_width][i%number_width]=number[i];
          }
 
 
