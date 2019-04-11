@@ -1,5 +1,5 @@
 //! Airhockey game.
-const MAX_SCORE: u16 = 10;
+const MAX_SCORE: u16 = 9;
 
 use super::{
     ball, ball::Ball, field, field::Field, init, init::Handler, player::Player, score::Score,
@@ -38,6 +38,10 @@ impl Game {
             field,
             handler,
         }
+    }
+
+    fn reset_ball(&mut self) {
+        self.ball.reset(&mut self.handler);
     }
 
     fn get_drawable_objects(&mut self) -> Vec<((u16, u16), u16, u32)> {

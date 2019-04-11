@@ -15,6 +15,8 @@ pub const STROKE_COLOR: u32 = 0xfff010;
 /// has bool stroke?
 pub const HAS_STROKE: bool = false;
 
+const RESET_POSITION: [u16;2] = [field::BORDER_WIDTH/2, field::HEIGHT_MAX/2];
+
 use super::init::Handler;
 
 /// structrepresents a ball in airhockey game
@@ -29,6 +31,10 @@ impl Ball {
             position: START_POSITION,
             speed: START_SPEED,
         }
+    }
+
+    pub fn reset(&mut self, handler: &mut Handler) {
+        self.position = [RESET_POSITION[0],RESET_POSITION[1]];
     }
 
     pub fn draw(&self, handler: &mut Handler) {
