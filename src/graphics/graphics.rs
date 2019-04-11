@@ -19,6 +19,9 @@ const USE_STROKE: bool = true;
 const PLAYER_SIZE: u16 = 10;
 const PUCK_SIZE: u16 = 6;
 const BACKGROUND_COLOR: u32 = 0xfff000;
+const NUMBER_HIGHT:u16=40;
+const NUMBER_WIDTH:u16=25;
+const DOUBLE_DOT_COLOR:u32=0xffff00;
 
 /// Graphics struct
 pub struct Graphics {
@@ -87,7 +90,23 @@ impl Graphics {
     pub fn clear_field(&self, color: u16) {}
 
     /// draw a score
-    pub fn draw_score(&self, player1_score: u8, player2_score: u8) {}
+    pub fn draw_score(
+        &self, 
+        player1_score: u8, 
+        player2_score: u8,
+        number_array:[lcd::Color;1000],
+        ) {
+        // Draws two number and : 2:1
+
+        // First number
+        self.draw_number(number_array,[225,15]);
+        // Second number
+        self.draw_number(number_array,[265,15]);
+
+        // Double dot
+        self.draw_circle(self::DOUBLE_DOT_COLOR, [240,25],2,false, self::DOUBLE_DOT_COLOR);
+        self.draw_circle(self::DOUBLE_DOT_COLOR, [240,35],2,false, self::DOUBLE_DOT_COLOR);
+    }
 
     /// init
     pub fn init(&self) {}
@@ -158,23 +177,21 @@ impl Graphics {
             color,
         );
     }
-
-    pub fn draw_numbers(
+    /// draw numbers on screen at positi
+    pub fn draw_number(
         &mut self,
         // array with the information of number
         number_array:[lcd::Color;1000],
         // upper left position of number rectangle
         position:[u16;2],
         // Dimension of number rectangle
-        number_width:u16,
-        number_hight:u16,
         ){
             let mut x_pos:u16;
             let mut y_pos:u16;
             for i in 0..1000{
                 // unpack 1darray to 2darray
-                x_pos=i%number_width;
-                y_pos=i/number_width;
+                x_pos=i%self::NUMBER_WIDTH;
+                y_pos=i/self::NUMBER_HIGHT;
 
                  self.display_layer.0.print_point_color_at(
                      x_pos as usize + position[0] as usize,
@@ -188,13 +205,62 @@ impl Graphics {
             }
 
 
-    pub fn get_numbers(){
+//     pub fn load_numbers(){
+
+//         //define pixel size
+//         let number_width:usize=25;
+//         let number_hight:usize=40;
+
+//         // Loading the graphics
+//         let zero=include_bytes!("0.data");
+//         let one=include_bytes!("1.data");
+//         let two=include_bytes!("2.data");
+//         let three=include_bytes!("3.data");
+//         let four=include_bytes!("4.data");
+//         let five=include_bytes!("5.data");
+//         let six=include_bytes!("6.data");
+//         let seven=include_bytes!("7.data");
+//         let eight=include_bytes!("8.data");
+//         let nine=include_bytes!("9.data");
+
+//         //unpack as array 4 values describe one pixel
+//         let number_one:[lcd::Color;1000];
+
+//         for i in 0..one.len(){
+//             // sorting the list to the rgb fields
+//             // red
+//             if i%4==0{
+//                 number_one[i/4].red=one[i];
+//             }
+//             //green
+//             else if i%4==3{
+//                 number_one[i/4].green=one[i];
+//             }
+//             //blue
+//             else if i%4==2{
+//                 number_one[i/4].blue=one[i];
+//             }
+//             // alpha
+//             else {
+//                 number_one[i/4].alpha=one[i];
+//             }
+
+//          }
+
+
+//     }
+// }
+
+
+    /// Function to lad all values and return reference of array
+    pub fn load_numbers()->&'static[[lcd::Color;10];1000]{
 
         //define pixel size
         let number_width:usize=25;
         let number_hight:usize=40;
 
         // Loading the graphics
+        let zero=include_bytes!("0.data");
         let one=include_bytes!("1.data");
         let two=include_bytes!("2.data");
         let three=include_bytes!("3.data");
@@ -206,30 +272,66 @@ impl Graphics {
         let nine=include_bytes!("9.data");
 
         //unpack as array 4 values describe one pixel
-        let number_one:[lcd::Color;1000];
+        let mut numbers:[[lcd::Color;10];1000];
 
         for i in 0..one.len(){
             // sorting the list to the rgb fields
             // red
             if i%4==0{
-                number_one[i/4].red=one[i];
+                numbers[0][i/4].red=zero[i];
+                numbers[1][i/4].red=one[i];
+                numbers[2][i/4].red=two[i];
+                numbers[3][i/4].red=three[i];
+                numbers[4][i/4].red=four[i];
+                numbers[5][i/4].red=five[i];
+                numbers[6][i/4].red=six[i];
+                numbers[7][i/4].red=seven[i];
+                numbers[8][i/4].red=eight[i];
+                numbers[9][i/4].red=nine[i];
+
             }
             //green
             else if i%4==3{
-                number_one[i/4].green=one[i];
+                numbers[0][i/4].red=zero[i];
+                numbers[1][i/4].red=one[i];
+                numbers[2][i/4].red=two[i];
+                numbers[3][i/4].red=three[i];
+                numbers[4][i/4].red=four[i];
+                numbers[5][i/4].red=five[i];
+                numbers[6][i/4].red=six[i];
+                numbers[7][i/4].red=seven[i];
+                numbers[8][i/4].red=eight[i];
+                numbers[9][i/4].red=nine[i];
             }
             //blue
             else if i%4==2{
-                number_one[i/4].blue=one[i];
+                numbers[0][i/4].red=zero[i];
+                numbers[1][i/4].red=one[i];
+                numbers[2][i/4].red=two[i];
+                numbers[3][i/4].red=three[i];
+                numbers[4][i/4].red=four[i];
+                numbers[5][i/4].red=five[i];
+                numbers[6][i/4].red=six[i];
+                numbers[7][i/4].red=seven[i];
+                numbers[8][i/4].red=eight[i];
+                numbers[9][i/4].red=nine[i];
             }
             // alpha
             else {
-                number_one[i/4].alpha=one[i];
+                numbers[0][i/4].red=zero[i];
+                numbers[1][i/4].red=one[i];
+                numbers[2][i/4].red=two[i];
+                numbers[3][i/4].red=three[i];
+                numbers[4][i/4].red=four[i];
+                numbers[5][i/4].red=five[i];
+                numbers[6][i/4].red=six[i];
+                numbers[7][i/4].red=seven[i];
+                numbers[8][i/4].red=eight[i];
+                numbers[9][i/4].red=nine[i];
             }
-
          }
 
-
+        &numbers
     }
 }
 
