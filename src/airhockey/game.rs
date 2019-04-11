@@ -144,7 +144,7 @@ impl Game {
 
 
         self.handler.physics_handler.update_ball_speed(&ball_speed);
-        let new_ball_position = self.handler.physics_handler.update_ball_position(player_position, player_radius, player_speed);
+        let new_ball_position = self.handler.physics_handler.update_ball_position(player_position, player_radius, player_speed, &mut self.score);
         let new_ball_speed = self.handler.physics_handler.get_ball_speed();
 
         self.ball.position = [new_ball_position.0, new_ball_position.1];

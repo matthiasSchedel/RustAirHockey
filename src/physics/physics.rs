@@ -1,7 +1,10 @@
 //! Graphics controller.
 extern crate libm;
+use crate::airhockey::score::Score;
 use libm::F64Ext;
 use crate::airhockey::helper;
+use crate::airhockey::field;
+use crate::airhockey::score;
 
 const FRICTION: f64 = 1.;
 /// friction used in simulation
@@ -50,7 +53,7 @@ impl Physics {
         Physics {
             width,
             height,
-            ball_pos: (200, 200),
+            ball_pos: (field::WIDTH_MAX / 2 , field::HEIGHT_MAX / 2),
             ball_speed: (0., 0.),
             ball_radius,
         }
@@ -79,6 +82,7 @@ impl Physics {
         player_radius: u16,
         speed_x: f64,
         speed_y: f64,
+        score: &mut Score,
     ) -> (u16, u16) {
         if self.ball_speed.0 > 2. * f64::from(player_radius) {
             self.ball_speed.0 = 1.95 * f64::from(player_radius);
@@ -88,7 +92,7 @@ impl Physics {
             self.ball_speed.1 = 1.95 * f64::from(player_radius) ;
         }
         let border_collisions: CollisionObject =
-            self.calculate_border_collision_point();
+            self.calculate_border_collision_point(score);
 
         // this one needs a fix, as it might need other parameters.
         let player_collision: CollisionObject = self.calculate_ball_collision_point(
@@ -100,15 +104,15 @@ impl Physics {
         );
 
         if border_collisions.has_collided {
-            self.update_pos_from_coll_point(border_collisions)
+            self.update_pos_from_coll_point(border_collisions, player_x, player_y, player_radius)
         } else if player_collision.has_collided {
-            self.update_pos_from_coll_point(player_collision)
+            self.update_pos_from_coll_point(player_collision, player_x, player_y, player_radius)
         } else {
             self.update_ball_pos_without_coll(player_x, player_y, player_radius)
         }
     }
 
-    fn update_pos_from_coll_point(&mut self, coll: CollisionObject) -> (u16, u16) {
+    fn update_pos_from_coll_point(&mut self, coll: CollisionObject, player_x: u16, player_y: u16, player_radius: u16) -> (u16, u16) {
         // border-collision
         if coll.collision_pos.0 == 0 || coll.collision_pos.0 == self.width {
             self.ball_speed.0 *= -1.0;
@@ -126,9 +130,15 @@ impl Physics {
             self.ball_speed.1 = -coll.collision_speed.1;
         }
 
+        let bias: (u16, u16) = self.proactive_ball_player_collision_check(player_x, player_y, player_radius);
+        
+        //set new position
+        self.ball_pos.0 += bias.0;
+        self.ball_pos.1 += bias.1;
+
         // collision is handled - update position
-        self.ball_pos.0 = (f64::from(self.ball_pos.0) + self.ball_speed.0) as u16;
-        self.ball_pos.1 = (f64::from(self.ball_pos.1) + self.ball_speed.1) as u16;
+        //self.ball_pos.0 = (f64::from(self.ball_pos.0) + self.ball_speed.0) as u16;
+        //self.ball_pos.1 = (f64::from(self.ball_pos.1) + self.ball_speed.1) as u16;
 
         (self.ball_pos.0, self.ball_pos.1)
     }
@@ -151,27 +161,44 @@ impl Physics {
     }
 
     /// checks if and where a ball collides with the border and returns a corresponding collision object
-    fn calculate_border_collision_point(&self) -> CollisionObject {
+    fn calculate_border_collision_point(&mut self, score: &mut Score) -> CollisionObject {
         let coll_x;
         let coll_y;
         let mut collision: bool = false;
 
         //x-Richtung: Fallen wir links raus? Rechts?
-        if i32::from(self.ball_pos.0) + self.ball_speed.0 as i32 - i32::from(self.ball_radius) <= 10 {
+        if i32::from(self.ball_pos.0) + self.ball_speed.0 as i32 - i32::from(self.ball_radius) <= i32::from(field::BORDER_WIDTH) {
             collision = true;
             coll_x = 0;
-        } else if i32::from(self.ball_pos.0) + self.ball_speed.0 as i32 + i32::from(self.ball_radius) >= i32::from(self.width) -10{
+        } else if i32::from(self.ball_pos.0) + self.ball_speed.0 as i32 + i32::from(self.ball_radius) >= i32::from(self.width) - i32::from(field::BORDER_WIDTH) {
             collision = true;
             coll_x = self.width;
         } else {
             coll_x = self.ball_pos.0;
         }
 
+        // check for goals
+        if collision && self.ball_pos.1 < field::HEIGHT_MAX / 2 + field::GOAL_SIZE / 2 && self.ball_pos.1 > field::HEIGHT_MAX / 2 - field::GOAL_SIZE / 2 {
+            if self.ball_pos.0 < field::WIDTH_MAX / 2 {
+                self.ball_pos.0 = (field::WIDTH_MAX / 2) - 2 * self.ball_radius;
+                score.increment_score_for_player(1);
+            } else {
+                let scored_player = 0;
+                self.ball_pos.0 = (field::WIDTH_MAX / 2) + 2 * self.ball_radius;
+                score.increment_score_for_player(0);
+            }
+            self.ball_pos.1 = field::HEIGHT_MAX / 2;
+            self.ball_speed = (0., 0.);
+
+            return CollisionObject::new(false, 0, 0, 0., 0.);
+        }
+
+
         //y-Richtung: Fallen wir oben oder unten raus?
-        if i32::from(self.ball_pos.1) + self.ball_speed.1 as i32 - i32::from(self.ball_radius) <= 10 {
+        if i32::from(self.ball_pos.1) + self.ball_speed.1 as i32 - i32::from(self.ball_radius) <= i32::from(field::BORDER_WIDTH) {
             collision = true;
             coll_y = 0;
-        } else if i32::from(self.ball_pos.1) + self.ball_speed.1 as i32 + i32::from(self.ball_radius) >= i32::from(self.height) -10 {
+        } else if i32::from(self.ball_pos.1) + self.ball_speed.1 as i32 + i32::from(self.ball_radius) >= i32::from(self.height) - i32::from(field::BORDER_WIDTH) {
             collision = true;
             coll_y = self.height;
         } else {

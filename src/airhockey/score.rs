@@ -63,4 +63,8 @@ impl Score {
             (false,0)
         }
     }
+
+    pub fn increment_score_for_player(&mut self, player_id: usize) {
+        self.player_scores[player_id] += 1;
+    }
 }

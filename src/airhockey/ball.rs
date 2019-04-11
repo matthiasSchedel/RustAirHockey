@@ -9,7 +9,7 @@ pub const COLOR: u32 = 0xfff000;
 /// start position of ball in game
 pub const START_POSITION: [u16; 2] = [field::WIDTH_MAX/2, field::HEIGHT_MAX/2];
 /// start velocity of ball?
-pub const START_SPEED: [f64; 2] = [1.0, 1.0];
+pub const START_SPEED: [f64; 2] = [0.0, 0.0];
 /// has bool of ball
 pub const STROKE_COLOR: u32 = 0xfff010;
 /// has bool stroke?
