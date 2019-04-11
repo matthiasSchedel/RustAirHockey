@@ -1,14 +1,17 @@
 //! Graphics controller.
+
 use crate::{
+    alloc,
     gpio::{GpioPort, OutputPin},
     init,
     lcd::{self, Color, FramebufferArgb8888},
-    system_clock, touch, alloc
+    system_clock, touch,
 };
+use alloc::vec::Vec;
 use alloc_cortex_m::CortexMHeap;
 use core::alloc::Layout as AllocLayout;
+use core::mem::uninitialized;
 use core::panic::PanicInfo;
-use alloc::vec::Vec;
 use rt::{entry, exception};
 use stm32f7::stm32f7x6::Peripherals;
 
@@ -17,6 +20,11 @@ const USE_STROKE: bool = true;
 const PLAYER_SIZE: u16 = 10;
 const PUCK_SIZE: u16 = 6;
 const BACKGROUND_COLOR: u32 = 0xfff000;
+const NUMBER_HIGHT: u16 = 40;
+const NUMBER_WIDTH: u16 = 25;
+const DOUBLE_DOT_COLOR: u32 = 0xffff00;
+const END_WIDTH: u16 = 300;
+const END_HIGHT: u16 = 200;
 
 /// Graphics struct
 pub struct Graphics {
@@ -29,6 +37,7 @@ pub struct Graphics {
     width: u16,
     ///display height
     height: u16,
+    numbers: [lcd::Color; 10000],
 }
 impl Graphics {
     /// game constructor
@@ -39,11 +48,13 @@ impl Graphics {
             lcd::Layer<lcd::FramebufferArgb8888>,
             lcd::Layer<lcd::FramebufferAl88>,
         ),
+        numbers: [lcd::Color; 10000],
     ) -> Graphics {
         Graphics {
             display_layer: display_layer,
             width: width,
             height: height,
+            numbers: numbers,
         }
     }
 
@@ -81,10 +92,10 @@ impl Graphics {
         }
     }
     ///Clear the specified layer
-    pub fn clear_layer (&mut self, layer:u8){
+    pub fn clear_layer(&mut self, layer: u8) {
         assert!(layer == 0 || layer == 1);
         if layer == 0 {
-        self.display_layer.0.clear();
+            self.display_layer.0.clear();
         } else {
             self.display_layer.1.clear()
         }
@@ -96,7 +107,16 @@ impl Graphics {
     pub fn clear_field(&self, color: u16) {}
 
     /// draw a score
-    pub fn draw_score(&self, player1_score: u8, player2_score: u8) {}
+    pub fn draw_score(&mut self, player_scores: Vec<u16>) {
+        // Draws two number and : 2:1
+
+        // First number
+        self.draw_number([190, 15]);
+        // Second number
+        self.draw_number([265, 15]);
+
+        // Double dot
+    }
 
     /// init
     pub fn init(&self) {}
@@ -129,6 +149,20 @@ impl Graphics {
         border_width: u16,
         goal_size: u16,
     ) {
+        self.draw_circle(
+            self::DOUBLE_DOT_COLOR,
+            [240, 25],
+            2,
+            false,
+            self::DOUBLE_DOT_COLOR,
+        );
+        self.draw_circle(
+            self::DOUBLE_DOT_COLOR,
+            [240, 35],
+            2,
+            false,
+            self::DOUBLE_DOT_COLOR,
+        );
         // lower rectangle
         self.draw_rectangle(0, 0, field_size[0], border_width, color);
 
@@ -169,34 +203,85 @@ impl Graphics {
 
         // draw middle line
         self.draw_rectangle(
-            field_size[0]/2 - border_width/4,
+            field_size[0] / 2 - border_width / 4,
             0,
-            field_size[0]/2 + border_width/4,
+            field_size[0] / 2 + border_width / 4,
             field_size[1],
             color,
         );
     }
 
-    pub fn draw_circles_implicit(&mut self, circles: &Vec<((u16,u16), u16, u32)>) {
-
+    pub fn draw_circles_implicit(&mut self, circles: &Vec<((u16, u16), u16, u32)>) {
         for x in 0..self.width {
             for y in 0..self.height {
                 let mut in_circle = false;
                 for circle in circles {
                     if self.in_circle(x, y, [(circle.0).0, (circle.0).1], circle.1) {
-                        (self.display_layer.1).print_point_color_at(x as usize, y as usize, Color::from_hex(circle.2));
+                        (self.display_layer.1).print_point_color_at(
+                            x as usize,
+                            y as usize,
+                            Color::from_hex(circle.2),
+                        );
                         in_circle = true;
                     }
                 }
                 if !in_circle {
-                    (self.display_layer.1).print_point_color_at(x as usize, y as usize, Color::from_argb8888(0));
+                    (self.display_layer.1).print_point_color_at(
+                        x as usize,
+                        y as usize,
+                        Color::from_argb8888(0),
+                    );
                 }
             }
         }
     }
 
-    pub fn in_circle(&self, x: u16, y: u16, pos: [u16; 2], radius: u16) -> bool {
-        (i32::from(x)  - i32::from(pos[0]))*(i32::from(x) - i32::from(pos[0])) + (i32::from(y)-i32::from(pos[1]))*(i32::from(y)-i32::from(pos[1])) <= i32::from(radius)*i32::from(radius)
+    fn in_circle(&self, x: u16, y: u16, pos: [u16; 2], radius: u16) -> bool {
+        (i32::from(x) - i32::from(pos[0])) * (i32::from(x) - i32::from(pos[0]))
+            + (i32::from(y) - i32::from(pos[1])) * (i32::from(y) - i32::from(pos[1]))
+            <= i32::from(radius) * i32::from(radius)
+    }
+    /// draw numbers on screen at positi
+    pub fn draw_number(
+        &mut self,
+
+        // upper left position of number rectangle
+        position: [u16; 2],
+        // Dimension of number rectangle
+    ) {
+        let mut x_pos: u16;
+        let mut y_pos: u16;
+        for i in 0..1000 {
+            // unpack 1darray to 2darray
+            x_pos = i % self::NUMBER_WIDTH;
+            y_pos = i / self::NUMBER_HIGHT;
+
+            self.display_layer.0.print_point_color_at(
+                x_pos as usize + position[0] as usize,
+                y_pos as usize + position[1] as usize,
+                self.numbers[i as usize],
+            );
+        }
+    }
+
+    pub fn draw_endgame(
+        &mut self,
+        // array with the information of number
+        number_array: [lcd::Color; 60000],
+        // upper left position of number rectangle
+        position: [u16; 2],
+        // Dimension of number rectangle
+    ) {
+        let mut x_pos: u16;
+        let mut y_pos: u16;
+        for i in 0..6000 {
+            x_pos = i % self::END_WIDTH;
+            y_pos = i / self::END_HIGHT;
+            self.display_layer.0.print_point_color_at(
+                x_pos as usize + position[0] as usize,
+                y_pos as usize + position[1] as usize,
+                number_array[i as usize],
+            );
+        }
     }
 }
-

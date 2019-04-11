@@ -33,6 +33,7 @@ impl GraphicsHandler {
     }
 
     pub fn draw_score(&mut self, player_scores: Vec<u16>) {
+        self.graphics.draw_score(player_scores)
     }
 
 

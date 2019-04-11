@@ -5,6 +5,9 @@ use alloc::vec::Vec;
 
 /// points scored per goal
 pub const POINTS_PER_GOAL: u8 = 1;
+pub const NUMBER_WIDTH:u16=25;
+pub const NUMBER_HIGHT:u16=40;
+pub const DOT_COLOR:u32=0xfff010;
 
 /// define the x coord of left right right goal used for goal checking
 const GOAL_X_POSITIONS: [u16;2] = [5, 488]; 
