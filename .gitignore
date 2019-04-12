@@ -4,3 +4,5 @@ blinking_led/target
 gdb.bat
 openOCD.bat
 openocd.sh
+gdb.sh
+.DS_Store
