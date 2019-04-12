@@ -1,4 +1,17 @@
-# stm32f7-discovery
+# Airhockey game based on stm32f7-discovery
+
+![Airhockey Game Image](airhockey.jpg) 
+
+Airhockey game for stm32f7 micro-controller written in Rust in course practical. 
+## How to install & start
+Follow the instructions down below and use  ``` $ cargo run --bin polling --release ``` to run the game.
+
+## How to play:
+Both players are controlled by touching the position the player should move to on their respective sites. The game ends if one player reaches 10 scoring points. To restart it run ``` $ cargo run --bin polling --release ```  again. 
+
+
+
+# original stm32f7-discovery README:
 
 ## Building
 
